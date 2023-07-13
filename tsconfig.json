@@ -1,0 +1,112 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "plugins": [
+      {
+        "name": "typescript-plugin-css-modules",
+        "options": {
+          "classnameTransform": "camelCase",
+          "rendererOptions": {
+            "less": {
+              "globalVars": {
+                "primary-color": "#1890ff",
+                "prefix-cls": "evefyou",
+                "namespace": "evefyou",
+                "layout-top-height": "3.5rem",
+                "text-color-help-dark": "#909399",
+                "text-color": "#c9d1d9",
+                "text-color-base": "#c9d1d9"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ],
+      "@api/*": [
+        "src/api/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@models/*": [
+        "src/models/*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
+      "@routes/*": [
+        "src/routes/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@/*": [
+        "src/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@config/*": [
+        "src/config/*"
+      ],
+      "@locales/*": [
+        "src/locales/*"
+      ],
+      "@enums/*": [
+        "src/enums/*"
+      ],
+      "@stores/*": [
+        "src/stores/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@types/*": [
+        "src/types/*"
+      ],
+      "@Container/*": [
+        "src/components/Container/*"
+      ],
+      "@Containers/*": [
+        "src/components/Containers/*"
+      ]
+    },
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "src",
+    "vite.config.ts"
+  ]
+}
