@@ -1,0 +1,71 @@
+@prefix-cls: ~'@{namespace}-basic-modal';
+
+.@{prefix-cls} {
+
+  &.fullscreen-modal {
+    overflow: hidden;
+
+    .ant-modal {
+      top: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: 100%;
+
+      &-content {
+        height: 100%;
+      }
+    }
+  }
+
+  .ant-modal {
+    &-content,
+    &-body {
+      padding: 0;
+    }
+    &-header,
+    &-footer,
+    &-close {
+      margin: 0;
+      height: 4rem;
+      padding: 1rem;
+    }
+    &-header {
+      border-bottom: 1px solid #f0f0f0;
+      border-radius: 2px 2px 0 0;
+    }
+    &-footer {
+      border-top: 1px solid #f0f0f0;
+      border-radius: 2px 2px 0 0;
+    }
+    &-close {
+      color: initial !important;
+      background-color: initial !important;
+      text-decoration: initial !important;
+      cursor: initial !important;
+      width: initial !important;
+      top: 0 !important;
+      right: 0 !important;
+    }
+    &-close svg:hover {
+      cursor: pointer;
+      color: @primary-color;
+    }
+  }
+  @media screen and (max-height: 600px) {
+    .ant-modal {
+      top: 60px;
+    }
+  }
+  @media screen and (max-height: 540px) {
+    .ant-modal {
+      top: 30px;
+    }
+  }
+  @media screen and (max-height: 480px) {
+    .ant-modal {
+      top: 10px;
+    }
+  }
+}
