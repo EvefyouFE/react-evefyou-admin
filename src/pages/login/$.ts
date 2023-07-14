@@ -1,1 +1,0 @@
-export { CommonLayout as default } from "../layouts";
