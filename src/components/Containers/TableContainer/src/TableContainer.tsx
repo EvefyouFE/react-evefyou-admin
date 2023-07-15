@@ -1,4 +1,4 @@
-import React, { ReactElement, Ref, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import React, { ReactElement, Ref, useImperativeHandle, useMemo, useRef } from "react";
 import { TableContainerInstance } from "./typing";
 import { useSearchForm, useTable, useTableContainerProps, useTableLayout } from "./hooks";
 import { useDesign } from "@/hooks";

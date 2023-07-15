@@ -1,14 +1,14 @@
 import { FC, createContext, useState } from "react"
-import { ModalContextDataMap, ModalContextOpenMap, ModalContextProps, ModalContextValue } from "../typing"
+import { ModalContextProps, ModalContextValue } from "../typing"
 
 const DEFAULT_MODAL_CONTEXT_VALUE = {
     dataMap: {
     },
-    setDataMap: (data: React.SetStateAction<ModalContextDataMap>) => {} ,
+    setDataMap: () => {} ,
     openMap: {
 
     },
-    setOpenMap: (data: React.SetStateAction<ModalContextOpenMap>) => {} ,
+    setOpenMap: () => {} ,
 }
 
 export const ModalContext = createContext<ModalContextValue>(DEFAULT_MODAL_CONTEXT_VALUE)

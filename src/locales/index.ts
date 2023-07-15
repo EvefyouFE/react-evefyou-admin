@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import enUS from './en-us';
 import { FormattedMessage, MessageDescriptor, PrimitiveType, useIntl } from 'react-intl';
 

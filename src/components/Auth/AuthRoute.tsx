@@ -16,7 +16,7 @@ export const AuthRoute: FC<RouteProps> = ({children}) => {
 
     const {data: user} = userInfoRes;
 
-    const [u,setUser] = useRecoilState(userAtom);
+    const [,setUser] = useRecoilState(userAtom);
     
     
 

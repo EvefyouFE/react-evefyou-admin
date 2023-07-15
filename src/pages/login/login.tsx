@@ -11,10 +11,6 @@ import { LoginByQrCode } from './loginByQrCode';
 import { LoginByUsername } from './loginByUsername';
 import { useDesign } from "@/hooks";
 
-interface LoginFormMiddleProps {
-    loginType: LoginTypeEnum;
-}
-
 const loginTypeItems: TabsProps['items'] = [
     {
         key: LoginTypeEnum.username,

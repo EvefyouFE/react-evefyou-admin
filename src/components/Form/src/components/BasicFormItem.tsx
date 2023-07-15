@@ -1,8 +1,7 @@
-import { Col, Form, FormItemProps } from "antd";
+import { Col, Form } from "antd";
 import { FC, useMemo } from "react";
 import { BasicFormItemProps } from "../props";
 import { Item } from "./render";
-import { is, omit } from "ramda";
 
 
 

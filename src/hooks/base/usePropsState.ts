@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export type UsePropsStateReturnType<T> = [T, React.Dispatch<React.SetStateAction<T>>]
 

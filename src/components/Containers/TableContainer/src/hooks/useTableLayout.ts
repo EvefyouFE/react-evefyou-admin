@@ -1,9 +1,7 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useLayoutEffect, useMemo } from "react";
 import { useDebounceFn, useEventListener } from "ahooks";
-import { is } from "ramda";
 import { getViewportOffset } from "@/utils";
 import { TableContainerProps } from "../props";
-import { ColumnType } from "antd/es/table";
 import { UseTableLayoutHooksMethods, UseTableLayoutReturnType } from "../typing";
 import { useMountEffect } from "@/hooks";
 

@@ -1,12 +1,12 @@
 import { AppLogo } from "@/components/Application";
 import { BasicBreadcrumb } from "@/components/Breadcrumb";
-import { useBaseeSetting, useMenuSetting } from "@/hooks";
+import { useBaseSetting, useMenuSetting } from "@/hooks";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { FC } from "react";
 
 export const HeaderLeft: FC = () => {
     const {collapsed, toggleCollapsed, showCollapsed} = useMenuSetting();
-    const {isMobile} = useBaseeSetting()
+    const {isMobile} = useBaseSetting()
     
 
 

@@ -133,7 +133,7 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
         });
     };
 
-    const onDocumentMouseUp = (event: Event) => {
+    const onDocumentMouseUp = () => {
         removeClass(yBarRef.current!, 'scroll-container-grabbed');
         removeClass(xBarRef.current!, 'scroll-container-grabbed');
         removeClass(document.body, 'scroll-container-grabbed');

@@ -3,7 +3,7 @@ import { BasicModal, BasicModalProps, useModalContext } from "@/components/Modal
 import { ModalContextData, ModalInstance } from "@/components/Modal/src/typing";
 import { useCompInstance } from "@/hooks";
 import { formatById } from "@/locales";
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { modalItems } from "./list.data";
 
 interface ProjectModalProps {
@@ -17,7 +17,7 @@ export const ModalForm = () => {
         },
         items: modalItems,
     }), [])
-    const [formRef, formInstance = {} as BasicFormInstance] = useCompInstance<BasicFormInstance>(modalFormProps)
+    const [formRef] = useCompInstance<BasicFormInstance>(modalFormProps)
     return (
         <BasicForm ref={formRef} name='projectmodal'/>
     )
@@ -30,7 +30,7 @@ export const ProjectModal = forwardRef<Partial<ModalInstance>, ProjectModalProps
         ...rest
     } = props;
     const [isUpdate, setUpdate] = useState(false)
-    const {dataMap,setOpenMap} = useModalContext();
+    const {dataMap} = useModalContext();
     const [modalRef, modalInstance = {} as ModalInstance] = useCompInstance<ModalInstance>()
     const {openOkLoading, closeOkLoading, closeModal} = modalInstance;
 

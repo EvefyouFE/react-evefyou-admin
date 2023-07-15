@@ -5,7 +5,6 @@ import { UseRowSelectionMethods } from "./tableRowSelection";
 import { UsePaginationMethods } from "./tablePagination";
 import React from "react";
 import { BaseInstance, HasPermissionOption, UsePropsMethods } from "@/hooks";
-import { BasicFormInstance } from "@/components/Form/src/types/form";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { PopconfirmProps, TooltipProps } from "antd";
 import { PopConfirmButtonProps } from "@/components/Button/src";
@@ -86,7 +85,7 @@ export interface TableActionItem extends PopConfirmButtonProps {
 }
 
 
-export interface TableRenderComp<T extends Recordable = any> {
+export interface TableRenderComp {
   tableHeader?: React.ReactNode;
 }
 export type UseRednersProps<T extends Recordable = any> = Partial<BasicTableProps<T>> & {

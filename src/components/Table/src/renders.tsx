@@ -8,9 +8,8 @@ import { SizeSetting } from "./components/settings/SizeSetting";
 import { TableSetting } from "./components/settings/TableSetting";
 import { DEFAULT_TABLE_SETTING } from "./constants";
 import { TableRenderComp, UseRednersProps } from "./types";
-import { BasicTableProps, TableHeaderProps } from "./props";
+import { TableHeaderProps } from "./props";
 import { genUUID } from "@/utils";
-import { useUpdate } from "ahooks";
 
 const RenderTableSetting = React.memo(renderTableSettingFn)
 

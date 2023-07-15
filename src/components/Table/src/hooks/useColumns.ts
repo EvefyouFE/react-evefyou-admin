@@ -2,12 +2,12 @@ import { usePermission, useUnmountEffect } from "@/hooks";
 import { formatById } from "@/locales";
 import { genUUID } from "@/utils";
 import moment from "moment";
-import { clone, is, omit } from "ramda";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { clone, is } from "ramda";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_ALIGN, ROW_KEYS } from "../constants";
 import { BasicTableProps, TableColumnProps, TableColumnPropsWithKey } from "../props";
 import { CellFormat, GetColumnsParams, UseColumnsReturnType } from "../types";
-import { ColumnType, ColumnsType, TableProps } from "antd/es/table";
+import { ColumnType } from "antd/es/table";
 
 
 function handleItem<T extends Recordable>(item: TableColumnProps<T>, ellipsis?: boolean) {
@@ -125,7 +125,7 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
                 .filter((c) => (c.auth && hasPermission(c.auth)) || isShow(c))
                 .map(function fn(c) {
                     c.children?.map(fn)
-                    const { render, format, edit, editRow, type = 'normal' } = c;
+                    const { format, edit, type = 'normal' } = c;
                     const isCustomColumn = type === 'normal'
                     if (!c.render && format && !edit && isCustomColumn) {
                         c.render = (...args) => {

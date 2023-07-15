@@ -1,6 +1,6 @@
 import React from "react";
 import { BasicTableProps, TableRowSelectionProps } from "../props";
-import { ExpandableConfig, GetRowKey, RowSelectMethod, SelectionSelectFn } from "antd/es/table/interface";
+import { GetRowKey, RowSelectMethod } from "antd/es/table/interface";
 
 export type UseRowSelectionProps<T extends Recordable = any> = {
     props: BasicTableProps<T>,

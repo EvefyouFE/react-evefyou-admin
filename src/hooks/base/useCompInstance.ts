@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useUnmountEffect from "./useUnmountEffect";
 
 export type UseCompInstanceReturnType<P, T extends BaseInstance<P>> = [React.MutableRefObject<T|null>, Partial<T>]

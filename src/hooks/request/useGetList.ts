@@ -12,6 +12,7 @@ export async function useGetList<T>(url: string, options?: UseGetListParamOption
     
 
     const transformRequest: AxiosRequestTransformer = (data, headers) => {
+        console.debug(data, headers)
     }
     const data: T = await axios.get(
         `${url}`, {

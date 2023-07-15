@@ -1,12 +1,8 @@
-import { BasicForm, BasicFormInstance, BasicFormProps } from "@/components/Form"
 import { ModalContextData, ModalInstance } from "@/components/Modal"
 import { TableActionItem } from "@/components/Table"
 import { TableAction } from "@/components/Table/src/components/TableAction"
 import { DeleteTwoTone, EditOutlined } from "@ant-design/icons"
 import { Project } from "@models/index"
-import { modalItems } from "./list.data"
-import { useMemo } from "react"
-import { useCompInstance } from "@/hooks"
 import { Button } from "antd"
 import { formatById } from "@/locales"
 
@@ -16,6 +12,7 @@ export function renderActionFn(modalInstance: Partial<ModalInstance>) {
     } = modalInstance;
     function renderAction(value: any, record: Project, index: number) {
         function handleEditOnClick(value: any, record: Project, index: number) {
+            console.debug(value,record,index)
             const data: ModalContextData = {
                 record,
                 isUpdate: true
@@ -24,7 +21,7 @@ export function renderActionFn(modalInstance: Partial<ModalInstance>) {
             openModal?.(true, data)
         }
         function handleDeleteOnClick(value: any, record: Project, index: number) {
-
+            console.debug(value,record,index)
         }
         const items: TableActionItem[] = [
             {

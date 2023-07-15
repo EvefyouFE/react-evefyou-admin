@@ -17,7 +17,7 @@ export type UseMenuList = {
 
 export function useMenuList(): UseMenuList {
     const [menuList, setMenuList] = useRecoilState(menuListSelector);
-    const { menuIconMap, exposeMenuList, isRoutesMenu } = useMenuSetting();
+    const { exposeMenuList, isRoutesMenu } = useMenuSetting();
 
     const res = !isRoutesMenu && useQuery({ ...queryGetCurrentMenus(), enabled: !menuList.length })
     res && useEffect(() => {

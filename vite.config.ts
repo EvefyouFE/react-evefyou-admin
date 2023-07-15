@@ -7,7 +7,6 @@ import { viteMockServe } from 'vite-plugin-mock';
 import WindiCSS from 'vite-plugin-windicss';
 import postcssConfig from './postcss.config';
 
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [

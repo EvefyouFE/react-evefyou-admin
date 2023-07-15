@@ -12,7 +12,6 @@ import { TabItem } from '../type';
 type RenderTabBar = Required<TabsProps>['renderTabBar']
 type RenderTabBarProps = Parameters<RenderTabBar>[0]
 type DefaultTabBar = Parameters<RenderTabBar>[1]
-type OnDragEnd = (event: DragEndEvent) => void
 
 interface DndContextTabBarProps extends RenderTabBarProps {
     items: TabItem[];

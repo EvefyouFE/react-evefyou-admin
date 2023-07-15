@@ -59,7 +59,7 @@ export function renderItemComponentFn({
     renderCallbackParams,
     ...rest
 }: Partial<ItemInnerProps>) {
-    const { getFieldsValue, setFieldValue } = Form.useFormInstance();
+    const { setFieldValue } = Form.useFormInstance();
 
     let itemComponentPropsValue: Recordable;
     if (is(Function, itemComponentProps)) {
@@ -189,7 +189,7 @@ export function renderItemFn(props: Partial<ItemInnerProps>) {
         const characterInx = rules.findIndex((rule) => !is(Function, rule) && rule.max);
         const ruleWithMax = rules[characterInx] as RuleObject
         if (characterInx !== -1 && !ruleWithMax.validator) {
-            ruleWithMax.message ??= formatById('component.form.maxTip', [ruleWithMax.max] as Recordable);
+            ruleWithMax.message ??= formatById('components.form.max.tip', {max: ruleWithMax.max});
         }
         return rules;
     }, [itemComponent, renderCallbackParams, defRules, dynamicRules, required,])
