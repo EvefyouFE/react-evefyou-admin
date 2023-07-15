@@ -1,0 +1,43 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: main
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6.0.2
+      - name: install 
+        run: |
+          pnpm install
+      - name: build
+        run: |
+          pnpm run build
+    
+      - name: Configure Docker
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Alibaba Cloud Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: registry.cn-hangzhou.aliyuncs.com
+          username: ${{ secrets.ALIYUN_ACR_USERNAME }}
+          password: ${{ secrets.ALIYUN_ACR_PASSWORD }}
+
+      - name: Build Docker image
+        run: docker build -t registry.cn-hangzhou.aliyuncs.com/evefyou/react-evefyou-admin:latest .
+
+      - name: Push Docker image
+        run: docker push registry.cn-hangzhou.aliyuncs.com/evefyou/react-evefyou-admin:latest 
