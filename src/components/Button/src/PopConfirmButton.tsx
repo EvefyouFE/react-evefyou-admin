@@ -1,4 +1,3 @@
-import { useNativeProps } from "@/hooks"
 import { useLocale } from "@/locales"
 import { Popconfirm } from "antd"
 import { FC, useMemo } from "react"

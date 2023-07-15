@@ -1,9 +1,9 @@
 import { useProps } from "@/hooks"
 import { BasicTableProps } from "../props"
 import { UseTablePropsReturnType, UseTablePropsSetMethods } from "../types"
-import { useMemo, useRef } from "react"
+import { useMemo } from "react"
 import { TableRowSelectionProps } from "../props"
-import { SizeType } from "antd/es/config-provider/SizeContext";
+import { SizeType } from "antd/es/config-provider/SizeContext"
 
 export function useTableProps<T extends Recordable = any>(props: BasicTableProps<T>): UseTablePropsReturnType<T> {
     const [propsState, propsMethods] = useProps(props)

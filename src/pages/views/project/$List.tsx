@@ -1,18 +1,13 @@
-import { ModalContextData, ModalInstance } from "@/components/Modal";
-import { BasicTable, BasicTableProps, TableActionItem, TableHeaderProps, BasicTableInstance } from "@/components/Table";
-import { TableAction } from "@/components/Table/src/components/TableAction";
-import { useCompInstance, useMountEffect, usePage } from "@/hooks";
-import { DeleteTwoTone, EditOutlined } from "@ant-design/icons";
+import { ModalInstance } from "@/components/Modal";
+import { BasicTableProps } from "@/components/Table";
+import { useCompInstance, usePage } from "@/hooks";
 import { queryGetProjectList } from "@api/query";
 import { Project, ProjectReq } from "@models/index";
 import { useQuery } from "@tanstack/react-query";
-import { ColumnType } from "antd/es/table";
-import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { FormattedMessage } from "react-intl";
+import { FC, useCallback, useMemo, useState } from "react";
 import { ProjectModal } from "./ProjectModal";
 import { columns, searchItems } from "./list.data";
 import { formatById } from "@/locales";
-import { Button, Form } from "antd";
 import { renderActionFn, renderToolbar } from "./render";
 import { TableContainerInstance } from "@/components/Containers/TableContainer/src/typing";
 import { TableContainer, TableContainerProps } from "@/components/Containers";
@@ -23,10 +18,9 @@ const headerProps: BasicTableProps['headerProps'] = {
 
 export const ProjectList: FC = () => {
   const { pageParams } = usePage({ pageNo: 1, pageSize: 10 })
-  const [projectReq, setProjectReq] = useState<ProjectReq>(pageParams)
-  const { data: projectRes, refetch } = useQuery(queryGetProjectList(projectReq));
+  const [projectReq] = useState<ProjectReq>(pageParams)
+  const { data: projectRes } = useQuery(queryGetProjectList(projectReq));
   const [modalRef, modalInstance] = useCompInstance<ModalInstance>()
-  const {openModal} = modalInstance??{};
 
   const tableProps: TableContainerProps<Project> = useMemo(() => ({
     // caption: formatById('view.project.list'),
@@ -56,12 +50,12 @@ export const ProjectList: FC = () => {
   function handleTableChange() {
 
   }
-  function handleAddOnClick() {
-    const data: ModalContextData = {
-      isUpdate: false
-    }
-    openModal?.(true, data)
-  }
+  // function handleAddOnClick() {
+  //   const data: ModalContextData = {
+  //     isUpdate: false
+  //   }
+  //   openModal?.(true, data)
+  // }
   return (
     <div className="project-list">
       <TableContainer<Project> ref={tableContainerRef} {...propsValue} >

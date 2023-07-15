@@ -1,27 +1,11 @@
 import { Icon } from "@/components/Icon";
-import { getPopupContainer as getParentPopupContainer } from '@/utils';
-import { DragOutlined, SettingOutlined } from "@ant-design/icons";
-import type { DragEndEvent } from '@dnd-kit/core';
-import { DndContext } from '@dnd-kit/core';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+import { DragOutlined } from "@ant-design/icons";
 import {
-    SortableContext,
-    arrayMove,
-    useSortable,
-    verticalListSortingStrategy
+    useSortable
 } from '@dnd-kit/sortable';
-import { Button, Checkbox, Divider, Popover, Tooltip } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
-import classNames from "classnames";
-import { is, omit } from "ramda";
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import { Checkbox, Divider, Tooltip } from "antd";
+import React, { FC } from "react";
 import { FormattedMessage } from "react-intl";
-import { TableColumnProps, TableColumnPropsWithKey } from "../../props";
-import { ColumnChangeParam } from "../../types";
-import { ScrollContainer } from "@/components/Containers";
-import { useTableContext } from "../../BasicTable";
-import { useDesign, useMountEffect, useUnmountEffect } from "@/hooks";
 import './ColumnSetting.less';
 import { CSS } from "@dnd-kit/utilities";
 import { PlainOption } from "./ColumnSetting";

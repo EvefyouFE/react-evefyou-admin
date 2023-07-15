@@ -5,6 +5,7 @@ import { is } from "ramda";
 import React, { Children, PropsWithChildren } from "react";
 import './BasicHelp.less';
 import { BasicHelpProps } from "./props";
+import { useDesign } from "@/hooks";
 
 export const BasicHelp: React.FC<PropsWithChildren<BasicHelpProps>> = ({
     text,

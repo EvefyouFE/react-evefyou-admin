@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { ModalHeader } from "./components/ModalHeader";
 import { BasicModalProps, ModalCloseProps, ModalFooterProps, ModalHeaderProps, ModalInnerProps } from "./props";
 import { ModalClose } from "./components/ModalClose";
@@ -21,6 +21,7 @@ export function useRenders(props: BasicModalProps, innerProps: ModalInnerProps) 
 }
 
 export function renderModal(props: BasicModalProps, innerProps: ModalInnerProps) {
+    console.debug(props)
     const {
         disabled: [disabledState]
     } = innerProps

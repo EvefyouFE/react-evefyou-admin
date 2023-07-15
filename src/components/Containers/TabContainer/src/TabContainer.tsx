@@ -1,12 +1,11 @@
 import { Icon } from "@/components/Icon";
 import { useActiveItems, useLayoutSetting, useTabs, useDesign } from "@/hooks";
 import { useTabContainerSetting } from "@/hooks/setting/useTabContainerSetting";
-import { PropsWithChildrenCls } from "@/types/base";
 import { TabsMenuItem } from "@/types/config";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { Spin, Tabs, TabsProps } from "antd";
-import React, { FC, PropsWithChildren, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Tabs, TabsProps } from "antd";
+import React, { FC, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { useLocation, useNavigate } from "react-router";
 import { DndContextTabBar } from "./components/DndContextTabBar";

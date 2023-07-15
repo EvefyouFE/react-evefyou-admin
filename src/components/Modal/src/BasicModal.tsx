@@ -1,14 +1,14 @@
-import { useDesign, useProps, useUnmountEffect } from "@/hooks";
-import { useBoolean, useFullscreen } from "ahooks";
-import { Modal, Spin } from "antd";
-import { assoc, equals, omit } from "ramda";
-import React, { PropsWithChildren, Suspense, forwardRef, useEffect, useId, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { useDesign, useUnmountEffect } from "@/hooks";
+import { useBoolean } from "ahooks";
+import { Modal } from "antd";
+import { assoc, equals } from "ramda";
+import React, { forwardRef, useEffect, useId, useImperativeHandle, useMemo, useState } from "react";
 import { useModalContext } from "./hooks";
-import { BasicModalProps, ModalFooterProps, ModalWrapperProps } from "./props";
-import { ModalInstance, UseModalPropsMethods } from "./typing";
+import { BasicModalProps, ModalWrapperProps } from "./props";
+import { ModalInstance } from "./typing";
 import { useModalProps } from "./hooks/useModalProps";
 import { useRenders } from "./renders";
-import './index.less'
+import './index.less';
 import { ModalWrapper } from "./components/ModalWrapper";
 import classNames from "classnames";
 
@@ -85,6 +85,7 @@ export const BasicModal = React.memo(forwardRef<ModalInstance, BasicModalProps>(
     })
 
     function openModal<T>(openState = true, data?: T, openOnSet = true) {
+        console.debug(openState)
         open();
         // 缓存modal data
         if (!data) return;

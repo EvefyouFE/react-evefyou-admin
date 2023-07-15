@@ -5,7 +5,7 @@ import { FormattedMessage } from "react-intl";
 export interface LoadingFallbackProps {
 }
 
-export const LoadingFallback: FC<LoadingFallbackProps> = (props) => {
+export const LoadingFallback: FC = () => {
     return (
         <div className="flex justify-center items-center h-full">
             <Spin

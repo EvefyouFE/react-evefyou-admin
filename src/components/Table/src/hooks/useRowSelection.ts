@@ -1,9 +1,8 @@
 import { genUUID } from "@/utils";
-import { RowSelectMethod } from "antd/es/table/interface";
-import { equals, is, omit } from "ramda";
+import { is, omit } from "ramda";
 import React, { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { ROW_KEYS } from "../constants";
-import { UseRowSelectionProps, UseRowSelectionReturnType } from "../types";
+import { UseRowSelectionReturnType } from "../types";
 import { BasicTableProps } from "../props";
 
 export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>): UseRowSelectionReturnType<T> {
@@ -47,9 +46,7 @@ export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>)
         onSelectionChange?.(selectedRowKeysState, selectedRowsState)
     }, [selectedRowKeysState])
 
-    function handleRowSelectionChange(selectedRowKeys: Key[], selectedRows: T[], info: {
-        type: RowSelectMethod;
-    }) {
+    function handleRowSelectionChange(selectedRowKeys: Key[], selectedRows: T[]) {
         setSelectedRowsAndRowKeys(selectedRowKeys, selectedRows)
     }
     function setSelectedRowsAndRowKeys(keys?: Key[], rows?: T[]) {

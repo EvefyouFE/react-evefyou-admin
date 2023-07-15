@@ -3,7 +3,7 @@ import { prefixCls as defaultPrefixCls } from '@/config';
 import {
     BreakpointsAntd,
 } from '@/enums/settings/breakpointEnum';
-import { useBaseeSetting, useBreakpoint, useLayoutSetting, useMenuSetting } from '@/hooks';
+import { useBaseSetting, useBreakpoint, useLayoutSetting, useMenuSetting } from '@/hooks';
 import { FC, PropsWithChildren, useEffect } from 'react';
 import { AppContext } from './useAppContext';
 
@@ -16,7 +16,7 @@ const AppProvider: FC<PropsWithChildren<AppProviderProps>> = (props) => {
     const breakpoints = useBreakpoint(BreakpointsAntd);
     const {setMobileLayout} = useLayoutSetting();
     const {setMenuSetting} = useMenuSetting();
-    const {isMobile,setBaseSetting} = useBaseeSetting();
+    const {isMobile,setBaseSetting} = useBaseSetting();
 
     const lgAndSmaller = breakpoints.smaller('LG');
     useEffect(() => {
@@ -28,9 +28,9 @@ const AppProvider: FC<PropsWithChildren<AppProviderProps>> = (props) => {
     
 
     
-    function handleRestoreState() {
+    // function handleRestoreState() {
         
-    }
+    // }
 
     return (
         <AppContext.Provider value={{ prefixCls, isMobile }}>

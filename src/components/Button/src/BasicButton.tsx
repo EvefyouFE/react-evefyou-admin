@@ -3,8 +3,7 @@ import { Icon } from "@/components/Icon";
 import { useNativeProps } from "@/hooks";
 import { Button } from "antd";
 import classNames from "classnames";
-import { is } from "ramda";
-import { FC, PropsWithChildren, memo, useMemo, useRef } from "react";
+import { FC, PropsWithChildren, useMemo } from "react";
 import { ButtonProps } from "./props";
 
 export const BasicButton: FC<PropsWithChildren<ButtonProps>> = ({

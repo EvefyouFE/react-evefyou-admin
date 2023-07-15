@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import useUnmountEffect from "./useUnmountEffect";
+import { useMemo } from "react";
 import { usePropsState } from "./usePropsState";
 
 export interface UsePropsSetMethods<T> {

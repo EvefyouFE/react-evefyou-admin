@@ -9,6 +9,7 @@ interface EmptyResultProps {
 }
 
 export const EmptyResult: FC<EmptyResultProps> = ({back,title,subTitle,btnName}) => {
+    console.debug(back,title,subTitle,btnName)
     return (
         <Empty />
     )

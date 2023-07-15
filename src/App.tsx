@@ -9,14 +9,14 @@ import './App.less';
 import { AppProvider } from './components/Application';
 import { NProgress } from './components/NProgress';
 import { localeConfigs } from './config/locale/localeConfig';
-import { useBaseeSetting } from './hooks';
+import { useBaseSetting } from './hooks';
 import { routes } from './routes';
 import { localeSelector } from './stores';
 import { LoadingFallback } from "./components/Fallback";
 
 const App: React.FC = () => {
-    const {locale: defaultLocale, theme} = useBaseeSetting();
-    const [userLocale, setLocale] = useRecoilState(localeSelector);
+    const {locale: defaultLocale, theme} = useBaseSetting();
+    const [userLocale, ] = useRecoilState(localeSelector);
 
     const locale = userLocale ?? defaultLocale;
 

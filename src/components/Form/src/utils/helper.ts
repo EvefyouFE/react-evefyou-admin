@@ -10,10 +10,10 @@ import { ItemComponentType } from "../types/form";
 export function createPlaceholderMessage(component: ItemComponentType) {
     const {formatById} = useLocale()
     if (component.includes('Input') || component.includes('Complete')) {
-        return formatById('common.inputText');
+        return formatById('components.common.input.text');
     }
     if (component.includes('Picker')) {
-        return formatById('common.chooseText');
+        return formatById('components.common.choose.text');
     }
     if (
         component.includes('Select') ||
@@ -22,7 +22,7 @@ export function createPlaceholderMessage(component: ItemComponentType) {
         component.includes('Radio') ||
         component.includes('Switch')
     ) {
-        return formatById('common.chooseText');
+        return formatById('components.common.choose.text');
     }
     return '';
 }
@@ -48,6 +48,7 @@ export function setComponentRuleType(
  * @returns 
  */
 export function validator(rule: RuleObject, value: StoreValue, callback: (error?: string) => void) {
+    console.debug(callback)
     const msg = rule.message;
     if (isNil(value)) {
         // 空值

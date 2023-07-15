@@ -44,7 +44,6 @@ axios.interceptors.response.use(
     },
     (error) => {
         
-        let msg = "请求错误";
         if (error.response && error.response.status) {
             switch (error.response.status) {
                 // 401: 未登录                

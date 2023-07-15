@@ -8,10 +8,9 @@ import './index.less'
 import { BasicMenu } from "@/components/Menu";
 
 export interface SiderNavProps {
-    collapsed: boolean;
 }
 
-export const SiderNav: React.FC<SiderNavProps> = (props) => {
+export const SiderNav: React.FC = () => {
     const { collapsed, showMenu } = useMenuSetting();
     const { menuList } = useMenuList();
     const { siderWidthWithUnit } = useLayoutSetting()

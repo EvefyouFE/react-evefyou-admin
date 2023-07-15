@@ -1,5 +1,5 @@
 import { Icon } from '@/components/Icon';
-import { useBaseeSetting, useDesign, useMenuSetting } from '@/hooks';
+import { useDesign, useMenuSetting } from '@/hooks';
 import { MenuTreeList } from '@models/auth/memu';
 import { ConfigProvider, Menu, MenuProps } from 'antd';
 import { FC, isValidElement, useMemo, useTransition } from 'react';
@@ -34,8 +34,8 @@ export const BasicMenu: FC<BasicMenuProps> = (props) => {
 
     const navigate = useNavigate();
     const [,startTrainsition] = useTransition();
-    const {isMobile} = useBaseeSetting()
-    const {collapsed,showMenu} = useMenuSetting()
+    // const {isMobile} = useBaseSetting()
+    const {collapsed} = useMenuSetting()
     const {prefixCls} = useDesign('basic-menu')
 
     const newMenuList = loopMenuItem(menuList);

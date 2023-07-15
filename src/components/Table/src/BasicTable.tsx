@@ -1,17 +1,15 @@
-import { BasicForm, BasicFormProps } from "@/components/Form";
-import { useDesign, useCompInstance, useLayoutSetting, useMountEffect, useProps } from "@/hooks";
-import { genUUID, subtractAllWithUnit } from "@/utils";
-import { Button, TablePaginationConfig } from "antd";
+import { useDesign } from "@/hooks";
+import { TablePaginationConfig } from "antd";
 import Table, { ColumnType, TableProps } from "antd/es/table";
-import { ColumnsType, FilterValue, SorterResult, TableCurrentDataSource } from "antd/es/table/interface";
+import { FilterValue, SorterResult, TableCurrentDataSource } from "antd/es/table/interface";
 import classNames from "classnames";
-import { is, isEmpty, omit } from "ramda";
-import React, { PropsWithChildren, ReactElement, Ref, createContext, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { is, omit } from "ramda";
+import React, { ReactElement, Ref, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { useColumns, useDataSource, usePagination, useRowSelection, useTableScroll } from "./hooks";
-import { BasicTableProps, TableColumnProps } from "./props";
+import { BasicTableProps } from "./props";
 import { useRenders } from "./renders";
 import { SearchState, TableChangeParams, TableContextValue, BasicTableInstance } from "./types";
-import './index.less'
+import './index.less';
 import { useTableProps } from "./hooks/useTableProps";
 
 export const TableContext = createContext<TableContextValue | undefined>(undefined);
@@ -24,18 +22,18 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
     const tableRef = useRef<HTMLDivElement>(null)
     const [propsState, propsMethods] = useTableProps(props)
     const [paginationState, paginationMethods] = usePagination(propsState)
-    const [rowSelectionState, rowSelectionMethods] = useRowSelection(propsState)
+    const [, rowSelectionMethods] = useRowSelection(propsState)
     const [dataSourceState, dataSourceMethods] = useDataSource({
         props: propsState,
         getRowKey: rowSelectionMethods.getRowKey
     })
-    const [columnsState, columnsMethods] = useColumns(propsState)
+    const [,columnsMethods] = useColumns(propsState)
     const [scrollMemo] = useTableScroll(propsState, {
         tableRef,
         getRowSelection: rowSelectionMethods.getRowSelection,
         getViewColumns: columnsMethods.getViewColumns,
     })
-    const [searchState, setSearchState] = useState<SearchState>({
+    const [searchState, ] = useState<SearchState>({
         sortInfo: {},
         filterInfo: {},
     });
@@ -92,6 +90,7 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
     }
 
     function handleHeaderRow(data: readonly ColumnType<any>[], index?: number) {
+        console.debug(data,index)
         return {
             style: {
                 height: props.headerRowHeight
@@ -106,6 +105,7 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
             currentDataSource,
             action,
         }: TableCurrentDataSource<any>) {
+            console.debug(currentDataSource, action)
         // clearSelectOnChange && 
         paginationMethods.setPagination(pagination)
 

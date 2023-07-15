@@ -1,5 +1,5 @@
 import { formatById } from "@/locales";
-import { Button, Empty, Result } from "antd";
+import { Button, Result } from "antd";
 import { FC } from "react";
 import { useNavigate } from "react-router";
 

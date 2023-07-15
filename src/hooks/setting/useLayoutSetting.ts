@@ -25,7 +25,7 @@ export function useLayoutSetting() {
     }
     const unit = layoutSetting.unit!;
     const fontsize = layoutSetting.fontSize!;
-    const filter = ([k, v]: [string, any]) => k !== 'unit' && k !== 'fonteSize';
+    const filter = ([k]: [string, any]) => k !== 'unit' && k !== 'fonteSize';
 
     const translatePx2WithUint = (n: number) => {
         switch(unit) {

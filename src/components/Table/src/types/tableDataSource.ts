@@ -1,5 +1,5 @@
 import { BasicTableProps } from "../props";
-import { ExpandableConfig, GetRowKey } from "antd/es/table/interface";
+import { GetRowKey } from "antd/es/table/interface";
 
 export type UseDataSourceProps<T extends Recordable = any> = {
     props: BasicTableProps<T>,

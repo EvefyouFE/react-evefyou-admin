@@ -1,10 +1,9 @@
 import { BasicFormProps } from "@/components/Form";
 import { HasPermissionOption } from "@/hooks";
 import { FilterFn, SortFn } from "@/types/component";
-import { TablePaginationConfig } from "antd";
 import { ColumnType, TableProps } from "antd/es/table";
-import { ColumnsType, GetRowKey, TableRowSelection } from "antd/es/table/interface";
-import React, { RefObject } from "react";
+import { ColumnsType, TableRowSelection } from "antd/es/table/interface";
+import React from "react";
 import { CellFormat, ColumnChangeParam, TableActionItem, TableChangeParams, TableSetting } from "./types";
 
 export interface TableActionProps {
@@ -15,7 +14,7 @@ export interface TableActionProps {
     renderDropdownHeader?: () => React.ReactNode;
 }
 
-export interface TableTitleProps<T extends Recordable = any> {
+export interface TableTitleProps {
     title?: React.ReactNode|((option: {selectRows: Recordable[]}) => React.ReactNode);
     getSelectRows?: () => Recordable[];
     helpMessage?: string|string[];
@@ -25,7 +24,7 @@ export interface TableSettingProps {
     items?: React.ReactNode[];
 }
 
-export interface TableHeaderProps<T extends Recordable = any> {
+export interface TableHeaderProps {
     renderTableTitle?: React.ReactNode;
     renderTableSetting?: React.ReactNode;
     renderHeaderTop?: React.ReactNode;
@@ -67,8 +66,8 @@ export interface BasicTableProps<T extends Recordable = any> extends Omit<TableP
     isTreeTable?: boolean;
     ellipsis?: boolean;
     tableSetting?: TableSetting | false;
-    headerProps?: TableHeaderProps<T>;
-    titleProps?: TableTitleProps<T>;
+    headerProps?: TableHeaderProps;
+    titleProps?: TableTitleProps;
     canResize?: boolean;
     canResizeParent?: boolean;
     searchProps?: BasicFormProps;

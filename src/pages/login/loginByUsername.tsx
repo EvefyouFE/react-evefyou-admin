@@ -14,7 +14,7 @@ export const LoginByUsername: FC = () => {
     const loginMutation = useMutation(mutationLogin());
 
     const onFinished = async (form: LoginByUsernameReq) => {
-        const { data: res, code } = await loginMutation.mutateAsync(form);
+        const { data: res } = await loginMutation.mutateAsync(form);
         if (res) {
             localStorage.setItem('token', res.token);
             localStorage.setItem('username', res.username);

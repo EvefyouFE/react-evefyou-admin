@@ -2,12 +2,12 @@ import { Divider } from "antd"
 import React from "react"
 import { TableHeaderProps } from "../props"
 
-export const TableHeader = React.forwardRef(function <T extends Recordable = any>({
+export const TableHeader = React.forwardRef(function ({
     renderTableTitle,
     renderTableSetting,
     renderHeaderTop,
     renderToolbar
-}: TableHeaderProps<T>, ref: React.ForwardedRef<HTMLDivElement>) {
+}: TableHeaderProps, ref: React.ForwardedRef<HTMLDivElement>) {
 
     return (
         <div ref={ref}>
@@ -28,6 +28,6 @@ export const TableHeader = React.forwardRef(function <T extends Recordable = any
             </div>
         </div>
     )
-}) as <T extends Recordable = any>(props: TableHeaderProps<T> & { ref?: React.ForwardedRef<HTMLDivElement> }) => JSX.Element;
+}) as (props: TableHeaderProps & { ref?: React.ForwardedRef<HTMLDivElement> }) => JSX.Element;
 
 export const TableHeaderMemo = React.memo(TableHeader) as typeof TableHeader

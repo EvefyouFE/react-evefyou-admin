@@ -1,7 +1,5 @@
-import { is } from "ramda";
 import { useMemo } from "react";
 import { BasicFormItemProps, BasicFormProps } from "../props";
-import { getNumByPercent } from "../utils";
 
 export interface UseFormItemsMethods {
 
