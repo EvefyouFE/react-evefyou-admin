@@ -7,7 +7,7 @@ const mockPermissonList = [
   'permission:list:*',
   '404:*',
 ];
-const mockMenuList = [
+const mockMenuTree = [
   {
     path: '/dashboard',
     name: '面板3',
@@ -48,6 +48,63 @@ const mockMenuList = [
     icon: 'ant-icon:SmileOutlined',
   }
 ];
+const mockMenuList = [
+  {
+    path: '/dashboard',
+    name: '面板3',
+    locale: 'menu.dashboard',
+    icon: 'ant-icon:DashboardOutlined',
+    id: 1,
+    pId: 0,
+  },
+  {
+    path: '/project',
+    name: 'Project',
+    icon: 'ant-icon:ProjectOutlined',
+    locale: 'menu.project',
+    id: 2,
+    pId: 0,
+  },
+  {
+    path: '/project/list',
+    name: 'Project List',
+    locale: 'menu.project.list',
+    id: 3,
+    pId: 2,
+  },
+  {
+    path: '/permission',
+    name: 'permission',
+    locale: 'menu.permission',
+    icon: 'ant-icon:KeyOutlined',
+    id: 4,
+    pId: 0,
+  },
+  {
+    path: '/permission/list',
+    name: 'permission list',
+    locale: 'menu.permission.list',
+    icon: 'ant-icon:FileOutlined',
+    id: 5,
+    pId: 4,
+  },
+  {
+    path: '/404',
+    name: '404',
+    locale: 'menu.404',
+    icon: 'ant-icon:SmileOutlined',
+    id: 6,
+    pId: 0,
+  }
+];
+
+const mockPermissionList = [
+  'dashboard',
+  'project',
+  'permission',
+  '404'
+];
+
 
 const mockNoticeList = [
   {
@@ -149,7 +206,7 @@ const mockNoticeList = [
 
 export default [
   {
-    url: '/api/v1/login',
+    url: '/basic-api/login',
     method: 'POST',
     timeout: 1000,
     response: ({ body }) => {
@@ -165,7 +222,19 @@ export default [
     },
   },
   {
-    url: '/api/v1/current/user',
+    url: '/basic-api/logout',
+    method: 'get',
+    timeout: 1000,
+    response: ({ body }) => {
+      return {
+        code: 200,
+        data: null,
+        msg: 'success',
+      };
+    },
+  },
+  {
+    url: '/basic-api/current/user',
     method: 'get',
     // statusCode: 401,
     response: ({ body }) => {
@@ -176,7 +245,7 @@ export default [
           roles: ['admin'],
           permissions: mockPermissonList,
           avatar: '',
-          menuList: mockMenuList,
+          menuList: mockMenuTree,
           device: 'DESKTOP',
           locale: 'zh-cn',
           newUser: true
@@ -186,7 +255,18 @@ export default [
     },
   },
   {
-    url: '/api/v1/current/menu',
+    url: '/basic-api/current/menuTreeList',
+    method: 'get',
+    response: ({ body }) => {
+      return {
+        code: 200,
+        data: mockMenuTree,
+        msg: 'success',
+      };
+    },
+  },
+  {
+    url: '/basic-api/current/menuList',
     method: 'get',
     response: ({ body }) => {
       return {
@@ -197,7 +277,18 @@ export default [
     },
   },
   {
-    url: '/api/v1/current/notice',
+    url: '/basic-api/getPermissionList',
+    method: 'get',
+    response: ({ body }) => {
+      return {
+        code: 200,
+        data: mockPermissionList,
+        msg: 'success',
+      };
+    },
+  },
+  {
+    url: '/basic-api/current/notice',
     method: 'get',
     response: ({ body }) => {
       return {

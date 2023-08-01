@@ -1,28 +1,24 @@
 import { ConfigProvider } from 'antd';
 import moment from 'moment';
 import 'moment/dist/locale/zh-cn';
-import { Suspense, useEffect, useMemo } from 'react';
+import { Suspense, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
-import { RouteObject, RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { RouterProvider } from 'react-router-dom';
 import './App.less';
 import { AppProvider } from './components/Application';
 import { NProgress } from './components/NProgress';
 import { localeConfigs } from './config/locale/localeConfig';
-import { useBaseSetting } from './hooks';
-import { routes } from './routes';
-import { localeSelector } from './stores';
 import { LoadingFallback } from "./components/Fallback";
+import { appAtom, useUserRecoilState } from "./stores";
+import { useRecoilValue } from "recoil";
+import { router } from "./routes";
+
+
 
 const App: React.FC = () => {
-    const {locale: defaultLocale, theme} = useBaseSetting();
-    const [userLocale, ] = useRecoilState(localeSelector);
-
-    const locale = userLocale ?? defaultLocale;
-
-    const router = useMemo(() => {
-        return createBrowserRouter(routes as RouteObject[]);
-    }, [routes]);
+    const { projectConfig: { baseSetting: { theme } } } = useRecoilValue(appAtom)
+    const [, { getDefaultLocale }] = useUserRecoilState();
+    const locale = getDefaultLocale();
 
     useEffect(() => {
         if (locale.toLowerCase() === 'en-us') {
@@ -62,7 +58,7 @@ const App: React.FC = () => {
                 <NProgress>
                     <Suspense fallback={<LoadingFallback />}>
                         <AppProvider>
-                            <RouterProvider router={router}  />
+                            <RouterProvider router={router}/>
                         </AppProvider>
                     </Suspense>
                 </NProgress>

@@ -1,4 +1,4 @@
-import { LoginTypeEnum } from "@/enums/login";
+import { LoginTypeEnum } from "@/pages/constants/login";
 import { QRCode } from "antd";
 import { FC } from "react";
 

@@ -1,11 +1,12 @@
 import { Icon } from '@/components/Icon';
-import { useDesign, useMenuSetting } from '@/hooks';
+import { useDesign } from '@/hooks';
 import { MenuTreeList } from '@models/auth/memu';
 import { ConfigProvider, Menu, MenuProps } from 'antd';
 import { FC, isValidElement, useMemo, useTransition } from 'react';
 import { useNavigate } from 'react-router';
 import './index.less';
 import { MenuItemLabel } from './MenuItemLabel';
+import { useAppRecoilState } from "@/stores";
 
 export type MenuItem = Required<MenuProps>['items'][number];
 
@@ -34,8 +35,8 @@ export const BasicMenu: FC<BasicMenuProps> = (props) => {
 
     const navigate = useNavigate();
     const [,startTrainsition] = useTransition();
-    // const {isMobile} = useBaseSetting()
-    const {collapsed} = useMenuSetting()
+    const [,{getMenuSetting}] = useAppRecoilState()
+    const {collapsed} = getMenuSetting()
     const {prefixCls} = useDesign('basic-menu')
 
     const newMenuList = loopMenuItem(menuList);

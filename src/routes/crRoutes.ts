@@ -1,8 +1,6 @@
 import { DEFAULT_MENU_SETTING } from '@/config';
-import { CrRouteObject, LazyModuleFn, ModulesObject, PageModule, RouteModulesObject, RoutePathConfig } from '@/types/route';
-import { queryClient } from '@api/query';
 import { assocPath } from 'ramda';
-import { cumbLoaderFn, handleFn, homeLoaderFn } from './props';
+import { crumbLoaderFn, handleFn, homeLoaderFn } from './props';
 import { wrapComponent } from './props/element';
 import { errorBoundary } from './props/errorElemnt';
 
@@ -86,7 +84,7 @@ function mapPathConfigToRoute(cfg: RoutePathConfig, isPageView: boolean = false)
             children,
             loader: (children && children.length === 1 && children[0].path === undefined)
                 ? undefined
-                : cumbLoaderFn({ locale, name, icon, path }, children),
+                : crumbLoaderFn({ locale, name, icon, path }, children),
             handle: (children && children.length === 1 && children[0].path === undefined)
                 ? handleFn({ title: locale })
                 : handleFn(),
@@ -142,7 +140,7 @@ function generateCrRoutes(): CrRouteObject[] {
             // element: wrapElemnt($view as LazyModule, {auth:true}),
             lazy: async () => ({ Component: wrapComponent((await lazyView).default, { auth: true }) }),
             children: viewRoutesWithoutUndefined,
-            loader: homeLoaderFn(queryClient),
+            loader: homeLoaderFn(),
             handle: handleFn({ title: 'menu.home', path: '/' }),
             errorElement: errorBoundary(),
         },

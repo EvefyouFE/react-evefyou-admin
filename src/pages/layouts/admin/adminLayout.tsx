@@ -1,8 +1,8 @@
+import { useAppContext } from "@/components/Application";
 import { TabContainer } from "@/components/Containers";
 import { ErrorBoundaryFallback, LoadingFallback } from "@/components/Fallback/src";
 import { KeepAliveMemo as KeepAlive } from '@/components/KeepAlive/KeepAlive';
-import { useBaseSetting, useMenuSetting } from '@/hooks';
-import { useKeepAliveSetting } from '@/hooks/setting/useKeepAliveSetting';
+import { useAppRecoilState } from "@/stores";
 import { Header } from '@pages/layouts/header';
 import { SiderNav } from '@pages/layouts/sider';
 import { viewsPaths } from '@routes/crRoutes';
@@ -13,8 +13,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { useOutlet } from 'react-router-dom';
 
 export const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
-    const { isMobile } = useBaseSetting()
-    const { setMenuSetting } = useMenuSetting()
+    const { isMobile } = useAppContext()
+    const [,{setMenuSetting}] = useAppRecoilState()
     const onContentClick = () => setMenuSetting({ collapsed: true })
     return (
         <Layout hasSider >
@@ -34,7 +34,8 @@ export const AdminLayout: FC<PropsWithChildren> = ({ children }) => {
 
 export const AdminLayoutPage = () => {
     const Outlet = useOutlet()
-    const { includes, includeAll, ...rest } = useKeepAliveSetting()
+    const [,{getKeepAliveSetting}] = useAppRecoilState()
+    const { includes, includeAll, ...rest } = getKeepAliveSetting()
     return (
         <AdminLayout>
             <TabContainer >

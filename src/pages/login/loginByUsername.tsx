@@ -3,22 +3,22 @@ import { Button, Form, Input } from 'antd';
 import { FC } from 'react';
 import { LoginByUsernameReq } from '@models/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
-import { mutationLogin } from '@api/query';
 import { FormattedMessage } from 'react-intl';
+import { useUserRecoilState } from "@/stores";
+import { mutationLogin } from "@/api";
 
 export const LoginByUsername: FC = () => {
     const { formatById } = useLocale();
+    const [,{login}] = useUserRecoilState()
     const navigate = useNavigate();
     const location = useLocation();
-    const loginMutation = useMutation(mutationLogin());
+    const loginMutation = mutationLogin.useMutation();
 
     const onFinished = async (form: LoginByUsernameReq) => {
-        const { data: res } = await loginMutation.mutateAsync(form);
-        if (res) {
-            localStorage.setItem('token', res.token);
-            localStorage.setItem('username', res.username);
-            navigate(location.state?.from || "/");
+        const userInfo = await login(form);
+        if (userInfo) {
+            console.log('userinfo...',userInfo, location.state?.from)
+            navigate("/");
         }
     };
 

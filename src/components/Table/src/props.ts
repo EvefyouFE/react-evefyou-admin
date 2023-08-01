@@ -1,5 +1,5 @@
 import { BasicFormProps } from "@/components/Form";
-import { HasPermissionOption } from "@/hooks";
+import { PermissionOptions } from "@/hooks";
 import { FilterFn, SortFn } from "@/types/component";
 import { ColumnType, TableProps } from "antd/es/table";
 import { ColumnsType, TableRowSelection } from "antd/es/table/interface";
@@ -40,7 +40,7 @@ export type TableColumnProps<T = any> = ColumnsType<T>[number] & {
     dataIndex?: string | number | readonly (string | number)[];
     //业务控制，比如权限
     show?: boolean | ((column: TableColumnProps<T>) => boolean);
-    auth?: HasPermissionOption;
+    auth?: PermissionOptions;
     format?: CellFormat;
     edit?: boolean;
     editRow?: boolean;

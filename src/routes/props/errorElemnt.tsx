@@ -4,7 +4,7 @@ import { useRouteError } from "react-router";
 
 export const RouteErrorBoundary: FC = () => {
     let error = useRouteError();
-    console.error(error);
+    console.error('error',error);
     return (
         <BasicResult code={500} />
     );

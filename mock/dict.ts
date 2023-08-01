@@ -25,7 +25,7 @@ const dictCodeList = [
 
 export default [
   {
-    url: '/api/v1/getDictsByCode',
+    url: '/basic-api/getDictsByCode',
     method: 'get',
     response: ({ body }) => {
       return {

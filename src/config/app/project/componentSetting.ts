@@ -1,4 +1,3 @@
-import { ComponentSetting } from "@/types/config";
 import { SorterResult } from "antd/es/table/interface";
 
 export const DEFAULT_COMPONENT_SETTING: ComponentSetting = {

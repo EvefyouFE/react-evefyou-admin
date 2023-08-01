@@ -1,4 +1,3 @@
-import { ProjectConfig } from "@/types/config";
 import { Role } from "./auth";
 import { Device } from "./info";
 import { MenuTreeList } from "./memu";
@@ -6,22 +5,17 @@ import { LocaleTypeEnum } from "@/config";
 
 export type Locale = `${LocaleTypeEnum}`;
 
-export interface CurrentUserRes {
-  username: string;
-  role: Role[];
-  permissions: string[]
+export interface CurrentUserRes extends UserInfo {
+  roleList: Role[];
+  permissionList: string[]
 }
 
 
-export interface User {
+export interface UserInfo {
   username: string;
 
   /** menu list for init tagsView */
   menuList: MenuTreeList;
-
-  permissions: string[];
-
-  roles: Role[];
 
   /** user's device */
   device: Device;
@@ -34,4 +28,6 @@ export interface User {
 
   settings?: ProjectConfig;
   avatar: string;
+  homePath?: string;
 }
+

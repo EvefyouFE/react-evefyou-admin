@@ -20,7 +20,7 @@ export const TableAction: FC<TableActionProps> = ({
 
     // 
 
-    const [{ hasPermission }] = usePermission();
+    const { hasPermission } = usePermission();
 
     const getTooltip = (data: string | TooltipProps): TooltipProps => {
         return {

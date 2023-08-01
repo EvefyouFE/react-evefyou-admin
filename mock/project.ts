@@ -247,7 +247,7 @@ const projectList = [
 
 export default [
   {
-    url: '/api/v1/getProjectList',
+    url: '/basic-api/getProjectList',
     method: 'get',
     response: ({ body }) => {
       return {

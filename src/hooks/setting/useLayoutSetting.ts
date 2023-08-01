@@ -1,8 +1,6 @@
-import { layoutSettingSelector } from "@/stores";
-import { LayoutSetting } from "@/types/config";
+import { useAppRecoilState } from "@/stores";
 import { divide, multiply } from "ramda";
 import { useMemo } from "react";
-import { useRecoilState } from "recoil";
 
 type LayoutSettingKeyWithUnit = `${keyof Omit<LayoutSetting, 'unit'>}WithUnit`
 type LayoutSettingWithUnit = Record<LayoutSettingKeyWithUnit, string>;
@@ -12,7 +10,8 @@ type CalcLayoutSettingKey = `calc${(Capitalize<keyof Omit<LayoutSetting, 'unit'>
 type CalcLayoutSetting = Record<CalcLayoutSettingKey, (cb?: (n: number) => number) => string>
 
 export function useLayoutSetting() {
-    const [layoutSetting, setLayoutSetting] = useRecoilState(layoutSettingSelector);
+    const [, {getLayoutSetting, setLayoutSetting}] = useAppRecoilState();
+    const layoutSetting = getLayoutSetting()
     const setMobileLayout = () => {
         setLayoutSetting({
             unit: 'rem',

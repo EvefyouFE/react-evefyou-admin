@@ -1,7 +1,5 @@
 import { Icon } from "@/components/Icon";
-import { useActiveItems, useLayoutSetting, useTabs, useDesign } from "@/hooks";
-import { useTabContainerSetting } from "@/hooks/setting/useTabContainerSetting";
-import { TabsMenuItem } from "@/types/config";
+import { useLayoutSetting, useTabs, useDesign, useActiveItemsState } from "@/hooks";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Tabs, TabsProps } from "antd";
@@ -15,6 +13,7 @@ import { TabItem } from "./type";
 import { CommonContainer, CommonContainerInstance } from "../../CommonContainer";
 import { useFullscreen, useUpdate } from "ahooks";
 import { genUUID } from "@/utils";
+import { useAppRecoilState } from "@/stores";
 
 export function translate2MenuItems(tabsMenuList: TabsMenuItem[]) {
     return tabsMenuList?.map((m, index) => ({
@@ -35,20 +34,23 @@ const CommonChildren = React.forwardRef(({ children }: {
 })
 
 export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
-    const [activeKey, items, { 
-        setItems, 
-        addItemAndActive, 
-        changeActiveKey, 
-        updateItemAndActive, 
-        removeItemAndActive,
-        removeAll,
+    const [{ activeKeyState, itemsState }, {
+        items: {
+            set: setItems,
+            updateByKey,
+        },
+        addAndActive: addItemAndActive,
+        active: changeActiveKey,
+        removeByKey: removeItemAndActive,
+        clear: removeAll,
         removeLeft,
         removeOther,
         removeRight,
-    }] = useActiveItems<TabItem>();
+    }] = useActiveItemsState<TabItem>();
     const newTabIndex = useRef(0);
     const location = useLocation();
-    const { indexRedirectPath, tabsMenuList } = useTabContainerSetting()
+    const [,{getTabContainerSetting}] = useAppRecoilState()
+    const { indexRedirectPath, tabsMenuList } = getTabContainerSetting()
     const [className, setClassName] = useState('')
     const { getTabItem } = useTabs();
     const { pageTabsNavHeightWithUnit } = useLayoutSetting()
@@ -57,7 +59,6 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
     const [, { toggleFullscreen }] = useFullscreen(getContainerElement)
     const navigate = useNavigate()
     const update = useUpdate();
-
     function onEdit(
         targetKey: React.MouseEvent | React.KeyboardEvent | string,
         action: 'add' | 'remove',
@@ -71,18 +72,18 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
     }
 
     useEffect(() => {
-        if (items.length === 1) {
-            items[0].closable = false;
-        } else if (items.length > 1) {
-            items[0].closable = true;
+        if (itemsState.length === 1) {
+            itemsState[0].closable = false;
+        } else if (itemsState.length > 1) {
+            itemsState[0].closable = true;
         }
-        activeKey && !activeKey.startsWith('newTab') && navigate(activeKey as string)
-    }, [activeKey])
+        activeKeyState && !activeKeyState.startsWith('newTab') && navigate(activeKeyState as string)
+    }, [activeKeyState])
 
     useEffect(() => {
         const newItem = getCurrentItem()
         addItemAndActive(newItem)
-    }, [location])
+    }, [location.pathname])
 
     const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => {
         const handleOnDragEnd = useCallback(({ active, over }: DragEndEvent) => {
@@ -99,7 +100,7 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
         }, [setClassName])
         return (
             <DndContextTabBar
-                items={items}
+                items={itemsState}
                 DefaultTabBar={DefaultTabBar}
                 handleOnDragEnd={handleOnDragEnd}
                 handleOnActiveBarTransform={handleOnActiveBarTransform}
@@ -120,31 +121,31 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
         onCloseRightTabs,
     }
     const tabBarExtraContent = (
-        <TabBarExtraContent {...tabBarExtraContentPropsValue}/>
+        <TabBarExtraContent {...tabBarExtraContentPropsValue} />
     )
     function onFullScreen() {
         toggleFullscreen()
     }
     function onRefresh() {
         const currentItem = getCurrentItem(true)
-        updateItemAndActive(currentItem)
+        updateByKey(currentItem)
+        changeActiveKey(currentItem.key)
         update()
     }
     function onCloseAllTabs() {
         removeAll()
     }
     function onCloseCurrentTab() {
-        console.log('.........')
-        removeItemAndActive(activeKey)
+        activeKeyState && removeItemAndActive(activeKeyState)
     }
     function onCloseLeftTabs() {
-        removeLeft(activeKey)
+        activeKeyState && removeLeft(activeKeyState)
     }
     function onCloseOtherTabs() {
-        removeOther(activeKey)
+        activeKeyState && removeOther(activeKeyState)
     }
     function onCloseRightTabs() {
-        removeRight(activeKey)
+        activeKeyState && removeRight(activeKeyState)
     }
     function getContainerElement() {
         return containerRef.current?.getElement()
@@ -153,11 +154,11 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
         const path = location.pathname === '/' ? indexRedirectPath : location.pathname;
         const locale = 'menu'.concat(path.replaceAll('/', '.'))
         const wrapChildren = (
-            <CommonChildren ref={containerRef} key={randomKey? genUUID():undefined}>
+            <CommonChildren ref={containerRef} key={randomKey ? genUUID() : undefined}>
                 {children}
             </CommonChildren>
         )
-        return {...getTabItem(path, locale, '', wrapChildren), forceRender: true}
+        return { ...getTabItem(path, locale, '', wrapChildren), forceRender: true }
     }
     return (
         <Tabs
@@ -167,10 +168,10 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
             className={`${prefixCls} ${className} h-full`}
             size="small"
             onChange={changeActiveKey}
-            activeKey={activeKey as string}
+            activeKey={activeKeyState as string}
             type="editable-card"
             onEdit={onEdit}
-            items={items}
+            items={itemsState}
             renderTabBar={renderTabBar}
             tabBarExtraContent={tabBarExtraContent}
             destroyInactiveTabPane

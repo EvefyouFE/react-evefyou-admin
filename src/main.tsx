@@ -1,4 +1,4 @@
-import axios, { AxiosContext } from '@api/request';
+import { AxiosContext, defHttp } from '@/api';
 import { QueryClientProvider } from '@tanstack/react-query';
 import 'nprogress/nprogress.css';
 import React, { useEffect, useMemo } from 'react';
@@ -12,7 +12,7 @@ import { DEFAULT_APP_STATE, appAtom } from './stores';
 
 const AxiosProvider = ({ children }: React.PropsWithChildren<unknown>) => {
   const axiosValue = useMemo(() => {
-    return axios;
+    return defHttp.getAxios();
   }, []);
 
   return (
@@ -29,7 +29,7 @@ function DebugObserver(): JSX.Element | null {
   useEffect(() => {
     console.debug('The following atoms were modified:');
     for (const node of snapshot.getNodes_UNSTABLE({ isModified: true })) {
-      console.debug(node.key, snapshot.getLoadable(node));
+      console.info(node.key, snapshot.getLoadable(node));
     }
   }, [snapshot]);
 
@@ -40,10 +40,10 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <AxiosProvider>
       <RecoilRoot initializeState={initializeState} >
-        <DebugObserver />
-        <QueryClientProvider client={queryClient} contextSharing>
+          <DebugObserver />
+          <QueryClientProvider client={queryClient}>
             <App />
-        </QueryClientProvider>
+          </QueryClientProvider>
       </RecoilRoot>
     </AxiosProvider>
   </React.StrictMode>,

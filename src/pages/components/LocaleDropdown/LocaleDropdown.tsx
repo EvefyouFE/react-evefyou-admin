@@ -1,11 +1,10 @@
 import { localeConfigs } from "@/config";
-import { localeSelector } from "@/stores";
+import { useUserRecoilState } from "@/stores";
 import { PropsWithCls } from "@/types/base";
 import { TranslationOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { FC } from "react";
 import { FormattedMessage } from "react-intl";
-import { useRecoilState } from "recoil";
 
 interface LocaleDropdownProps extends PropsWithCls {
 
@@ -14,7 +13,7 @@ interface LocaleDropdownProps extends PropsWithCls {
 export const LocaleDropdown: FC<LocaleDropdownProps> = ({
     className
 }) => {
-    const [,setLocale] = useRecoilState(localeSelector)
+    const [,{setLocale}] = useUserRecoilState()
 
     const items = localeConfigs.map((v) => ({
         key: v.key,
