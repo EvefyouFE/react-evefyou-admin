@@ -1,5 +1,3 @@
-import { LayoutSetting } from "@/types/config";
-
 export const DEFAULT_LAYOUT_SETTING: LayoutSetting = {
     fontSize: 14,
     unit: 'rem',

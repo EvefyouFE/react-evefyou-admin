@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2021", "DOM", "DOM.Iterable"],
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
 
@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
     /* Linting */
     "types": [
       "vite/client",
@@ -96,6 +95,9 @@
       ]
     },
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "types/*.d.ts",
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

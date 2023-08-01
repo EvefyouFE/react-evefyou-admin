@@ -1,46 +1,58 @@
 import { ComponentPermissionEnum, ControlPermissionEnum } from "@/enums";
-import { userAtom } from "@/stores";
-import { isSubArray } from "@/utils/array";
+import { transforRoutePathToPermissionCode } from "@/routes";
+import { useAuthRecoilState } from "@/stores/auth";
+import { isSubList } from "@/utils/list";
 import { Role } from "@models/auth";
+import { includes } from "ramda";
 import { useLocation } from "react-router";
-import { useRecoilValue } from "recoil";
 
-type PermissionOption = {control: ControlPermissionEnum, component?: ComponentPermissionEnum}
-export type HasPermissionOption = {roles: Role[], permissionOptions: PermissionOption[]}
-
-interface ReturnMethods {
-    hasPermission: (option?: HasPermissionOption) => boolean;
+export interface PermissionOptions {
+    control?: ControlPermissionEnum;
+    component?: ComponentPermissionEnum;
+    roles?: Role[];
 }
 
-type usePermissionReturnType = [ReturnMethods]
+const WHITE_LIST = ['/']
 
-export function usePermission(): usePermissionReturnType {
-    const { permissions: userPermissions, roles: userRoles } = useRecoilValue(userAtom)
+export function usePermission() {
+    const [{ permissionList, roleList, routes }] = useAuthRecoilState()
+    const {pathname} = useLocation()
 
-    function getPermission({component, control}: PermissionOption) {
-        const componentStr = component?`${component}:` : ''
-        return `${componentStr}${control}`; 
+    function authenticateRouting() {
+        if(includes(pathname, WHITE_LIST)) return true
+        return includes(pathname, routes)
     }
-    function getPermissions(options: PermissionOption[]) {
-        return options.map((op) => getPermission(op)); 
+    function authenticateRole(roles?: Role[]) {
+        return !roles || isSubList(roles, roleList)
     }
-    function getFullPermissions(options?: PermissionOption[]) {
-        const { pathname } = useLocation()
-        const permissions = options && getPermissions(options)
-        if(permissions?.length) {
-            if (pathname) {
-                const prefix = pathname.replaceAll('/', ':').slice(1)
-                return permissions?.map((p) => prefix ? prefix.concat(':').concat(p) : p)
-            }
+    function authenticatePermission(permissions: string[]|number[]) {
+        return !permissions || isSubList(permissions, permissionList)
+    }
+    function buildCompPermission(control?: ControlPermissionEnum, component?: ComponentPermissionEnum) {
+        return component ? control ? `${component}:${control}` : `${component}` : control ? `${control}` : ''
+    }
+    function buildPermission(control?: ControlPermissionEnum, component?: ComponentPermissionEnum) {
+        const compPermission = buildCompPermission(control, component)
+        if(!compPermission) {
+            return ''
         }
-        return permissions
+        const viewPermission = transforRoutePathToPermissionCode(pathname)
+        return viewPermission.concat(':').concat(compPermission)
     }
-    function hasPermission(options?: HasPermissionOption) {
-        const {roles, permissionOptions} = options || {}
-        const permisssions = getFullPermissions(permissionOptions)
-        return isSubArray(roles, userRoles) && isSubArray(permisssions, userPermissions)
+
+    function hasPermission({control, roles, component}: PermissionOptions = {}) {
+        if(!control && !component) {
+            return true
+        }
+        return authenticateRole(roles) 
+        && authenticatePermission([buildPermission(control, component)])
     }
-    return [{
+    function hasNumberPermission(permissions: number[]){
+        return authenticatePermission(permissions)
+    }
+    return {
+        authenticateRouting,
         hasPermission,
-    }]
+        hasNumberPermission
+    }
 }

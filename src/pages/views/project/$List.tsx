@@ -1,9 +1,7 @@
 import { ModalInstance } from "@/components/Modal";
 import { BasicTableProps } from "@/components/Table";
 import { useCompInstance, usePage } from "@/hooks";
-import { queryGetProjectList } from "@api/query";
 import { Project, ProjectReq } from "@models/index";
-import { useQuery } from "@tanstack/react-query";
 import { FC, useCallback, useMemo, useState } from "react";
 import { ProjectModal } from "./ProjectModal";
 import { columns, searchItems } from "./list.data";
@@ -11,6 +9,7 @@ import { formatById } from "@/locales";
 import { renderActionFn, renderToolbar } from "./render";
 import { TableContainerInstance } from "@/components/Containers/TableContainer/src/typing";
 import { TableContainer, TableContainerProps } from "@/components/Containers";
+import { queryGetProjectList } from "@/api";
 
 const headerProps: BasicTableProps['headerProps'] = {
   renderToolbar: renderToolbar(),
@@ -19,14 +18,14 @@ const headerProps: BasicTableProps['headerProps'] = {
 export const ProjectList: FC = () => {
   const { pageParams } = usePage({ pageNo: 1, pageSize: 10 })
   const [projectReq] = useState<ProjectReq>(pageParams)
-  const { data: projectRes } = useQuery(queryGetProjectList(projectReq));
+  const { data: projectRes } = queryGetProjectList.useQueryRes({params: projectReq});
   const [modalRef, modalInstance] = useCompInstance<ModalInstance>()
 
   const tableProps: TableContainerProps<Project> = useMemo(() => ({
     // caption: formatById('view.project.list'),
     title: () => formatById('view.project.list'),
     columns,
-    dataSource: projectRes?.data.resultData,
+    dataSource: projectRes?.resultData,
     searchConfig: {
       items: searchItems,
     },

@@ -22,9 +22,13 @@ export interface MenuItem {
      * 国际化配置
      */
     locale?: string;
+    
 }
 
-export type MenuChild = Omit<MenuItem, 'children'>;
+export type MenuChild = Omit<MenuItem, 'children'> & {
+    id: number;
+    pId: number;
+};
 
 export type MenuTreeList = MenuItem[];
 export type MenuList = MenuChild[];

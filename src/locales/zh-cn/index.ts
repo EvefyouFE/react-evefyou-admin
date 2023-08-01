@@ -8,6 +8,8 @@ import { zhCN_locale } from "./locale";
 import { zhCN_container } from "./container";
 import { zhCN_view } from "./view";
 import { zhCN_components } from "./components";
+import { zhCN_common } from "./common";
+import { zhCN_sys } from "./sys/indext";
 
 export default {
   ...zhCN_login,
@@ -20,4 +22,6 @@ export default {
   ...zhCN_container,
   ...zhCN_view,
   ...zhCN_components,
+  ...zhCN_common,
+  ...zhCN_sys
 };

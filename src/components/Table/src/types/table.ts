@@ -4,7 +4,7 @@ import { UseColumnsMethods } from "./tableColumns";
 import { UseRowSelectionMethods } from "./tableRowSelection";
 import { UsePaginationMethods } from "./tablePagination";
 import React from "react";
-import { BaseInstance, HasPermissionOption, UsePropsMethods } from "@/hooks";
+import { BaseInstance, PermissionOptions, UsePropsMethods } from "@/hooks";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { PopconfirmProps, TooltipProps } from "antd";
 import { PopConfirmButtonProps } from "@/components/Button/src";
@@ -77,7 +77,7 @@ export interface TableActionItem extends PopConfirmButtonProps {
   disabled?: boolean;
   divider?: boolean;
   // 权限编码控制是否显示
-  auth?: HasPermissionOption;
+  auth?: PermissionOptions;
   // 业务控制是否显示
   show?: boolean;
   tooltip?: string | TooltipProps;

@@ -1,7 +1,6 @@
 import { DEFAULT_PROJECT_CONFIG, DEFAULT_ROUTER_CONFIG } from "@/config";
-import { BaseSetting, KeepAliveSetting, LayoutSetting, MenuSetting, TabContainerSetting, ProjectConfig, RouterConfig } from "@/types/config";
-import { deepMerge } from "@/utils";
-import { atom, selector } from "recoil";
+import { defineRecoilSelectorState } from "@/utils";
+import { atom } from "recoil";
 
 interface AppState {
     // project config
@@ -16,72 +15,53 @@ export const DEFAULT_APP_STATE: AppState = {
 
 export const appAtom = atom<AppState>({
     key: 'appAtom',
-    default: {} as AppState
+    default: DEFAULT_APP_STATE
 });
 
-export const baseSettingSelector = selector<Partial<BaseSetting>>({
-    key: 'baseSettingSelector',
-    get: ({ get }) => get(appAtom).projectConfig.baseSetting,
-    set: ({ get, set }, newValue) => {
-        const appState = get(appAtom);
-        set(appAtom, {
-            ...appState, projectConfig: {
-                ...appState.projectConfig,
-                baseSetting: deepMerge(appState.projectConfig.baseSetting, newValue)
-            }
-        })
+export const useAppRecoilState = defineRecoilSelectorState({
+    name: 'appState',
+    state: DEFAULT_APP_STATE as AppState,
+    getters: {
+        getBaseSetting(state) {
+            return state.projectConfig.baseSetting
+        },
+        getLayoutSetting(state) {
+            return state.projectConfig.layoutSetting
+        },
+        getMenuSetting(state) {
+            return state.projectConfig.menuSetting
+        },
+        getKeepAliveSetting(state) {
+            return state.routerConfig.keepAliveSetting
+        },
+        getTabContainerSetting(state) {
+            return state.projectConfig.tabContainerSetting
+        },
+    },
+    setters: {
+        setBaseSetting(baseSetting: BaseSetting) {
+            this.deepMerge(['projectConfig', 'baseSetting'] as const, baseSetting)
+        },
+        setLayoutSetting(layoutSetting: Partial<LayoutSetting>) {
+            this.deepMerge(['projectConfig', 'layoutSetting'] as const, layoutSetting)
+        },
+        setMenuSetting(menuSetting: Partial<MenuSetting>) {
+            this.deepMerge(['projectConfig', 'menuSetting'] as const, menuSetting)
+        },
+        setKeepAliveSetting(keepAliveSetting: KeepAliveSetting) {
+            this.deepMerge(['routerConfig', 'keepAliveSetting'] as const, keepAliveSetting)
+        },
+        setTabContainerSetting(tabContainerSetting: TabContainerSetting) {
+            this.deepMerge(['projectConfig', 'tabContainerSetting'] as const, tabContainerSetting)
+        },
+    },
+    actions: {
+        toggleCollapsed() {
+            const menuSetting = this.getMenuSetting()
+            this.setMenuSetting({
+                collapsed: !menuSetting.collapsed, 
+                showMenu: !menuSetting.showCollapsed ? menuSetting.collapsed : true 
+            })
+        }
     }
-});
-
-export const layoutSettingSelector = selector<Partial<LayoutSetting>>({
-    key: 'layoutSettingSelector',
-    get: ({ get }) => get(appAtom).projectConfig.layoutSetting,
-    set: ({ get, set }, newValue) => {
-        const appState = get(appAtom);
-        set(appAtom, {
-            ...appState, projectConfig: {
-                ...appState.projectConfig,
-                layoutSetting: deepMerge(appState.projectConfig.layoutSetting, newValue)
-            }
-        })
-    }
-});
-
-export const menuSettingSelector = selector<Partial<MenuSetting>>({
-    key: 'menuSettingSelector',
-    get: ({ get }) => get(appAtom).projectConfig.menuSetting,
-    set: ({ get, set }, newValue) => {
-        const appState = get(appAtom);
-        set(appAtom, {
-            ...appState, projectConfig: {
-                ...appState.projectConfig,
-                menuSetting: deepMerge(appState.projectConfig.menuSetting, newValue)
-            }
-        })
-    }
-});
-
-export const keepAliveSettingSelector = selector<Partial<KeepAliveSetting>>({
-    key: 'keepAliveSettingSelector',
-    get: ({ get }) => get(appAtom).routerConfig.keepAliveSetting,
-    set: ({ get, set }, newValue) => {
-        const appState = get(appAtom);
-        set(appAtom, { ...appState, routerConfig: { keepAliveSetting: deepMerge(appState.routerConfig.keepAliveSetting, newValue) } })
-    }
-});
-
-export const tabContainerSettingSelector = selector<Partial<TabContainerSetting>>({
-    key: 'tabContainerSettingSelector',
-    get: ({ get }) => get(appAtom).projectConfig.tabContainerSetting,
-    set: ({ get, set }, newValue) => {
-        const appState = get(appAtom);
-        set(appAtom, {
-            ...appState, projectConfig: {
-                ...appState.projectConfig,
-                tabContainerSetting: deepMerge(appState.projectConfig.tabContainerSetting, newValue)
-            }
-        })
-    }
-});
-
-export default appAtom;
+}, appAtom)

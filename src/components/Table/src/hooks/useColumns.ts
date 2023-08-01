@@ -1,13 +1,13 @@
 import { usePermission, useUnmountEffect } from "@/hooks";
 import { formatById } from "@/locales";
 import { genUUID } from "@/utils";
-import moment from "moment";
 import { clone, is } from "ramda";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_ALIGN, ROW_KEYS } from "../constants";
 import { BasicTableProps, TableColumnProps, TableColumnPropsWithKey } from "../props";
 import { CellFormat, GetColumnsParams, UseColumnsReturnType } from "../types";
 import { ColumnType } from "antd/es/table";
+import { formatToDate } from "@/utils/dateUtil";
 
 
 function handleItem<T extends Recordable>(item: TableColumnProps<T>, ellipsis?: boolean) {
@@ -90,7 +90,7 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
     const [columnsState, setColumnsState] = useState<TableColumnProps<T>[]>(columns ?? [])
     let cacheColumns = columns ?? []
     const isInited = useRef<boolean | null>(false);
-    const [{ hasPermission }] = usePermission();
+    const { hasPermission } = usePermission();
 
     useUnmountEffect(() => {
         isInited.current = null
@@ -254,7 +254,7 @@ export function formatCell(format: CellFormat, text: string, record: Recordable,
             if (!dateFormat) {
                 return text;
             }
-            return moment(text).format(dateFormat);
+            return formatToDate(text, dateFormat)
         }
     } catch (error) {
         console.error('单元格日期格式化失败：', format, text)

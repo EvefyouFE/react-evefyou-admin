@@ -1,9 +1,8 @@
-import { CrRouteObject, RouteMenuItem } from "@/types/route";
-import { queryGetCurrentMenus, queryGetCurrentUser, queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@api/query";
-import { User } from "@models/auth";
+import { queryGetCurrentMenuTreeList, queryGetCurrentUser, queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
+import { CrRouteObject, RouteMenuItem } from "types/route";
+import { UserInfo } from "@models/auth";
 import { MenuTreeList } from "@models/auth/memu";
 import { Res } from "@models/base";
-import { QueryClient } from "@tanstack/react-query";
 
 export interface CrumbData {
     title: string;
@@ -11,10 +10,10 @@ export interface CrumbData {
 }
 
 export interface HomeLoaderData {
-    userInfoRes?: Res<User>;
+    userInfoRes?: Res<UserInfo>;
 }
 
-export function cumbLoaderFn(
+export function crumbLoaderFn(
     routeMenuItem?: RouteMenuItem,
     routes?: CrRouteObject[]
 ): () => CrumbData {
@@ -36,20 +35,23 @@ export function cumbLoaderFn(
  * 
  * @returns 
  */
-export function homeLoaderFn(queryClient: QueryClient): () => Promise<HomeLoaderData>  {
+export function homeLoaderFn(): () => Promise<HomeLoaderData> {
     return async () => {
-        const queryCurrentUser = queryGetCurrentUser();
-        const userInfoRes = queryClient.getQueryData<Res<User>>(queryCurrentUser.queryKey)
-            ?? (await queryClient.fetchQuery(queryCurrentUser));
+        const {
+            getQueryData: getQueryDataGetCurrentUser,
+            fetchQuery: fetchQueryGetCurrentUser,
+        } = queryGetCurrentUser
+        const userInfoRes = getQueryDataGetCurrentUser()
+            ?? await fetchQueryGetCurrentUser()
 
-        queryClient.fetchQuery({
-            ...queryGetCurrentMenus(),
-            staleTime: Infinity,
-        });
-        queryClient.fetchQuery(queryGetNoticeList());
-        queryClient.fetchQuery(queryGetMessageList());
-        queryClient.fetchQuery(queryGetTodoList());
-
+        queryGetCurrentMenuTreeList.fetchQuery({
+            options: {
+                staleTime: Infinity
+            }
+        })
+        queryGetNoticeList.fetchQuery()
+        queryGetMessageList.fetchQuery()
+        queryGetTodoList.fetchQuery()
         return {
             userInfoRes
         }

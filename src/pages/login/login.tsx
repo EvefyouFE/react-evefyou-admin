@@ -1,6 +1,6 @@
 import { ReactComponent as QQLogoSvg } from '@/assets/logo/qq_logo.svg';
 import { ReactComponent as WechatLogoSvg } from '@/assets/logo/wechat_logo.svg';
-import { LoginTypeEnum } from '@/enums/login';
+import { LoginTypeEnum } from '@/pages/constants/login';
 import { Space, Tabs, TabsProps } from 'antd';
 import classNames from 'classnames';
 import { FC, useState } from 'react';
@@ -10,6 +10,7 @@ import { LoginByMessage } from './loginByMessage';
 import { LoginByQrCode } from './loginByQrCode';
 import { LoginByUsername } from './loginByUsername';
 import { useDesign } from "@/hooks";
+import { useAppContext } from "@/components/Application";
 
 const loginTypeItems: TabsProps['items'] = [
     {
@@ -22,17 +23,17 @@ const loginTypeItems: TabsProps['items'] = [
     },
 ];
 
-const formHeader = (
-    <h1 className='w-full flex justify-center items-center'>
-        <FormattedMessage id="global.app.name" />
-    </h1>
-)
-
 export const LoginForm: FC = () => {
     const [loginType, setLoginType] = useState<`${LoginTypeEnum}`>(LoginTypeEnum.username);
     const { prefixCls } = useDesign('login-form')
+    const {name} = useAppContext()
 
     let children;
+    const formHeader = (
+        <h1 className='w-full flex justify-center items-center'>
+            {name} Admin
+        </h1>
+    )
     switch (loginType) {
         case LoginTypeEnum.username:
             children = (

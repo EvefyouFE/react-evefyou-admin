@@ -1,18 +1,20 @@
 import { AppLogo } from '@/components/Application';
 import { ScrollContainer } from "@/components/Containers";
-import { useDesign, useLayoutSetting, useMenuSetting } from '@/hooks';
-import { useMenuList } from '@/hooks/user';
+import { useDesign, useLayoutSetting } from '@/hooks';
 import { ConfigProvider } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import './index.less'
 import { BasicMenu } from "@/components/Menu";
+import { useAppRecoilState } from "@/stores";
+import { useAuthRecoilState } from "@/stores/auth";
 
 export interface SiderNavProps {
 }
 
 export const SiderNav: React.FC = () => {
-    const { collapsed, showMenu } = useMenuSetting();
-    const { menuList } = useMenuList();
+    const [,{getMenuSetting}] = useAppRecoilState()
+    const { collapsed, showMenu } = getMenuSetting();
+    const [{ menuTreeList }] = useAuthRecoilState();
     const { siderWidthWithUnit } = useLayoutSetting()
     const {prefixCls} = useDesign('sider-nav')
 
@@ -36,9 +38,9 @@ export const SiderNav: React.FC = () => {
             >
                 <ScrollContainer className={`${prefixCls}-content`} >
                     {
-                        menuList && (
+                        menuTreeList && (
                             <BasicMenu
-                                menuList={menuList}
+                                menuList={menuTreeList}
                             />
                         )
                     }

@@ -1,11 +1,9 @@
-import { DeviceTypeEnum, User } from "@models/auth";
+import { DeviceTypeEnum, UserInfo } from "@models/auth";
 import { DEFAULT_PROJECT_CONFIG } from "../app/project";
 
-export const DEFAULT_USER_INFO: User = {
+export const DEFAULT_USER_INFO: UserInfo = {
     username: 'evef',
     avatar: '',
-    permissions: [],
-    roles: ['admin'],
     menuList: [],
     device: DeviceTypeEnum.DESKTOP,
     locale: 'zh-cn',

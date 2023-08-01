@@ -1,4 +1,3 @@
-import { GenerateTheme } from '@/types/design';
 import { generate } from '@ant-design/colors';
 import { theme } from 'antd';
 import { divide } from 'ramda';

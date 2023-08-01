@@ -1,8 +1,7 @@
+import { queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
 import { Icon } from "@/components/Icon";
 import { useList } from "@/hooks";
 import { PropsWithCls } from "@/types/base";
-import { queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@api/query";
-import { useQuery } from "@tanstack/react-query";
 import { List } from "antd";
 import classNames from "classnames";
 import { FC, memo, useMemo } from "react";
@@ -32,18 +31,19 @@ export const ReminderList: FC<ReminderListProps> = ({
     const {current,onChange} = useList()
     const pageSize = 3;
     const params = {current, pageSize}
-    const {data: noticeListRes} = useQuery(queryGetNoticeList(params))
-    const {data: messageListRes} = useQuery(queryGetMessageList(params))
-    const {data: todoListRes} = useQuery(queryGetTodoList(params))
+    
+    const {data: noticeListRes} = queryGetNoticeList.useQueryRes({params})
+    const {data: messageListRes} = queryGetMessageList.useQueryRes({params})
+    const {data: todoListRes} = queryGetTodoList.useQueryRes({params})
 
     const data = useMemo(() => {
         switch(type) {
             case ReminderListTypeEnum.notice: 
-            return noticeListRes?.data.resultData;
+            return noticeListRes?.resultData;
             case ReminderListTypeEnum.message: 
-            return messageListRes?.data.resultData;
+            return messageListRes?.resultData;
             case ReminderListTypeEnum.todo: 
-            return todoListRes?.data.resultData;
+            return todoListRes?.resultData;
         }
     }, [type])
 

@@ -1,5 +1,3 @@
-import { TabContainerSetting } from "@/types/config";
-
 export const DEFAULT_TAB_CONTAINER_SETTING: TabContainerSetting = {
     indexRedirectPath: '/dashboard',
     tabsMenuList: [

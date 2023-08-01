@@ -7,6 +7,8 @@ import { enUS_page } from "./page";
 import { enUS_locale } from "./locale";
 import { enUS_view } from "./view";
 import { enUS_components } from "./components";
+import { enUS_common } from "./common";
+import { enUS_sys } from "./sys/indext";
 
 
 export default {
@@ -19,4 +21,6 @@ export default {
   ...enUS_locale,
   ...enUS_view,
   ...enUS_components,
+  ...enUS_common,
+  ...enUS_sys,
 };

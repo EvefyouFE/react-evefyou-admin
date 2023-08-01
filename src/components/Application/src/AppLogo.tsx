@@ -1,6 +1,6 @@
 import { ReactComponent as LogoSvg } from '@/assets/logo/nika_logo.svg';
-import { formatById } from "@/locales";
 import classNames from "classnames";
+import { useGlobSetting } from "@/hooks/setting/useGlobalSetting";
 
 interface AppLogoProps {
   showTitle?: boolean;
@@ -9,6 +9,7 @@ interface AppLogoProps {
 
 export const AppLogo: React.FC<AppLogoProps> = (props) => {
   const { showTitle = true, className } = props;
+  const {title} = useGlobSetting()
   const rootClsName = classNames('flex justify-center items-center cursor-pointer text-base transition-all duration-500 ', className)
   return (
     <div className={rootClsName}>
@@ -18,7 +19,7 @@ export const AppLogo: React.FC<AppLogoProps> = (props) => {
       {
         showTitle ? (
           <span className="flex-1 font-bold transition-all duration-500 leading-normal text-white">
-            {formatById('global.app.name')}
+            {title}
           </span>
         ) : null
       }

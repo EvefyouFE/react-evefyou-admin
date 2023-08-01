@@ -1,4 +1,3 @@
-import { MenuSetting } from "@/types/config";
 
 export const DEFAULT_MENU_SETTING: MenuSetting = {
     showCollapsed: true,

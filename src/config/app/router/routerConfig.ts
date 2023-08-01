@@ -1,4 +1,3 @@
-import { RouterConfig } from "@/types/config";
 import { DEFAULT_KEEP_ALIVE_SETTING } from "./keepAliveSetting";
 
 export const DEFAULT_ROUTER_CONFIG: RouterConfig = {

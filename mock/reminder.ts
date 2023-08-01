@@ -113,7 +113,7 @@ const mockMessageList = [
 
 export default [
   {
-    url: '/api/v1/getNoticeList',
+    url: '/basic-api/getNoticeList',
     method: 'get',
     response: ({ body }) => {
       return {
@@ -129,7 +129,7 @@ export default [
     },
   },
   {
-    url: '/api/v1/getMessageList',
+    url: '/basic-api/getMessageList',
     method: 'get',
     response: ({ body }) => {
       return {
@@ -145,7 +145,7 @@ export default [
     },
   },
   {
-    url: '/api/v1/getTodoList',
+    url: '/basic-api/getTodoList',
     method: 'get',
     response: ({ body }) => {
       return {
