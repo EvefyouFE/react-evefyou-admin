@@ -52,7 +52,7 @@ export interface TableSetting {
   fullScreen?: boolean;
 }
 export interface SearchState {
-  sortInfo: Recordable;
+  sortInfo: Recordable|Recordable[];
   filterInfo: Record<string, string[]>;
 }
 

@@ -1,5 +1,4 @@
 import { MenuItem, MenuTreeList } from "@/models";
-import { CrRouteObject } from "types/route";
 import { clone, pick } from "ramda";
 
 export function transforRoutesToMenuTreeList(

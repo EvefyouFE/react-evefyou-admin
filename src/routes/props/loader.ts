@@ -1,5 +1,4 @@
 import { queryGetCurrentMenuTreeList, queryGetCurrentUser, queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
-import { CrRouteObject, RouteMenuItem } from "types/route";
 import { UserInfo } from "@models/auth";
 import { MenuTreeList } from "@models/auth/memu";
 import { Res } from "@models/base";

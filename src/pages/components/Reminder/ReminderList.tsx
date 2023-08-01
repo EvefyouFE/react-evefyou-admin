@@ -1,7 +1,6 @@
 import { queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
 import { Icon } from "@/components/Icon";
 import { useList } from "@/hooks";
-import { PropsWithCls } from "@/types/base";
 import { List } from "antd";
 import classNames from "classnames";
 import { FC, memo, useMemo } from "react";

@@ -1,4 +1,3 @@
-import { PropsWithCls } from "@/types/base";
 import { ReactComponent as LogoSvg } from '@assets/logo/nika_logo.svg';
 import { Avatar, Dropdown } from "antd";
 import { FC } from "react";

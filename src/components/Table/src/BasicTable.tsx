@@ -27,17 +27,17 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
         props: propsState,
         getRowKey: rowSelectionMethods.getRowKey
     })
-    const [,columnsMethods] = useColumns(propsState)
+    const [, columnsMethods] = useColumns(propsState)
     const [scrollMemo] = useTableScroll(propsState, {
         tableRef,
         getRowSelection: rowSelectionMethods.getRowSelection,
         getViewColumns: columnsMethods.getViewColumns,
     })
-    const [searchState, ] = useState<SearchState>({
+    const [searchState,] = useState<SearchState>({
         sortInfo: {},
         filterInfo: {},
     });
-    
+
     const context: TableContextValue = useMemo(() => ({
         getElement: () => tableRef.current,
         setSize: propsMethods.setSize,
@@ -70,12 +70,12 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
         dataSource: dataSourceState,
     })
 
-    const {prefixCls} = useDesign('basic-table')
+    const { prefixCls } = useDesign('basic-table')
     const tableClsName = classNames(prefixCls, 'bg-white p-4')
     const { tableSetting, caption, title, searchConfig, ...restPropsState } = propsState
     const renderCaption = !title ? renderTableHeader : caption;
     const propsValue: TableProps<T> = {
-        ...omit(['children','searchProps'],restPropsState),
+        ...omit(['children', 'searchProps'], restPropsState),
         scroll: scrollMemo,
         onHeaderRow: handleHeaderRow,
         caption: renderCaption,
@@ -90,7 +90,7 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
     }
 
     function handleHeaderRow(data: readonly ColumnType<any>[], index?: number) {
-        console.debug(data,index)
+        console.debug(data, index)
         return {
             style: {
                 height: props.headerRowHeight
@@ -100,20 +100,26 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
     function handleTableChange(
         pagination: TablePaginationConfig,
         filters: Record<string, FilterValue | null>,
-        sorter: SorterResult<any> | SorterResult<any>[],
+        sorter: SorterResult<T> | SorterResult<T>[],
         {
             currentDataSource,
             action,
         }: TableCurrentDataSource<any>) {
-            console.debug(currentDataSource, action)
+        console.debug(currentDataSource, action)
         // clearSelectOnChange && 
         paginationMethods.setPagination(pagination)
 
         const params: TableChangeParams = {};
         if (sorter && is(Function, props.sortFn)) {
-            const sortInfo = props.sortFn(sorter);
-            searchState.sortInfo = sortInfo;
-            params.sortInfo = sortInfo;
+            if (is(Array, sorter)) {
+                const sortInfo = sorter.map(st => props.sortFn?.(st))
+                searchState.sortInfo = sortInfo;
+                params.sortInfo = sortInfo;
+            } else {
+                const sortInfo = props.sortFn(sorter);
+                searchState.sortInfo = sortInfo;
+                params.sortInfo = sortInfo;
+            }
         }
         if (filters && is(Function, props.filterFn)) {
             const filterInfo = props.filterFn(filters);

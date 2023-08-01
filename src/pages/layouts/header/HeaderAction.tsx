@@ -1,4 +1,3 @@
-import { PropsWithCls } from "@/types/base";
 import { LocaleDropdown, Reminder, UserDropdown } from "@pages/components";
 import { FC } from "react";
 
