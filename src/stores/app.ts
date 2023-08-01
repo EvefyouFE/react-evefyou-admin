@@ -1,4 +1,5 @@
 import { DEFAULT_PROJECT_CONFIG, DEFAULT_ROUTER_CONFIG } from "@/config";
+import { BaseSetting, ProjectConfig } from "@/types/config";
 import { defineRecoilSelectorState } from "@/utils";
 import { atom } from "recoil";
 

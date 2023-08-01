@@ -1,4 +1,3 @@
-import { PropsWithChildrenCls } from "@/types/base";
 import classNames from "classnames";
 import { FC, useMemo } from "react";
 import { BasicHelp } from './BasicHelp';

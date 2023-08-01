@@ -1,3 +1,4 @@
+import { ProjectConfig } from "@/types/config";
 import { Role } from "./auth";
 import { Device } from "./info";
 import { MenuTreeList } from "./memu";

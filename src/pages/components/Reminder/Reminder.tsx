@@ -1,4 +1,3 @@
-import { PropsWithCls } from "@/types/base";
 import { AlertOutlined } from "@ant-design/icons";
 import { Badge, Popover, Spin } from "antd";
 import { FC, Suspense } from "react";

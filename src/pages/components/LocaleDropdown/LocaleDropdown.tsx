@@ -1,6 +1,5 @@
 import { localeConfigs } from "@/config";
 import { useUserRecoilState } from "@/stores";
-import { PropsWithCls } from "@/types/base";
 import { TranslationOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { FC } from "react";

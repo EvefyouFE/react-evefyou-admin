@@ -1,6 +1,5 @@
 import { CSSProperties } from "react";
 import { ObjectUtils } from "./utils";
-import { PropsWithChildrenCls } from "@/types/base";
 import { genUUID } from "@/utils";
 
 export type ScrollContainerDefaultProps = PropsWithChildrenCls<{
