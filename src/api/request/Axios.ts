@@ -3,8 +3,8 @@ import axios from 'axios';
 import qs from 'qs';
 import { ContentTypeEnum, RequestEnum } from '@/enums';
 import { AxiosCanceler } from "./axiosCancel";
-import { CreateAxiosOptions } from "./axiosTransform";
 import { clone, is } from "ramda";
+import { AxiosTransform, CreateAxiosOptions } from "./axiosTransform";
 
 /**
  * @description:  axios module

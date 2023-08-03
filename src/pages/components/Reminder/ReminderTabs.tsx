@@ -1,6 +1,5 @@
 import { BasicResult } from "@/components/Result";
 import { TabItem, useActiveItems, useTabs } from "@/hooks/components";
-import { ResCode } from "@models/base";
 import { Tabs } from "antd";
 import { FC, PropsWithChildren, useEffect, useMemo } from "react";
 import { ReminderListMemo, ReminderListTypeEnum } from "./ReminderList";
@@ -12,9 +11,9 @@ interface ReminderTabItemProps extends PropsWithChildren {
 export const ReminderTabs: FC<ReminderTabItemProps> = ({
 }) => {
     const [activeKey, items, { setItems, changeActiveKey: onChange }] = useActiveItems<TabItem>(ReminderListTypeEnum.notice);
-    const {data: noticeListRes} = queryGetNoticeList.useQuery()
-    const {data: messageListRes} = queryGetMessageList.useQuery()
-    const {data: todoListRes} = queryGetTodoList.useQuery()
+    const {data: noticeListRes} = queryGetNoticeList.useQueryRes()
+    const {data: messageListRes} = queryGetMessageList.useQueryRes()
+    const {data: todoListRes} = queryGetTodoList.useQueryRes()
     const { getTabItem } = useTabs()
 
     const noticeItem = useMemo(() => {
@@ -27,7 +26,7 @@ export const ReminderTabs: FC<ReminderTabItemProps> = ({
         return getTabItem(ReminderListTypeEnum.todo, 'layout.header.reminder.tabs.todo', '(#)'.replace('#', todoListRes?.data?.totalNum + ''))
     }, [todoListRes?.data?.totalNum])
 
-    const getChildren = (code?: ResCode) => {
+    const getChildren = (code?: number) => {
         return (
             <BasicResult code={code}>
                 <ReminderListMemo type={activeKey as ReminderListTypeEnum} />

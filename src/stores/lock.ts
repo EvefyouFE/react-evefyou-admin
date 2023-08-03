@@ -2,7 +2,7 @@ import { LOCK_INFO_KEY } from "@/enums";
 import { Persistent } from "@/utils/cache";
 import {defineRecoilSelectorState } from "@/hooks/state";
 import { atom } from "recoil";
-import { useUserRecoilState } from ".";
+import { useUserRecoilState } from "./user";
 import { LockInfo } from "@/types/store";
 
 interface LockState {
@@ -36,7 +36,7 @@ export const useLockRecoilState = defineRecoilSelectorState({
             this.set({ lockInfo: null })
         },
     },
-    callback: () => {
+    use: () => {
         const [{ userInfo }, { login }] = useUserRecoilState()
         return {
             login,

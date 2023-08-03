@@ -13,6 +13,7 @@ import { useUserRecoilState } from "./stores/user";
 import { appAtom } from "./stores/app";
 import { useRecoilValue } from "recoil";
 import { router } from "./routes";
+import { AxiosInterceptor } from "./api/request/AxiosInterceptor";
 
 const App: React.FC = () => {
     const { projectConfig: { baseSetting: { theme } } } = useRecoilValue(appAtom)
@@ -54,6 +55,7 @@ const App: React.FC = () => {
                 }
                 throw err;
             }}>
+                <AxiosInterceptor/>
                 <NProgress>
                     <Suspense fallback={<LoadingFallback />}>
                         <AppProvider>

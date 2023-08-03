@@ -306,7 +306,7 @@ export function defineRecoilStateAndSelector<
         UseSelectorState<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}>,
         RecoilValueReadOnly<[S, SelectorStateMethods<S, N, G, SE>]>
     ] {
-    const { actions = {} as A, callback, ...rest } = config
+    const { actions = {} as A, use, ...rest } = config
     const stateAtom = atm ?? atom<S>({
         key: rest.name.concat('Atom'),
         default: rest.state
@@ -316,9 +316,9 @@ export function defineRecoilStateAndSelector<
     function useDefineState(): UseSelectorStateReturnType<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}> {
         const stateValue = useRecoilValue(stateSelector)
         const [recoilState, recoilMethods] = useMemo(() => stateValue, [stateValue])
-        const callbackMethods = callback?.()
+        const useMethods = use?.()
         let methods = {
-            ...callbackMethods,
+            ...useMethods,
             ...recoilMethods
         } as SelectorStateAsyncMethods<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}>
         if (actions) {

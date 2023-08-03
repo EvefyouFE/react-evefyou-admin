@@ -143,7 +143,7 @@ export function query<T, D>(
         useQuery: fn(useQueryData),
         getQueryData: fn(getQueryData),
         fetchQuery: asyncFn(fetchQuery),
-        useQueryRes: resFn(useQuery),
+        useQueryRes: resFn(useQueryData),
         getQueryDataRes: resFn(getQueryData),
         fetchQueryRes: resAsyncFn(fetchQuery),
         getOrFetchData: multiFn(getQueryData, fetchQuery),

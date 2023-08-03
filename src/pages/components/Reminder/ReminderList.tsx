@@ -31,9 +31,9 @@ export const ReminderList: FC<ReminderListProps> = ({
     const pageSize = 3;
     const params = {current, pageSize}
     
-    const {data: noticeListRes} = queryGetNoticeList.useQueryRes({params})
-    const {data: messageListRes} = queryGetMessageList.useQueryRes({params})
-    const {data: todoListRes} = queryGetTodoList.useQueryRes({params})
+    const {data: noticeListRes} = queryGetNoticeList.useQuery({params})
+    const {data: messageListRes} = queryGetMessageList.useQuery({params})
+    const {data: todoListRes} = queryGetTodoList.useQuery({params})
 
     const data = useMemo(() => {
         switch(type) {

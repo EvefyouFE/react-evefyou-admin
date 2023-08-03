@@ -222,7 +222,7 @@ declare interface SelectorStateConfig<
     A extends Actions = Actions,
     CB extends RecoilCallback = RecoilCallback,
 > extends BaseSelectorStateConfig<S, N, G, SE> {
-    callback?: CB,
+    use?: CB,
     actions?: A & ThisType<
         (S extends any[] ? SelectorItemsDefaultMethods<S, N> : SelectorDefaultMethods<S, N>)
         & GetterMethods<S, G>

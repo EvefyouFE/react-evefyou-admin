@@ -70,7 +70,7 @@ export const useUserRecoilState = defineRecoilSelectorState({
             // setAuthCache(USER_INFO_KEY, userInfo);
         },
     },
-    callback: () => {
+    use: () => {
         const loginMutation = mutationLogin.useMutation()
         const [, permissionMethods] = useAuthRecoilState()
         return {

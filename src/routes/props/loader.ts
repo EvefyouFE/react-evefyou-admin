@@ -37,7 +37,7 @@ export function homeLoaderFn(): () => Promise<HomeLoaderData> {
     return async () => {
         const userInfoRes = await queryGetCurrentUser.getOrFetchDataRes()
 
-        queryGetCurrentMenuTreeList.fetchQuery({
+        queryGetCurrentMenuTreeList.fetchQuery(undefined,{
             staleTime: Infinity
         })
         queryGetNoticeList.fetchQuery()

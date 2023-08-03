@@ -5,9 +5,9 @@ import { localeConfig } from "@/config/locale";
 import { getRecoil } from "recoil-nexus";
 import { userAtom } from "@/stores/user";
 
-type Id = keyof typeof enUS;
+export type Id = keyof typeof enUS;
 type FormatXMLElementFn<T, R = string | T | (string | T)[]> = (parts: Array<string | T>) => R;
-type Values = Record<string, React.ReactNode | PrimitiveType | FormatXMLElementFn<React.ReactNode, React.ReactNode>>;
+export type Values = Record<string, React.ReactNode | PrimitiveType | FormatXMLElementFn<React.ReactNode, React.ReactNode>>;
 interface Props extends MessageDescriptor {
   id: Id;
   values?: Values;
