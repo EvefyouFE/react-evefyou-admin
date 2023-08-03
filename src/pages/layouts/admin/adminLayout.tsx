@@ -2,7 +2,7 @@ import { useAppContext } from "@/components/Application";
 import { TabContainer } from "@/components/Containers";
 import { ErrorBoundaryFallback, LoadingFallback } from "@/components/Fallback/src";
 import { KeepAliveMemo as KeepAlive } from '@/components/KeepAlive/KeepAlive';
-import { useAppRecoilState } from "@/stores";
+import { useAppRecoilState } from "@/stores/app";
 import { Header } from '@pages/layouts/header';
 import { SiderNav } from '@pages/layouts/sider';
 import { viewsPaths } from '@routes/crRoutes';

@@ -7,13 +7,12 @@ import { RouterProvider } from 'react-router-dom';
 import './App.less';
 import { AppProvider } from './components/Application';
 import { NProgress } from './components/NProgress';
-import { localeConfigs } from './config/locale/localeConfig';
+import { localeConfig } from './config/locale/localeConfig';
 import { LoadingFallback } from "./components/Fallback";
-import { appAtom, useUserRecoilState } from "./stores";
+import { useUserRecoilState } from "./stores/user";
+import { appAtom } from "./stores/app";
 import { useRecoilValue } from "recoil";
 import { router } from "./routes";
-
-
 
 const App: React.FC = () => {
     const { projectConfig: { baseSetting: { theme } } } = useRecoilValue(appAtom)
@@ -29,13 +28,13 @@ const App: React.FC = () => {
     }, [locale]);
 
     const getLocale = () => {
-        const lang = localeConfigs.find((item) => {
+        const lang = localeConfig.find((item) => {
             return item.key === locale.toLowerCase();
         });
         return lang?.messages;
     };
     const getAntdLocale = () => {
-        const lang = localeConfigs.find((item) => {
+        const lang = localeConfig.find((item) => {
             return item.key === locale.toLowerCase();
         });
         return lang?.antdMessages;

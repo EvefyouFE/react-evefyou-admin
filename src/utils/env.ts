@@ -1,4 +1,4 @@
-import { warn } from '@/utils';
+import { warn } from '@/utils/log';
 // import pkg from 'package.json';
 // import { getConfigFileName } from "build/getConfigFileName";
 

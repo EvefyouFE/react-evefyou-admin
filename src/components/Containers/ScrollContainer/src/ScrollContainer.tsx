@@ -1,9 +1,10 @@
-import { useDesign, useMountEffect, useUnmountEffect } from "@/hooks";
+import { useMountEffect, useUnmountEffect } from "@/hooks/core";
+import { useDesign} from "@/hooks/design";
 import { MouseEventHandler, forwardRef, useImperativeHandle, useRef } from "react";
 import { ScrollContainerBase, ScrollContainerProps } from "./ScrollContainerBase";
 import { classNames } from "./utils";
 import './index.less'
-import { addClass, removeClass, getHeight } from "@/utils";
+import { addClass, removeClass, getHeight } from "@/utils/dom";
 
 export interface ScrollContainerMethods {
     props: ScrollContainerProps,

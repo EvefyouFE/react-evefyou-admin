@@ -1,6 +1,7 @@
-import { DEFAULT_PROJECT_CONFIG, DEFAULT_ROUTER_CONFIG } from "@/config";
+import { DEFAULT_PROJECT_CONFIG } from "@/config/app/project";
+import { DEFAULT_ROUTER_CONFIG } from "@/config/app/router";
 import { BaseSetting, ProjectConfig } from "@/types/config";
-import { defineRecoilSelectorState } from "@/utils";
+import { defineRecoilSelectorState } from "@/hooks/state";
 import { atom } from "recoil";
 
 interface AppState {

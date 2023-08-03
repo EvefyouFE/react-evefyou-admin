@@ -1,4 +1,4 @@
-import { useLayoutSetting } from '@/hooks';
+import { useLayoutSetting } from '@/hooks/setting';
 import { Header as AntdHeader } from 'antd/es/layout/layout';
 import { FC } from 'react';
 import { HeaderAction } from './HeaderAction';

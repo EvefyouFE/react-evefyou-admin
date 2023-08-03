@@ -1,6 +1,7 @@
 import { ModalInstance } from "@/components/Modal";
 import { BasicTableProps } from "@/components/Table";
-import { useCompInstance, usePage } from "@/hooks";
+import { useCompInstance } from "@/hooks/core";
+import { usePage } from "@/hooks/components";
 import { Project, ProjectReq } from "@models/index";
 import { FC, useCallback, useMemo, useState } from "react";
 import { ProjectModal } from "./ProjectModal";
@@ -18,14 +19,14 @@ const headerProps: BasicTableProps['headerProps'] = {
 export const ProjectList: FC = () => {
   const { pageParams } = usePage({ pageNo: 1, pageSize: 10 })
   const [projectReq] = useState<ProjectReq>(pageParams)
-  const { data: projectRes } = queryGetProjectList.useQueryRes({params: projectReq});
+  const {data: projectPage} = queryGetProjectList.useQuery({params: projectReq});
   const [modalRef, modalInstance] = useCompInstance<ModalInstance>()
 
   const tableProps: TableContainerProps<Project> = useMemo(() => ({
     // caption: formatById('view.project.list'),
     title: () => formatById('view.project.list'),
     columns,
-    dataSource: projectRes?.resultData,
+    dataSource: projectPage?.resultData,
     searchConfig: {
       items: searchItems,
     },

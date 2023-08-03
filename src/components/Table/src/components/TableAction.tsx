@@ -1,7 +1,7 @@
 import { PopConfirmButton } from "@/components/Button/src";
 import { BasicDropdown } from "@/components/Dropdown";
 import { Icon } from "@/components/Icon";
-import { usePermission } from "@/hooks";
+import { usePermission } from "@/hooks/auth";
 import { MoreOutlined } from "@ant-design/icons";
 import { Button, Divider, Tooltip, TooltipProps } from "antd";
 import { is } from "ramda";

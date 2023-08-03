@@ -1,6 +1,7 @@
-import { usePermission, useUnmountEffect } from "@/hooks";
+import { useUnmountEffect } from "@/hooks/core";
+import { usePermission } from "@/hooks/auth";
 import { formatById } from "@/locales";
-import { genUUID } from "@/utils";
+import { genUUID } from "@/utils/generate";
 import { clone, is } from "ramda";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_ALIGN, ROW_KEYS } from "../constants";

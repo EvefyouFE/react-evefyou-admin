@@ -1,6 +1,6 @@
 import { getStorageShortName } from '@/utils/env';
 import { createStorage as create, CreateStorageParams } from './storageCache';
-import { enableStorageEncryption, DEFAULT_CACHE_TIME } from '@/config';
+import { enableStorageEncryption, DEFAULT_CACHE_TIME } from '@/config/app/auth';
 
 export * from './persistent';
 export * from './memory';

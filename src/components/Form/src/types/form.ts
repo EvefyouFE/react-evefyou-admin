@@ -1,6 +1,6 @@
 import { FormInstance } from "antd";
 import { BasicFormProps, ItemProps } from "../props";
-import { BaseInstance, UsePropsMethods } from "@/hooks";
+import { BaseInstance, UsePropsMethods } from "@/hooks/core";
 
 export interface ItemComponentParams {
     props: Partial<ItemProps>;

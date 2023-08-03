@@ -3,7 +3,7 @@ import { Badge, Popover, Spin } from "antd";
 import { FC, Suspense } from "react";
 import { ReminderTabs } from "./ReminderTabs";
 import './index.less'
-import { useDesign } from "@/hooks";
+import { useDesign } from "@/hooks/design";
 import classNames from "classnames";
 
 export const Reminder: FC<PropsWithCls> = ({

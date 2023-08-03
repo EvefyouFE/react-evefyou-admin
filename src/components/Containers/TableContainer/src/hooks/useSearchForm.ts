@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { BasicFormProps } from "@/components/Form";
-import { useCompInstance, useDesign } from "@/hooks";
+import { useCompInstance } from "@/hooks/core";
+import { useDesign } from "@/hooks/design";
 import { BasicFormInstance } from "@/components/Form/src/types/form";
 import classNames from "classnames";
 import { TableContainerProps } from "../props";

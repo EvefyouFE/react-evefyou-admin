@@ -1,6 +1,6 @@
-import { cacheCipher } from '@/config';
-import type { EncryptionParams } from '@/utils';
-import { AesEncryption } from '@/utils';
+import { cacheCipher } from '@/config/app/auth';
+import type { EncryptionParams } from '@/utils/cipher';
+import { AesEncryption } from '@/utils/cipher';
 import { isNil } from "ramda";
 
 export interface CreateStorageParams extends EncryptionParams {

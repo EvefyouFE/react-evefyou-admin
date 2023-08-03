@@ -1,4 +1,4 @@
-import { useSelectItems } from "@/hooks";
+import { useSelectItems } from "@/hooks/components";
 import { ColumnHeightOutlined } from "@ant-design/icons";
 import { Dropdown, Tooltip, TooltipProps } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";

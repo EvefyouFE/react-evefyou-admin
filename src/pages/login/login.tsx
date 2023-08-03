@@ -9,7 +9,7 @@ import './index.less';
 import { LoginByMessage } from './loginByMessage';
 import { LoginByQrCode } from './loginByQrCode';
 import { LoginByUsername } from './loginByUsername';
-import { useDesign } from "@/hooks";
+import { useDesign } from "@/hooks/design";
 import { useAppContext } from "@/components/Application";
 
 const loginTypeItems: TabsProps['items'] = [

@@ -1,5 +1,5 @@
 import { BasicFormProps } from "@/components/Form";
-import { PermissionOptions } from "@/hooks";
+import { PermissionOptions } from "@/hooks/auth";
 import { ColumnType, TableProps } from "antd/es/table";
 import { ColumnsType, TableRowSelection } from "antd/es/table/interface";
 import React from "react";

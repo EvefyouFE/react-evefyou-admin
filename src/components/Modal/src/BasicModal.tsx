@@ -1,4 +1,5 @@
-import { useDesign, useUnmountEffect } from "@/hooks";
+import { useDesign } from "@/hooks/design";
+import { useUnmountEffect } from "@/hooks/core";
 import { useBoolean } from "ahooks";
 import { Modal } from "antd";
 import { assoc, equals } from "ramda";

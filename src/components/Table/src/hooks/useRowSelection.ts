@@ -1,4 +1,4 @@
-import { genUUID } from "@/utils";
+import { genUUID } from "@/utils/generate";
 import { is, omit } from "ramda";
 import React, { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { ROW_KEYS } from "../constants";

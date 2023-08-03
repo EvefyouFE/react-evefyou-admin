@@ -1,11 +1,12 @@
 import { AppLogo } from '@/components/Application';
 import { ScrollContainer } from "@/components/Containers";
-import { useDesign, useLayoutSetting } from '@/hooks';
+import { useLayoutSetting } from '@/hooks/setting';
+import { useDesign } from '@/hooks/design';
 import { ConfigProvider } from 'antd';
 import Sider from 'antd/es/layout/Sider';
 import './index.less'
 import { BasicMenu } from "@/components/Menu";
-import { useAppRecoilState } from "@/stores";
+import { useAppRecoilState } from "@/stores/app";
 import { useAuthRecoilState } from "@/stores/auth";
 
 export interface SiderNavProps {

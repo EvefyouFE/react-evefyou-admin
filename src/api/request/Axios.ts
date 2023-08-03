@@ -170,23 +170,23 @@ export class VAxios {
     };
   }
 
-  get<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  get<T = any, D = any>(config: AxiosRequestConfig<D>, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'GET' }, options);
   }
 
-  post<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  post<T = any, D = any>(config: AxiosRequestConfig<D>, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'POST' }, options);
   }
 
-  put<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  put<T = any, D = any>(config: AxiosRequestConfig<D>, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'PUT' }, options);
   }
 
-  delete<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  delete<T = any, D = any>(config: AxiosRequestConfig<D>, options?: RequestOptions): Promise<T> {
     return this.request({ ...config, method: 'DELETE' }, options);
   }
 
-  request<T = any>(config: AxiosRequestConfig, options?: RequestOptions): Promise<T> {
+  request<T = any, D = any>(config: AxiosRequestConfig<D>, options?: RequestOptions): Promise<T> {
     let conf: CreateAxiosOptions = clone(config);
     // cancelToken 如果被深拷贝，会导致最外层无法使用cancel方法来取消请求
     if(config.cancelToken){
@@ -209,8 +209,8 @@ export class VAxios {
 
     return new Promise((resolve, reject) => {
       this.axiosInstance
-        .request<any, AxiosResponse<Result>>(conf)
-        .then((res: AxiosResponse<Result>) => {
+        .request<any, AxiosResponse<Res>>(conf)
+        .then((res: AxiosResponse<Res>) => {
           if (transformResponseHook && is(Function,transformResponseHook)) {
             try {
               const ret = transformResponseHook(res, opt);

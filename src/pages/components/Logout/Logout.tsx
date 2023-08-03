@@ -1,4 +1,4 @@
-import { useLogout } from "@/hooks"
+import { useLogout } from "@/hooks/auth"
 import { FC } from "react"
 import { FormattedMessage } from "react-intl"
 

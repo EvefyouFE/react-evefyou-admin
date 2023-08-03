@@ -1,4 +1,4 @@
-import { useProps } from "@/hooks"
+import { useProps } from "@/hooks/core"
 import { BasicFormProps } from "../props"
 import { UseFormPropsReturnType } from "../types/form"
 

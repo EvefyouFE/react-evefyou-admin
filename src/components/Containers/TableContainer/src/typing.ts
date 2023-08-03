@@ -1,6 +1,6 @@
 import { BasicFormInstance } from "@/components/Form";
 import { BasicTableInstance } from "@/components/Table";
-import { BaseInstance } from "@/hooks";
+import { BaseInstance } from "@/hooks/core";
 import { TableContainerProps } from "./props";
 
 export interface TableContainerInstance<T extends Recordable = any> extends BaseInstance<TableContainerProps<T>> {

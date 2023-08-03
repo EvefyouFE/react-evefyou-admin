@@ -1,24 +1,15 @@
-import { AxiosContext, defHttp } from '@/api';
 import { QueryClientProvider } from '@tanstack/react-query';
 import 'nprogress/nprogress.css';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import { MutableSnapshot, RecoilRoot, useRecoilSnapshot } from 'recoil';
 import 'virtual:windi.css';
 import App from './App';
-import { queryClient } from './api';
+import { queryClient } from '@/api/query';
 import './index.less';
-import { DEFAULT_APP_STATE, appAtom } from './stores';
-
-const AxiosProvider = ({ children }: React.PropsWithChildren<unknown>) => {
-  const axiosValue = useMemo(() => {
-    return defHttp.getAxios();
-  }, []);
-
-  return (
-    <AxiosContext.Provider value={axiosValue}>{children}</AxiosContext.Provider>
-  );
-};
+import { DEFAULT_APP_STATE, appAtom } from './stores/app';
+import { AxiosProvider } from "./api/request/AxiosProvider";
+import RecoilNexus from "recoil-nexus";
 
 function initializeState({ set }: MutableSnapshot) {
   set(appAtom, DEFAULT_APP_STATE);
@@ -40,6 +31,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <AxiosProvider>
       <RecoilRoot initializeState={initializeState} >
+        <RecoilNexus />
           <DebugObserver />
           <QueryClientProvider client={queryClient}>
             <App />

@@ -1,4 +1,4 @@
-import { DEFAULT_COMPONENT_SETTING } from "@/config";
+import { DEFAULT_COMPONENT_SETTING } from "@/config/app/project";
 import { TableSetting } from "./types";
 
 const { table } = DEFAULT_COMPONENT_SETTING;

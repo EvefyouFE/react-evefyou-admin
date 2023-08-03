@@ -10,7 +10,7 @@ import {
     APP_SESSION_CACHE_KEY,
     MULTIPLE_TABS_KEY,
 } from '@/enums';
-import { DEFAULT_CACHE_TIME } from '@/config';
+import { DEFAULT_CACHE_TIME } from '@/config/app/auth';
 import { UserInfo } from "@/models";
 import { omit, pick } from "ramda";
 import { ProjectConfig } from "@/types/config";

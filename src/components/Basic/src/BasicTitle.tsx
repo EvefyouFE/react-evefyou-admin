@@ -3,7 +3,7 @@ import { FC, useMemo } from "react";
 import { BasicHelp } from './BasicHelp';
 import './BasicTitle.less';
 import { BasicTittleProps } from "./props";
-import { useDesign } from "@/hooks";
+import { useDesign } from "@/hooks/design";
 
 export const BasicTittle: FC<PropsWithChildrenCls<BasicTittleProps>> = ({
     span,

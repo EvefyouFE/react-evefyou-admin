@@ -1,6 +1,6 @@
 import { AppLogo, useAppContext } from "@/components/Application";
 import { BasicBreadcrumb } from "@/components/Breadcrumb";
-import { useAppRecoilState } from "@/stores";
+import { useAppRecoilState } from "@/stores/app";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { FC } from "react";
 

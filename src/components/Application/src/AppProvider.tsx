@@ -1,12 +1,13 @@
 import { ModalProvider } from '@/components/Modal/src/context/ModalProvider';
-import { prefixCls as defaultPrefixCls } from '@/config';
+import { prefixCls as defaultPrefixCls } from '@/config/design';
 import {
     BreakpointsAntd,
 } from '@/enums';
-import { useBreakpoint, useLayoutSetting } from '@/hooks';
+import { useBreakpoint } from '@/hooks/event';
+import { useLayoutSetting } from '@/hooks/setting';
 import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import { AppContext } from './useAppContext';
-import { useAppRecoilState } from "@/stores";
+import { useAppRecoilState } from "@/stores/app";
 
 interface AppProviderProps {
     prefixCls?: string;

@@ -1,4 +1,4 @@
-import { useDesign } from "@/hooks";
+import { useDesign } from "@/hooks/design";
 import { TablePaginationConfig } from "antd";
 import Table, { ColumnType, TableProps } from "antd/es/table";
 import { FilterValue, SorterResult, TableCurrentDataSource } from "antd/es/table/interface";

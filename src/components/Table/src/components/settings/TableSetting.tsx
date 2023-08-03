@@ -2,7 +2,7 @@ import React from "react";
 import { TableSettingProps } from "../../props";
 import './TableSetting.less'
 import classNames from "classnames";
-import { useDesign } from "@/hooks";
+import { useDesign } from "@/hooks/design";
 
 export const TableSetting: React.FC<TableSettingProps> = ({
     items,

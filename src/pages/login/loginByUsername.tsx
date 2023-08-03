@@ -4,7 +4,7 @@ import { FC } from 'react';
 import { LoginByUsernameReq } from '@models/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
-import { useUserRecoilState } from "@/stores";
+import { useUserRecoilState } from "@/stores/user";
 import { mutationLogin } from "@/api";
 
 export const LoginByUsername: FC = () => {

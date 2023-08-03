@@ -1,4 +1,5 @@
-import { KeyItem, defineUseState, useKeyItemsState, useKeysState } from "@/hooks";
+import { KeyItem, useKeyItemsState, useKeysState } from "@/hooks/state/items";
+import { defineUseState } from "@/hooks/state";
 import { drop, includes, is } from "ramda";
 import React, { useCallback } from "react";
 

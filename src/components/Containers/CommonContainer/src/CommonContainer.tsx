@@ -1,4 +1,5 @@
-import { useDesign, useLayoutSetting } from "@/hooks";
+import { useDesign } from "@/hooks/design";
+import { useLayoutSetting } from "@/hooks/setting";
 import { Footer } from "antd/es/layout/layout";
 import classNames from "classnames";
 import React, { PropsWithChildren, forwardRef, useImperativeHandle, useRef } from "react";

@@ -2,7 +2,7 @@ import { ProjectConfig } from "@/types/config";
 import { Role } from "./auth";
 import { Device } from "./info";
 import { MenuTreeList } from "./memu";
-import { LocaleTypeEnum } from "@/config";
+import { LocaleTypeEnum } from "@/config/locale";
 
 export type Locale = `${LocaleTypeEnum}`;
 

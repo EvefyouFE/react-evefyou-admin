@@ -9,7 +9,7 @@ import { TableSetting } from "./components/settings/TableSetting";
 import { DEFAULT_TABLE_SETTING } from "./constants";
 import { TableRenderComp, UseRednersProps } from "./types";
 import { TableHeaderProps } from "./props";
-import { genUUID } from "@/utils";
+import { genUUID } from "@/utils/generate";
 
 const RenderTableSetting = React.memo(renderTableSettingFn)
 

@@ -19,7 +19,7 @@ export abstract class AxiosTransform {
   /**
    * @description: 处理响应数据
    */
-  transformResponseHook?: (res: AxiosResponse<Result>, options: RequestOptions) => any;
+  transformResponseHook?: (res: AxiosResponse<Res>, options: RequestOptions) => any;
 
   /**
    * @description: 请求失败处理

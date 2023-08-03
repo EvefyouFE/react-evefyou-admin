@@ -90,6 +90,9 @@ dependencies:
   recoil:
     specifier: ^0.7.7
     version: registry.npmmirror.com/recoil@0.7.7(react-dom@18.2.0)(react@18.2.0)
+  recoil-nexus:
+    specifier: ^0.5.0
+    version: registry.npmmirror.com/recoil-nexus@0.5.0(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)(recoil@0.7.7)(typescript@5.0.2)
   uuid:
     specifier: ^9.0.0
     version: registry.npmmirror.com/uuid@9.0.0
@@ -11929,6 +11932,25 @@ packages:
     dependencies:
       picomatch: registry.npmmirror.com/picomatch@2.3.1
     dev: true
+
+  registry.npmmirror.com/recoil-nexus@0.5.0(@types/react@18.2.14)(react-dom@18.2.0)(react@18.2.0)(recoil@0.7.7)(typescript@5.0.2):
+    resolution: {integrity: sha512-I2qerncPPmTPhFi0V/q2ebwKrRq9UXqZf30xoNUYLCZnjwxsusbfZKHICULVxjOhIJ3nkU2xrnVjdfVjKaYLEQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/recoil-nexus/-/recoil-nexus-0.5.0.tgz}
+    id: registry.npmmirror.com/recoil-nexus/0.5.0
+    name: recoil-nexus
+    version: 0.5.0
+    peerDependencies:
+      '@types/react': '>=16.8.0'
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+      recoil: '>=0.2.0'
+      typescript: '>=4.1.0'
+    dependencies:
+      '@types/react': registry.npmmirror.com/@types/react@18.2.14
+      react: registry.npmmirror.com/react@18.2.0
+      react-dom: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
+      recoil: registry.npmmirror.com/recoil@0.7.7(react-dom@18.2.0)(react@18.2.0)
+      typescript: registry.npmmirror.com/typescript@5.0.2
+    dev: false
 
   registry.npmmirror.com/recoil@0.7.7(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-8Og5KPQW9LwC577Vc7Ug2P0vQshkv1y3zG3tSSkWMqkWSwHmE+by06L8JtnGocjW6gcCvfwB3YtrJG6/tWivNQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/recoil/-/recoil-0.7.7.tgz}

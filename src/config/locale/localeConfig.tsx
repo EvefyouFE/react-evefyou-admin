@@ -20,7 +20,7 @@ interface LocaleConfig {
   antdMessages: any
 }
 
-export const localeConfigs: LocaleConfig[] = [
+export const localeConfig: LocaleConfig[] = [
   {
     name: 'English',
     key: 'en-us',

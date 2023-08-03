@@ -1,4 +1,4 @@
-import { getPopupContainer as getParentPopupContainer } from '@/utils';
+import { getPopupContainer as getParentPopupContainer } from '@/utils/dom';
 import { SettingOutlined } from "@ant-design/icons";
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
@@ -18,7 +18,8 @@ import { TableColumnPropsWithKey } from "../../props";
 import { ColumnChangeParam } from "../../types";
 import { ScrollContainer } from "@/components/Containers";
 import { useTableContext } from "../../BasicTable";
-import { useDesign, useUnmountEffect } from "@/hooks";
+import { useUnmountEffect } from "@/hooks/core";
+import { useDesign } from "@/hooks/design";
 import './ColumnSetting.less';
 import { PlainOptionNode } from "./PlainOptionNode";
 

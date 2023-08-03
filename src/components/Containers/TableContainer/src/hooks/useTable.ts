@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useCompInstance } from "@/hooks";
+import { useCompInstance } from "@/hooks/core";
 import { BasicTableInstance, BasicTableProps } from "@/components/Table";
 import { omit } from "ramda";
 import { TableContainerProps } from "../props";

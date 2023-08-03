@@ -1,6 +1,6 @@
-import { DEFAULT_PROJECT_CONFIG } from "@/config";
+import { DEFAULT_PROJECT_CONFIG } from "@/config/app/project"
 import { ErrorTypeEnum } from "@/enums";
-import { defineRecoilSelectorState } from "@/hooks";
+import { defineRecoilSelectorState } from "@/hooks/state";
 import { ErrorLogInfo } from "@/types/store";
 import { formatToDateTime } from "@/utils/dateUtil";
 import { is } from "ramda";

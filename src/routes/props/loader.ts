@@ -1,7 +1,6 @@
 import { queryGetCurrentMenuTreeList, queryGetCurrentUser, queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
 import { UserInfo } from "@models/auth";
 import { MenuTreeList } from "@models/auth/memu";
-import { Res } from "@models/base";
 
 export interface CrumbData {
     title: string;
@@ -36,24 +35,17 @@ export function crumbLoaderFn(
  */
 export function homeLoaderFn(): () => Promise<HomeLoaderData> {
     return async () => {
-        const {
-            getQueryData: getQueryDataGetCurrentUser,
-            fetchQuery: fetchQueryGetCurrentUser,
-        } = queryGetCurrentUser
-        const userInfoRes = getQueryDataGetCurrentUser()
-            ?? await fetchQueryGetCurrentUser()
+        const userInfoRes = await queryGetCurrentUser.getOrFetchDataRes()
 
         queryGetCurrentMenuTreeList.fetchQuery({
-            options: {
-                staleTime: Infinity
-            }
+            staleTime: Infinity
         })
         queryGetNoticeList.fetchQuery()
         queryGetMessageList.fetchQuery()
         queryGetTodoList.fetchQuery()
         return {
             userInfoRes
-        }
+        } as HomeLoaderData
     }
 }
 

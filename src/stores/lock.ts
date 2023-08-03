@@ -1,5 +1,6 @@
 import { LOCK_INFO_KEY } from "@/enums";
-import { Persistent, defineRecoilSelectorState } from "@/utils";
+import { Persistent } from "@/utils/cache";
+import {defineRecoilSelectorState } from "@/hooks/state";
 import { atom } from "recoil";
 import { useUserRecoilState } from ".";
 import { LockInfo } from "@/types/store";

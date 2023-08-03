@@ -1,5 +1,8 @@
 import { Icon } from "@/components/Icon";
-import { useLayoutSetting, useTabs, useDesign, useActiveItemsState } from "@/hooks";
+import {  useDesign } from "@/hooks/design";
+import { useLayoutSetting } from "@/hooks/setting";
+import { useTabs } from "@/hooks/components";
+import { useActiveItemsState } from "@/hooks/state/items";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Tabs, TabsProps } from "antd";
@@ -12,8 +15,8 @@ import { TabBarExtraContent } from "./components/TabBarExtraContent";
 import { TabItem } from "./type";
 import { CommonContainer, CommonContainerInstance } from "../../CommonContainer";
 import { useFullscreen, useUpdate } from "ahooks";
-import { genUUID } from "@/utils";
-import { useAppRecoilState } from "@/stores";
+import { genUUID } from "@/utils/generate";
+import { useAppRecoilState } from "@/stores/app";
 
 export function translate2MenuItems(tabsMenuList: TabsMenuItem[]) {
     return tabsMenuList?.map((m, index) => ({

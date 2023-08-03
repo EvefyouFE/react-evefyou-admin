@@ -6,8 +6,8 @@ import { BasicFormItem } from "./components/BasicFormItem";
 import { useFormItems } from "./hooks";
 import { BasicFormActionProps, BasicFormProps } from "./props";
 import { BasicFormInstance } from "./types/form";
-import { usePropsState } from "@/hooks";
-import { genUUID } from "@/utils";
+import { usePropsState } from "@/hooks/core";
+import { genUUID } from "@/utils/generate";
 import { useFormProps } from "./hooks/useFormProps";
 
 export const BasicForm = React.memo(React.forwardRef(<T extends Recordable = any>(

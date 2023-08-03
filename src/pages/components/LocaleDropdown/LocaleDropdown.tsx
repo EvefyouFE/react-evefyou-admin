@@ -1,5 +1,5 @@
-import { localeConfigs } from "@/config";
-import { useUserRecoilState } from "@/stores";
+import { localeConfig } from "@/config/locale";
+import { useUserRecoilState } from "@/stores/user";
 import { TranslationOutlined } from "@ant-design/icons";
 import { Dropdown } from "antd";
 import { FC } from "react";
@@ -14,7 +14,7 @@ export const LocaleDropdown: FC<LocaleDropdownProps> = ({
 }) => {
     const [,{setLocale}] = useUserRecoilState()
 
-    const items = localeConfigs.map((v) => ({
+    const items = localeConfig.map((v) => ({
         key: v.key,
         label: (
             <span onClick={() => {setLocale(v.key)}}>

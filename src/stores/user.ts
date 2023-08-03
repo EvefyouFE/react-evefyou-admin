@@ -1,12 +1,13 @@
 import { mutationLogin, queryGetCurrentUser, queryLogout } from "@/api";
-import { DEFAULT_USER_INFO } from "@/config";
+import { DEFAULT_USER_INFO } from "@/config/user";
 import { PageEnum } from "@/enums";
-import { defineRecoilSelectorState, useMessage } from "@/hooks";
-// import { setAuthCache } from "@/utils";
+import { useMessage } from "@/hooks/web";
+import { defineRecoilSelectorState } from "@/hooks/state";
+// import { setAuthCache } from "@/utils/auth";
 import { Locale, LoginByUsernameReq, UserInfo } from "@models/auth";
 import { MenuTreeList } from "@models/auth/memu";
 import { useAuthRecoilState } from "./auth";
-import { appAtom } from ".";
+import { appAtom } from "./app";
 import { atom } from "recoil";
 import { router } from "@/routes";
 import React from "react";
@@ -87,8 +88,7 @@ export const useUserRecoilState = defineRecoilSelectorState({
         ): Promise<Nullable<UserInfo>> {
             try {
                 const { goHome = true } = options ?? {};
-                const { data: data } = await this.loginMutation.mutateAsync(params);
-                const { token } = data;
+                const { token } = await this.loginMutation.mutateAsync(params);
                 this.setToken(token);
                 return this.afterLoginAction(goHome);
             } catch (error) {
@@ -111,7 +111,7 @@ export const useUserRecoilState = defineRecoilSelectorState({
         async getUserInfoAction(state?: Partial<UserState>): Promise<Nullable<UserInfo>> {
             const { token } = state ?? this.userState
             if (!token) return null;
-            const userInfo = await queryGetCurrentUser.fetchQueryRes()
+            const userInfo = await queryGetCurrentUser.fetchQuery()
             this.setRoleList(userInfo?.roleList ?? []);
             this.setPermissionList(userInfo?.permissionList ?? [])
             this.setUserInfo(userInfo ?? null);

@@ -1,9 +1,9 @@
 import { useLayoutEffect, useMemo } from "react";
 import { useDebounceFn, useEventListener } from "ahooks";
-import { getViewportOffset } from "@/utils";
+import { getViewportOffset } from "@/utils/dom";
 import { TableContainerProps } from "../props";
 import { UseTableLayoutHooksMethods, UseTableLayoutReturnType } from "../typing";
-import { useMountEffect } from "@/hooks";
+import { useMountEffect } from "@/hooks/core";
 
 export function useTableLayout(
     props: TableContainerProps,

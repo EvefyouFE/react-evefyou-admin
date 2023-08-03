@@ -1,4 +1,4 @@
-import { useAppRecoilState } from "@/stores";
+import { useAppRecoilState } from "@/stores/app";
 import { divide, multiply } from "ramda";
 import { useMemo } from "react";
 

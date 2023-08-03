@@ -1,6 +1,6 @@
 import { Persistent, BasicKeys } from '@/utils/cache/persistent';
 import { CacheTypeEnum } from '@/enums';
-import { DEFAULT_PROJECT_CONFIG } from '@/config';
+import { DEFAULT_PROJECT_CONFIG } from '@/config/app/project';
 import { TOKEN_KEY } from '@/enums';
 
 const { permissionCacheType } = DEFAULT_PROJECT_CONFIG;

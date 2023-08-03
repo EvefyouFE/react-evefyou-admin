@@ -1,6 +1,6 @@
 
 import { Icon } from "@/components/Icon";
-import { useNativeProps } from "@/hooks";
+import { useNativeProps } from "@/hooks/core";
 import { Button } from "antd";
 import classNames from "classnames";
 import { FC, PropsWithChildren, useMemo } from "react";

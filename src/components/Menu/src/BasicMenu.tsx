@@ -1,12 +1,12 @@
 import { Icon } from '@/components/Icon';
-import { useDesign } from '@/hooks';
+import { useDesign } from '@/hooks/design';
 import { MenuTreeList } from '@models/auth/memu';
 import { ConfigProvider, Menu, MenuProps } from 'antd';
 import { FC, isValidElement, useMemo, useTransition } from 'react';
 import { useNavigate } from 'react-router';
 import './index.less';
 import { MenuItemLabel } from './MenuItemLabel';
-import { useAppRecoilState } from "@/stores";
+import { useAppRecoilState } from "@/stores/app";
 
 export type MenuItem = Required<MenuProps>['items'][number];
 

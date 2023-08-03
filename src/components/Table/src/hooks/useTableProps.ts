@@ -1,4 +1,4 @@
-import { useProps } from "@/hooks"
+import { useProps } from "@/hooks/core"
 import { BasicTableProps } from "../props"
 import { UseTablePropsReturnType, UseTablePropsSetMethods } from "../types"
 import { useMemo } from "react"

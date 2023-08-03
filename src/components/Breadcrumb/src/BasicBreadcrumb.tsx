@@ -3,7 +3,7 @@ import { Breadcrumb, BreadcrumbProps } from "antd";
 import { FC } from "react";
 import { useMatches } from "react-router-dom";
 import './index.less';
-import { useDesign } from "@/hooks";
+import { useDesign } from "@/hooks/design";
 
 export type BasicBreadcrumbProps = BreadcrumbProps & {
     back?: boolean;

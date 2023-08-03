@@ -1,4 +1,4 @@
-import { BaseInstance, UsePropsMethods } from "@/hooks";
+import { BaseInstance, UsePropsMethods } from "@/hooks/core";
 import { PropsWithChildren } from "react";
 import { BasicModalProps } from "./props";
 

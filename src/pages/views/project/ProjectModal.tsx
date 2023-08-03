@@ -1,7 +1,7 @@
 import { BasicForm, BasicFormInstance, BasicFormProps } from "@/components/Form";
 import { BasicModal, BasicModalProps, useModalContext } from "@/components/Modal";
 import { ModalContextData, ModalInstance } from "@/components/Modal/src/typing";
-import { useCompInstance } from "@/hooks";
+import { useCompInstance } from "@/hooks/core";
 import { formatById } from "@/locales";
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { modalItems } from "./list.data";

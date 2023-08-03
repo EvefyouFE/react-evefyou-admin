@@ -1,5 +1,5 @@
 import { BasicResult } from "@/components/Result";
-import { TabItem, useActiveItems, useTabs } from "@/hooks";
+import { TabItem, useActiveItems, useTabs } from "@/hooks/components";
 import { ResCode } from "@models/base";
 import { Tabs } from "antd";
 import { FC, PropsWithChildren, useEffect, useMemo } from "react";

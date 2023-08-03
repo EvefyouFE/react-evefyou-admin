@@ -1,6 +1,7 @@
-import { DEFAULT_USER_INFO } from "@/config";
-import { useMountEffect, usePermission } from "@/hooks";
-import { useUserRecoilState } from "@/stores";
+import { DEFAULT_USER_INFO } from "@/config/user";
+import { useMountEffect } from "@/hooks/core";
+import { usePermission } from "@/hooks/auth";
+import { useUserRecoilState } from "@/stores/user";
 import { homeLoaderFn } from "@routes/props";
 import { FC } from "react";
 import { Navigate, RouteProps, useLoaderData } from "react-router";

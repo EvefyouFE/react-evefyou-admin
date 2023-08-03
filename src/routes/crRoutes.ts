@@ -1,4 +1,4 @@
-import { DEFAULT_MENU_SETTING } from '@/config';
+import { DEFAULT_MENU_SETTING } from '@/config/app/project';
 import { assocPath } from 'ramda';
 import { crumbLoaderFn, handleFn, homeLoaderFn } from './props';
 import { wrapComponent } from './props/element';
