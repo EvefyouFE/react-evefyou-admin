@@ -1,5 +1,5 @@
 import { warn } from '@/utils/log';
-// import pkg from 'package.json';
+import pkg from 'package.json';
 // import { getConfigFileName } from "build/getConfigFileName";
 
 export const getConfigFileName = (env: Record<string, any>) => {
@@ -15,7 +15,7 @@ export function getCommonStoragePrefix() {
 
 // Generate cache key according to version
 export function getStorageShortName() {
-  return `${getCommonStoragePrefix()}${`__0.0.0`}__`.toUpperCase();
+  return `${getCommonStoragePrefix()}${`__${pkg.version}`}__`.toUpperCase();
 }
 
 export function getAppEnvConfig() {

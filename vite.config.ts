@@ -10,7 +10,7 @@ import moment from 'moment';
 import cssnanoPlugin from "cssnano";
 import postcssPresetEnv from 'postcss-preset-env';
 import { createVitePlugins } from "./build/vite/plugins";
-import { getAppConfigSrc } from './build/vite/plugins/html';
+import { getAppConfigSrc, getAppConfigSrcUrl } from './build/vite/plugins/html';
 import { fileURLToPath } from 'node:url';
 
 const { dependencies, devDependencies, name, version } = pkg;
