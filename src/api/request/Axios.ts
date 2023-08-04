@@ -4,7 +4,7 @@ import qs from 'qs';
 import { ContentTypeEnum, RequestEnum } from '@/enums';
 import { AxiosCanceler } from "./axiosCancel";
 import { clone, is } from "ramda";
-import { AxiosTransform, CreateAxiosOptions } from "./axiosTransform";
+import { CreateAxiosOptions } from "./axiosTransform";
 
 /**
  * @description:  axios module

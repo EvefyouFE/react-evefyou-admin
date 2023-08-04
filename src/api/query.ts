@@ -1,4 +1,4 @@
-import { FetchQueryOptions, MutationOptions, QueryClient, QueryFunction, QueryKey, QueryObserverOptions, QueryOptions, UseMutationOptions, UseQueryOptions, UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
+import { FetchQueryOptions, MutationOptions, QueryClient, QueryFunction, QueryKey, QueryObserverOptions, UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
 import { values } from "ramda";
 import { defHttp } from "./request";
 import { FetchTypeEnum } from "@/enums/queryEnum";

@@ -20,6 +20,10 @@ export abstract class AxiosTransform {
    * @description: 处理响应数据
    */
   transformResponseHook?: (res: AxiosResponse<Res>, options: RequestOptions) => any;
+  /**
+   * @description: 处理响应数据 跟随react声明周期
+   */
+  useTransformResponseHook?: (res: AxiosResponse<Res>, options: RequestOptions) => any;
 
   /**
    * @description: 请求失败处理
