@@ -1,17 +1,17 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "i18n-ally.localesPaths": [
-        "src/locales",
-        "src/config/locale",
-        "src/locales/en-us/locale",
-        "src/locales/zh-cn/locale"
-    ],
-    "explorer.fileNesting.enabled": true,
-    "explorer.fileNesting.expand": false,
-    "explorer.fileNesting.patterns": {
-      "*.ts": "$(capture).test.ts, $(capture).test.tsx",
-      "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
-      "*.env": "$(capture).env.*",
-      "package.json": "pnpm-lock.yaml,yarn.lock,LICENSE,README*,CHANGELOG*,CNAME,.gitattributes,.gitignore,.prettierrc.cjs,.commitlintrc.cjs,stylelint.config.js,commitlint.config.js,.stylelintignore,.prettierignore,.gitpod.yml,.eslintrc.cjs,.eslintignore"
-    },
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "i18n-ally.localesPaths": [
+    "src/locales",
+    "src/config/locale",
+    "src/locales/en-us/locale",
+    "src/locales/zh-cn/locale"
+  ],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "$(capture).test.ts, $(capture).test.tsx",
+    "*.tsx": "$(capture).test.ts, $(capture).test.tsx",
+    "*.env": "$(capture).env.*",
+    "package.json": "pnpm-lock.yaml,yarn.lock,LICENSE,README*,CHANGELOG*,CNAME,.gitattributes,.gitignore,.prettierrc.cjs,.commitlintrc.cjs,stylelint.config.js,commitlint.config.js,.stylelintignore,.prettierignore,.gitpod.yml,.eslintrc.cjs,.eslintignore,react-evefyou-admin.code-workspace"
+  },
 }

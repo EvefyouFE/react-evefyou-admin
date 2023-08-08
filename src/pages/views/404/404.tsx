@@ -1,6 +1,4 @@
-import React from "react";
-import { BasicResult } from "@/components/Result";
+import React from 'react';
+import { BasicResult } from '@/components/Result';
 
-export const NotExist: React.FC = () => (
-    <BasicResult code={404} />
-)
+export const NotExist: React.FC = () => <BasicResult code={404} />;

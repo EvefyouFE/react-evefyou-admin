@@ -1,16 +1,11 @@
-import { Popconfirm } from "antd"
-import { FC, useMemo } from "react"
-import { BasicButton } from "./BasicButton"
-import { formatById } from "@/locales"
-import { PopConfirmButtonProps } from "./props"
+import { Popconfirm } from 'antd';
+import { FC } from 'react';
+import { BasicButton } from './BasicButton';
+import { formatById } from '@/locales';
+import { PopConfirmButtonProps } from './props';
 
 export const PopConfirmButton: FC<PopConfirmButtonProps> = (props) => {
-  const {
-    popconfirmProps,
-    color,
-    disabled,
-    ...rest
-  } = props
+  const { popconfirmProps, color, disabled, ...rest } = props;
 
   const popconfirmPropsMemo = popconfirmProps && {
     okText: formatById('components.button.okText'),
@@ -19,18 +14,16 @@ export const PopConfirmButton: FC<PopConfirmButtonProps> = (props) => {
   };
 
   const buttonProps = {
-    color: (color && disabled) ? '' : color,
+    color: color && disabled ? '' : color,
     disabled,
-    ...rest
+    ...rest,
   };
 
-  return popconfirmPropsMemo
-    ? (
-      <Popconfirm {...popconfirmPropsMemo}>
-        <BasicButton {...buttonProps} />
-      </Popconfirm>
-    )
-    : (
-      <BasicButton {...rest} />
-    )
-}
+  return popconfirmPropsMemo ? (
+    <Popconfirm {...popconfirmPropsMemo}>
+      <BasicButton {...buttonProps} />
+    </Popconfirm>
+  ) : (
+    <BasicButton {...rest} />
+  );
+};

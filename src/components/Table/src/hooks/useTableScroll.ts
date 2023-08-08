@@ -45,7 +45,7 @@ export function useTableScroll(
         y: canResizeMemo ? height : undefined,
         scrollToFirstRowOnChange: false,
         ...scroll,
-    }), [scrollXMemo, canResizeMemo, height])
+    }), [scrollXMemo, canResizeMemo, scroll, height])
 
 
     function canTableResize() {

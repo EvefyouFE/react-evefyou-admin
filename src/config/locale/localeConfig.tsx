@@ -1,16 +1,15 @@
-
-import { Locale } from "@models/auth";
+import { Locale } from '@models/auth';
 import antdEnUS from 'antd/locale/en_US';
 import antdZhCN from 'antd/locale/zh_CN';
-import React from "react";
-import { ReactComponent as EnUsSvg } from "@/assets/header/en_US.svg";
-import { ReactComponent as ZhCnSvg } from "@/assets/header/zh_CN.svg";
+import React from 'react';
+import { ReactComponent as EnUsSvg } from '@/assets/header/en_US.svg';
+import { ReactComponent as ZhCnSvg } from '@/assets/header/zh_CN.svg';
 import enUSLocale from '@/locales/en-us';
 import zhCNLocale from '@/locales/zh-cn';
 
 export enum LocaleTypeEnum {
   enUS = 'en-us',
-  zhCN = 'zh-cn'
+  zhCN = 'zh-cn',
 }
 
 interface LocaleConfig {
@@ -18,7 +17,7 @@ interface LocaleConfig {
   key: Locale;
   messages: Record<string, string>;
   icon: React.ReactNode;
-  antdMessages: any
+  antdMessages: any;
 }
 
 export const localeConfig: LocaleConfig[] = [
@@ -35,5 +34,5 @@ export const localeConfig: LocaleConfig[] = [
     messages: zhCNLocale,
     icon: <ZhCnSvg />,
     antdMessages: antdZhCN,
-  }
+  },
 ];

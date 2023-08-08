@@ -1,16 +1,24 @@
+import { ModalFunc } from 'antd/es/modal/confirm';
+import { Modal, ModalFuncProps, message, notification } from 'antd';
+import { is } from 'ramda';
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  InfoCircleFilled,
+} from '@ant-design/icons';
+import { formatById } from '@/locales';
 
-import { ModalFunc } from "antd/es/modal/confirm";
-import { Modal, ModalFuncProps, message, notification } from "antd";
-import { is } from "ramda";
-import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from "@ant-design/icons";
-import { formatById } from "@/locales";
-
-export declare type NotificationPlacement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
+export declare type NotificationPlacement =
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomLeft'
+  | 'bottomRight';
 export declare type IconType = 'success' | 'info' | 'error' | 'warning';
 export interface ModalOptionsEx extends Omit<ModalFuncProps, 'iconType'> {
   iconType: 'warning' | 'success' | 'error' | 'info';
 }
-export type ModalOptionsPartial = Partial<ModalOptionsEx> & Pick<ModalOptionsEx, 'content'>;
+export type ModalOptionsPartial = Partial<ModalOptionsEx> &
+  Pick<ModalOptionsEx, 'content'>;
 
 interface ConfirmOptions {
   info: ModalFunc;
@@ -36,7 +44,9 @@ function getIcon(iconType: string) {
 function renderContent({ content }: Pick<ModalOptionsEx, 'content'>) {
   if (is(String, content)) {
     // eslint-disable-next-line react/no-danger
-    return <div dangerouslySetInnerHTML={{ __html: `<div>${content}</div>` }} />;
+    return (
+      <div dangerouslySetInnerHTML={{ __html: `<div>${content}</div>` }} />
+    );
   }
   return content;
 }
@@ -59,9 +69,12 @@ function createConfirm(options: ModalOptionsEx): ConfirmOptions {
 const getBaseOptions = () => ({
   okText: formatById('common.text.ok'),
   centered: true,
-})
+});
 
-function createModalOptions(options: ModalOptionsPartial, icon: string): ModalOptionsPartial {
+function createModalOptions(
+  options: ModalOptionsPartial,
+  icon: string,
+): ModalOptionsPartial {
   return {
     ...getBaseOptions(),
     ...options,
