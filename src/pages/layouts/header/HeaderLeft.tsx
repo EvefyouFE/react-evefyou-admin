@@ -1,11 +1,12 @@
-import { AppLogo, useAppContext } from "@/components/Application";
-import { BasicBreadcrumb } from "@/components/Breadcrumb";
-import { useAppRecoilState } from "@/stores/app";
+
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { FC } from "react";
+import { AppLogo, useAppContext } from "@/components/Application";
+import { BasicBreadcrumb } from "@/components/Breadcrumb";
+import { useAppRecoilValue } from "@/stores/app";
 
 export const HeaderLeft: FC = () => {
-    const [, { getMenuSetting, toggleCollapsed }] = useAppRecoilState();
+    const [, { getMenuSetting, toggleCollapsed }] = useAppRecoilValue();
     const { collapsed, showCollapsed } = getMenuSetting()
     const { isMobile } = useAppContext()
 
@@ -15,6 +16,9 @@ export const HeaderLeft: FC = () => {
             <div
                 className="flex items-center h-full px-3 cursor-pointer transition-colors duration-300 hover:text-primary hover:bg-headerLeftTiggerHover "
                 onClick={toggleCollapsed}
+                onKeyUp={toggleCollapsed}
+                tabIndex={0}
+                role="button"
             >
                 {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             </div>

@@ -1,5 +1,5 @@
 import { is } from "ramda";
-
+/* eslint-disable */
 /**
  * Add the object as a parameter to the URL
  * @param baseUrl url
@@ -11,12 +11,12 @@ import { is } from "ramda";
  *  ==>www.baidu.com?a=3&b=4
  */
 export function setObjToUrlParams(baseUrl: string, obj: any): string {
-    let parameters = '';
-    for (const key in obj) {
-        parameters += key + '=' + encodeURIComponent(obj[key]) + '&';
-    }
-    parameters = parameters.replace(/&$/, '');
-    return /\?$/.test(baseUrl) ? baseUrl + parameters : baseUrl.replace(/\/?$/, '?') + parameters;
+  let parameters = '';
+  for (const key in obj) {
+    parameters += key + '=' + encodeURIComponent(obj[key]) + '&';
+  }
+  parameters = parameters.replace(/&$/, '');
+  return /\?$/.test(baseUrl) ? baseUrl + parameters : baseUrl.replace(/\/?$/, '?') + parameters;
 }
 
 const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -54,7 +54,7 @@ export function formatRequestDate(params: Recordable) {
       const value = params[key];
       if (value) {
         try {
-          params[key] = is(String,value) ? value.trim() : value;
+          params[key] = is(String, value) ? value.trim() : value;
         } catch (error: any) {
           throw new Error(error);
         }

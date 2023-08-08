@@ -1,10 +1,11 @@
+
+import { Project, ProjectReq } from "@models/project";
+import { FC, useCallback, useMemo, useState } from "react";
+import { ProjectModal } from "./ProjectModal";
 import { ModalInstance } from "@/components/Modal";
 import { BasicTableProps } from "@/components/Table";
 import { useCompInstance } from "@/hooks/core";
-import { usePage } from "@/hooks/components";
-import { Project, ProjectReq } from "@models/index";
-import { FC, useCallback, useMemo, useState } from "react";
-import { ProjectModal } from "./ProjectModal";
+import { usePage } from "@/hooks/components/page";
 import { columns, searchItems } from "./list.data";
 import { formatById } from "@/locales";
 import { renderActionFn, renderToolbar } from "./render";
@@ -19,7 +20,7 @@ const headerProps: BasicTableProps['headerProps'] = {
 export const ProjectList: FC = () => {
   const { pageParams } = usePage({ pageNo: 1, pageSize: 10 })
   const [projectReq] = useState<ProjectReq>(pageParams)
-  const {data: projectPage} = queryGetProjectList.useQuery({params: projectReq});
+  const { data: projectPage } = queryGetProjectList.useQuery({ params: projectReq });
   const [modalRef, modalInstance] = useCompInstance<ModalInstance>()
 
   const tableProps: TableContainerProps<Project> = useMemo(() => ({
@@ -33,12 +34,14 @@ export const ProjectList: FC = () => {
     actionColumnConfig: {
       width: '10rem',
     }
-  }), [])
+  }), [projectPage?.resultData])
   const [tableContainerRef] = useCompInstance<TableContainerInstance>(tableProps)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderAction = useCallback(renderActionFn(modalInstance), [modalInstance])
 
   const onChange = useCallback(handleTableChange, [])
+  const onSuccessCb = useCallback(onSuccess, [])
   const propsValue = {
     headerProps,
     onChange,
@@ -61,7 +64,7 @@ export const ProjectList: FC = () => {
       <TableContainer<Project> ref={tableContainerRef} {...propsValue} >
         {renderAction}
       </TableContainer>
-      <ProjectModal ref={modalRef} onSuccess={onSuccess} />
+      <ProjectModal ref={modalRef} onSuccess={onSuccessCb} />
     </div>
   )
 }

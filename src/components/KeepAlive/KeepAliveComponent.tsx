@@ -1,4 +1,4 @@
-import { JSXElementConstructor, ReactElement, RefObject, memo, useEffect, useRef, useState } from "react";
+import React, { JSXElementConstructor, ReactElement, RefObject, memo, useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
 
 export type Children = ReactElement<any, string | JSXElementConstructor<any>> | null
@@ -9,7 +9,7 @@ export interface ComponentProps {
     renderDiv: RefObject<HTMLDivElement>
 }
 
-const KeepAliveComponent = ({ active, children, name, renderDiv }: ComponentProps) => {
+const KeepAliveComponent: React.FC<ComponentProps> = ({ active, children, name, renderDiv }) => {
     const [targetElement] = useState(() => document.createElement('div'))
     const activatedRef = useRef(false)
     activatedRef.current = activatedRef.current || active
@@ -22,13 +22,13 @@ const KeepAliveComponent = ({ active, children, name, renderDiv }: ComponentProp
                 renderDiv.current?.appendChild(targetElement)
             }
         }
-    }, [active])
+    }, [active, renderDiv, targetElement])
     useEffect(() => {
         // 添加一个id 作为标识 并没有什么太多作用 
         targetElement.setAttribute('id', name)
-    }, [name])
+    }, [name, targetElement])
     // 把vnode 渲染到document.createElement('div') 里面
-    return <>{activatedRef.current && ReactDOM.createPortal(children, targetElement)}</>
+    return activatedRef.current ? ReactDOM.createPortal(children, targetElement) : children
 }
 
 export const KeepAliveComponentMemo = memo(KeepAliveComponent)

@@ -20,7 +20,7 @@ export interface ButtonProps extends Partial<AntdButtonProps> {
      * @default: 14
      */
     iconSize?: number;
-    onClick?: React.MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>;
+    onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 }
 export interface PopConfirmButtonProps extends Partial<ButtonProps> {
     enable?: boolean;

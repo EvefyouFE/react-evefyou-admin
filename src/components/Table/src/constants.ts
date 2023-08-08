@@ -1,5 +1,5 @@
 import { DEFAULT_COMPONENT_SETTING } from "@/config/app/project";
-import { TableSetting } from "./types";
+import { TableSetting } from "./types/table";
 
 const { table } = DEFAULT_COMPONENT_SETTING;
 

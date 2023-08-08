@@ -1,18 +1,21 @@
-export interface CacheInfo<V = any> {
+import { StorageValue } from "./storageCache";
+
+export interface CacheInfo<V extends StorageValue = StorageValue> {
   value?: V;
   timeoutId?: ReturnType<typeof setTimeout>;
   time?: number;
   alive?: number;
 }
 
-type Cache<T, V = any> = {
+export type Cache<T = Recordable, V extends StorageValue = StorageValue> = {
   [key in keyof T]?: CacheInfo<V>;
 }
 
 const NOT_ALIVE = 0;
 
-export class Memory<T = any, V = any> {
+export class Memory<T = Recordable, V extends StorageValue = StorageValue> {
   private cache: Cache<T, V> = {};
+
   private alive: number;
 
   constructor(alive = NOT_ALIVE) {
@@ -41,10 +44,11 @@ export class Memory<T = any, V = any> {
     return this.cache[key];
   }
 
-  set<K extends keyof T>(key: K, value: V, expires?: number) {
+  set<K extends keyof T>(key: K, value: V, exp?: number) {
     let item = this.get(key);
 
-    if (!expires || (expires as number) <= 0) {
+    let expires = exp
+    if (!expires || (expires) <= 0) {
       expires = this.alive;
     }
     if (item) {
@@ -82,19 +86,20 @@ export class Memory<T = any, V = any> {
     const item = this.get(key);
     Reflect.deleteProperty(this.cache, key);
     if (item) {
-      clearTimeout(item.timeoutId!);
+      clearTimeout(item.timeoutId);
       return item.value;
     }
+    return undefined;
   }
 
-  resetCache(cache: { [K in keyof T]: CacheInfo }) {
+  resetCache(cache: Cache<T, V>) {
     Object.keys(cache).forEach((key) => {
-      const k = key as any as keyof T;
+      const k = key as keyof T;
       const item = cache[k];
       if (item && item.time) {
         const now = new Date().getTime();
         const expire = item.time;
-        if (expire > now) {
+        if (expire > now && item.value) {
           this.set(k, item.value, expire);
         }
       }

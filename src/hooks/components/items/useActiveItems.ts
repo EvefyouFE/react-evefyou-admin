@@ -23,13 +23,13 @@ export type UseActiveItemsReturnType<K extends React.Key, T extends Item<K>> = [
 ]
 
 export function useActiveItems<T extends Item<K>, K extends React.Key = string>(initialActiveKey?: K, initialItems?: T[])
-: UseActiveItemsReturnType<K, T> {
-    const [selectedKeys, items, { 
-        getSelectedItems, 
-        setItems, 
-        changeSelectedKeys, 
-        addItem, 
-        updateItem, 
+    : UseActiveItemsReturnType<K, T> {
+    const [selectedKeys, items, {
+        getSelectedItems,
+        setItems,
+        changeSelectedKeys,
+        addItem,
+        updateItem,
         removeItem,
         ...rest
     }] = useSelectItems(initialActiveKey ? [initialActiveKey] : undefined, initialItems)
@@ -49,7 +49,7 @@ export function useActiveItems<T extends Item<K>, K extends React.Key = string>(
     function addItemAndActive(newItem: T) {
         addItem(newItem)
         changeSelectedKeys([newItem.key])
-    };
+    }
     function updateItemAndActive(newItem: T) {
         updateItem(newItem)
     }

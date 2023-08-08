@@ -1,12 +1,7 @@
-import { useMemo } from "react";
 import { useCompInstance } from "@/hooks/core";
-import { BasicTableInstance, BasicTableProps } from "@/components/Table";
-import { omit } from "ramda";
+import { BasicTableInstance } from "@/components/Table/src/types/tableHook";
 import { TableContainerProps } from "../props";
 
-export function useTable<T extends Recordable = any>(props: TableContainerProps<T>) {
-    const tablePropsValue: BasicTableProps<T> = useMemo(() => {
-        return omit(['searchConfig'], props)
-    }, [props])
-    return useCompInstance<BasicTableInstance<T>>(tablePropsValue)
+export function useTable<T = any>(props: TableContainerProps<T>) {
+    return useCompInstance<BasicTableInstance<T>>(props)
 }

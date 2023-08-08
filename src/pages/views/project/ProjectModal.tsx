@@ -1,9 +1,9 @@
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { BasicForm, BasicFormInstance, BasicFormProps } from "@/components/Form";
 import { BasicModal, BasicModalProps, useModalContext } from "@/components/Modal";
 import { ModalContextData, ModalInstance } from "@/components/Modal/src/typing";
 import { useCompInstance } from "@/hooks/core";
 import { formatById } from "@/locales";
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { modalItems } from "./list.data";
 
 interface ProjectModalProps {
@@ -19,7 +19,7 @@ export const ModalForm = () => {
     }), [])
     const [formRef] = useCompInstance<BasicFormInstance>(modalFormProps)
     return (
-        <BasicForm ref={formRef} name='projectmodal'/>
+        <BasicForm ref={formRef} name='projectmodal' />
     )
 }
 
@@ -30,15 +30,16 @@ export const ProjectModal = forwardRef<Partial<ModalInstance>, ProjectModalProps
         ...rest
     } = props;
     const [isUpdate, setUpdate] = useState(false)
-    const {dataMap} = useModalContext();
+    const { dataMap } = useModalContext();
     const [modalRef, modalInstance = {} as ModalInstance] = useCompInstance<ModalInstance>()
-    const {openOkLoading, closeOkLoading, closeModal} = modalInstance;
+    const { openOkLoading, closeOkLoading, closeModal } = modalInstance;
 
     useImperativeHandle(ref, () => modalInstance, [modalInstance])
 
+    const handleDataChangeCb = useCallback(handleDataChange, [isUpdate])
     useEffect(() => {
-        dataMap && handleDataChange(dataMap)
-    },[dataMap])
+        dataMap && handleDataChangeCb(dataMap)
+    }, [dataMap, handleDataChangeCb])
 
     const propsValue: BasicModalProps = {
         name: 'projectmodal',
@@ -46,14 +47,14 @@ export const ProjectModal = forwardRef<Partial<ModalInstance>, ProjectModalProps
             onOk: handleSubmit
         },
         headerProps: {
-            title: isUpdate 
-                ? formatById('view.edit', { target: formatById('view.project') }) 
-                : formatById('view.add', { target: formatById('view.project') }) 
+            title: isUpdate
+                ? formatById('view.edit', { target: formatById('view.project') })
+                : formatById('view.add', { target: formatById('view.project') })
         },
         ...rest
     }
 
-    async function handleSubmit() {
+    function handleSubmit() {
         try {
             //   const values = await validate();
             openOkLoading?.();
@@ -63,7 +64,7 @@ export const ProjectModal = forwardRef<Partial<ModalInstance>, ProjectModalProps
             closeOkLoading?.();
         }
     }
-    async function handleDataChange(data: ModalContextData) {
+    function handleDataChange(data: ModalContextData) {
         // resetFields();
         setUpdate(!!data?.isUpdate)
 
@@ -84,3 +85,5 @@ export const ProjectModal = forwardRef<Partial<ModalInstance>, ProjectModalProps
         </BasicModal>
     )
 })
+
+ProjectModal.displayName = 'ProjectModal'

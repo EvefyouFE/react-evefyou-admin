@@ -13,15 +13,13 @@ export const BasicTittle: FC<PropsWithChildrenCls<BasicTittleProps>> = ({
     className,
     children,
 }) => {
-    const {prefixCls} = useDesign('basic-title')
-    const rootClsName = useMemo(() => {
-        return classNames(
-            className,
-            prefixCls,
-            children && span && prefixCls.concat('-show-span'),
-            normal && prefixCls.concat('-normal')
-        )
-    }, [span, normal])
+    const { prefixCls } = useDesign('basic-title')
+    const rootClsName = useMemo(() => classNames(
+        className,
+        prefixCls,
+        children && span && prefixCls.concat('-show-span'),
+        normal && prefixCls.concat('-normal')
+    ), [className, prefixCls, children, span, normal])
     return (
         <span className={rootClsName} onDoubleClick={onDoubleClick}>
             {children}

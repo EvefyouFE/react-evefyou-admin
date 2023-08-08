@@ -1,27 +1,27 @@
-import { ModalContextData, ModalInstance } from "@/components/Modal"
-import { TableActionItem } from "@/components/Table"
-import { TableAction } from "@/components/Table/src/components/TableAction"
 import { DeleteTwoTone, EditOutlined } from "@ant-design/icons"
-import { Project } from "@models/index"
+import { Project } from "@models/project"
 import { Button } from "antd"
+import { ModalContextData, ModalInstance } from "@/components/Modal"
+import { TableActionItem } from "@/components/Table/src/types/table"
+import { TableAction } from "@/components/Table/src/components/TableAction"
 import { formatById } from "@/locales"
 
 export function renderActionFn(modalInstance: Partial<ModalInstance>) {
     const {
         openModal
     } = modalInstance;
-    function renderAction(value: any, record: Project, index: number) {
-        function handleEditOnClick(value: any, record: Project, index: number) {
-            console.debug(value,record,index)
+    function renderAction(value: Value, record: Project, index: number) {
+        function handleEditOnClick(v: Value, rd: Project, idx: number) {
+            console.debug(v, rd, idx)
             const data: ModalContextData = {
-                record,
+                record: rd,
                 isUpdate: true
             }
 
             openModal?.(true, data)
         }
-        function handleDeleteOnClick(value: any, record: Project, index: number) {
-            console.debug(value,record,index)
+        function handleDeleteOnClick(v: Value, rd: Project, idx: number) {
+            console.debug(v, rd, idx)
         }
         const items: TableActionItem[] = [
             {
@@ -31,7 +31,7 @@ export function renderActionFn(modalInstance: Partial<ModalInstance>) {
             },
             {
                 key: 'project-action-delete',
-                icon: <DeleteTwoTone twoToneColor={'red'} />,
+                icon: <DeleteTwoTone twoToneColor="red" />,
                 popConfirmProps: {
                     title: '是否确认删除',
                     placement: 'left',
@@ -47,8 +47,8 @@ export function renderActionFn(modalInstance: Partial<ModalInstance>) {
 
 export function renderToolbar() {
     return (
-      <Button type="primary">
-        {formatById('view.add', { target: formatById('view.project') })}
-      </Button>
+        <Button type="primary">
+            {formatById('view.add', { target: formatById('view.project') })}
+        </Button>
     )
 }

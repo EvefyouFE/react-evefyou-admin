@@ -8,6 +8,8 @@
     },
     "extends": "./tsconfig.json",
     "include": [
+        "src",
+        "types/*.d.ts",
         "tools/**/*.ts",
         ".eslintrc.cjs",
         "jest.config.base.js",

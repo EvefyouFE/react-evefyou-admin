@@ -56,4 +56,4 @@ export function del(compName: ItemComponentType) {
   itemComponentMap.delete(compName);
 }
 
-export { itemComponentMap as itemComponentMap };
+export { itemComponentMap };

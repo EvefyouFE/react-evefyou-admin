@@ -1,6 +1,14 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-shadow */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // axios配置  可自行根据项目进行更改，只需更改该文件即可，其他文件可以不动
 // The axios configuration can be changed according to the project, just change the file, other files can be left unchanged
-
+import { ReactNode, createContext } from "react";
+import { clone, is, isEmpty, isNil } from "ramda";
+import axios from "axios";
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import type { AxiosTransform, CreateAxiosOptions } from './axiosTransform';
 import { VAxios } from './Axios';
@@ -8,28 +16,26 @@ import { useGlobSetting } from '@/hooks/setting';
 import { ContentTypeEnum, RequestEnum, ResultEnum } from '@/enums';
 import { deepMerge } from '@/utils/object';
 
-import { ReactNode, createContext } from "react";
 import { getToken } from "@/utils/auth";
 import { formatRequestDate, joinTimestamp, setObjToUrlParams } from "./helper";
-import { clone, is, isEmpty, isNil } from "ramda";
 import { formatById, formatOutside } from "@/locales";
-import { useMessage } from "@/hooks/web";
-import axios from "axios";
+import { getMessageHelper } from "@/hooks/web";
 import { AxiosRetry } from "./axiosRetry";
 
+// eslint-disable-next-line react-hooks/rules-of-hooks
 const globSetting = useGlobSetting();
-const urlPrefix = globSetting.urlPrefix;
+const { urlPrefix = '' } = globSetting;
 
 
 const beforeRequestHook = (config: AxiosRequestConfig, options: RequestOptions) => {
-  const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true, urlPrefix } = options;
+  const { apiUrl, joinPrefix, joinParamsToUrl, formatDate, joinTime = true } = options;
 
   if (joinPrefix) {
-    config.url = `${urlPrefix}${config.url}`;
+    config.url = `${urlPrefix}${config.url ?? ''}`;
   }
 
   if (apiUrl && is(String, apiUrl)) {
-    config.url = `${apiUrl}${config.url}`;
+    config.url = `${apiUrl}${config.url ?? ''}`;
   }
   const params = config.params || {};
   const data = config.data || false;
@@ -40,35 +46,33 @@ const beforeRequestHook = (config: AxiosRequestConfig, options: RequestOptions) 
       config.params = Object.assign(params || {}, joinTimestamp(joinTime, false));
     } else {
       // 兼容restful风格
-      config.url = config.url + params + `${joinTimestamp(joinTime, true)}`;
+      config.url = `${(config.url ?? '') + params}${joinTimestamp(joinTime, true)}`;
       config.params = undefined;
+    }
+  } else if (!is(String, params)) {
+    formatDate && formatRequestDate(params);
+    if (
+      Reflect.has(config, 'data') &&
+      config.data &&
+      (Object.keys(config.data).length > 0 || config.data instanceof FormData)
+    ) {
+      config.data = data;
+      config.params = params;
+    } else {
+      // 非GET请求如果没有提供data，则将params视为data
+      config.data = params;
+      config.params = undefined;
+    }
+    if (joinParamsToUrl) {
+      config.url = setObjToUrlParams(
+        config.url as string,
+        { ...config.params, ...config.data },
+      );
     }
   } else {
-    if (!is(String, params)) {
-      formatDate && formatRequestDate(params);
-      if (
-        Reflect.has(config, 'data') &&
-        config.data &&
-        (Object.keys(config.data).length > 0 || config.data instanceof FormData)
-      ) {
-        config.data = data;
-        config.params = params;
-      } else {
-        // 非GET请求如果没有提供data，则将params视为data
-        config.data = params;
-        config.params = undefined;
-      }
-      if (joinParamsToUrl) {
-        config.url = setObjToUrlParams(
-          config.url as string,
-          Object.assign({}, config.params, config.data),
-        );
-      }
-    } else {
-      // 兼容restful风格
-      config.url = config.url + params;
-      config.params = undefined;
-    }
+    // 兼容restful风格
+    config.url += params;
+    config.params = undefined;
   }
   return config;
 }
@@ -84,6 +88,7 @@ const requestInterceptors = (config: InternalAxiosRequestConfig, options: Create
   if (token && (config as Recordable)?.requestOptions?.withToken !== false) {
     // jwt token
     (config as Recordable).headers.Authorization = options.authenticationScheme
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       ? `${options.authenticationScheme} ${token}`
       : token;
   }
@@ -93,11 +98,9 @@ const requestInterceptors = (config: InternalAxiosRequestConfig, options: Create
 /**
  * @description: 响应拦截器处理
  */
-const responseInterceptors = (res: AxiosResponse<any>) => {
-  return res;
-}
+const responseInterceptors = (res: AxiosResponse<any>) => res
 
-const { createMessage, createErrorModal, createSuccessModal } = useMessage();
+const { createMessage, createErrorModal, createSuccessModal } = getMessageHelper();
 const transformResponseHook = (res: AxiosResponse<Res>, options: RequestOptions) => {
   const { isTransformResponse, isReturnNativeResponse } = options;
   // 是否返回原生响应头 比如：需要获取响应头时使用该属性
@@ -191,7 +194,7 @@ const responseInterceptorsCatch = (axiosInstance: AxiosResponse, error: any) => 
       return Promise.reject(error);
     }
   } catch (error) {
-    throw new Error(error as unknown as string);
+    throw new Error(error as string);
   }
 
   // 添加自动重试机制 保险起见 只针对GET请求
@@ -247,7 +250,7 @@ function createAxios(opt?: Partial<CreateAxiosOptions>) {
           // 接口地址
           apiUrl: globSetting.apiUrl,
           // 接口拼接地址
-          urlPrefix: urlPrefix,
+          urlPrefix,
           //  是否加入时间戳
           joinTime: true,
           // 忽略重复请求

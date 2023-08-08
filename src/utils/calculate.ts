@@ -13,7 +13,7 @@ export function increaseWithUnit(
     const unit = target.slice(value.length);
     const result = parseFloat(value) + delta;
     if (Number.isNaN(result)) return target;
-    return result + unit;
+    return `${result}${unit}`;
 }
 export function addWithUnit(
     target: string | number,
@@ -27,7 +27,7 @@ export function addWithUnit(
     const unit = target.slice(targetValue.length);
     const result = parseFloat(targetValue) + parseFloat(deltaValue);
     if (Number.isNaN(result)) return target;
-    return result + unit;
+    return `${result}${unit}`;
 }
 
 export function decreaseWithUnit(
@@ -39,7 +39,7 @@ export function decreaseWithUnit(
     const unit = target.slice(value.length);
     const result = parseFloat(value) - delta;
     if (Number.isNaN(result)) return target;
-    return result + unit;
+    return `${result}${unit}`;
 }
 export function subtractWithUnit(
     target: string | number,
@@ -56,7 +56,7 @@ export function subtractWithUnit(
         result = parseFloat(targetValue) - parseFloat(deltaValue);
     }
     if (Number.isNaN(result)) return target;
-    return result + unit;
+    return `${result}${unit}`;
 }
 export function subtractAllWithUnit(
     target: string | number,

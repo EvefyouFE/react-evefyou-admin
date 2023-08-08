@@ -3,15 +3,14 @@ import { useFullscreen } from "ahooks";
 import { Tooltip, TooltipProps } from "antd";
 import React from "react";
 import { FormattedMessage } from "react-intl";
-import { useTableContext } from "../../BasicTable";
+import { useTableContext } from "../../context";
 
-export type FullScreenSettingProps = Partial<TooltipProps> & {
-}
+export type FullScreenSettingProps = Partial<TooltipProps>;
 
 export const FullScreenSetting: React.FC<FullScreenSettingProps> = ({
     getPopupContainer
 }) => {
-    const {getElement} = useTableContext();
+    const { getElement } = useTableContext();
     const [isFullscreen, { toggleFullscreen }] = useFullscreen(getElement)
     return (
         <Tooltip

@@ -1,4 +1,3 @@
-import { getPopupContainer as getParentPopupContainer } from '@/utils/dom';
 import { SettingOutlined } from "@ant-design/icons";
 import type { DragEndEvent } from '@dnd-kit/core';
 import { DndContext } from '@dnd-kit/core';
@@ -12,27 +11,18 @@ import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import classNames from "classnames";
 import { clone, is, omit } from "ramda";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FormattedMessage } from "react-intl";
-import { TableColumnPropsWithKey } from "../../props";
-import { ColumnChangeParam } from "../../types";
+import { ColumnChangeParam } from "../../types/table";
 import { ScrollContainer } from "@/components/Containers";
-import { useTableContext } from "../../BasicTable";
+import { useTableContext } from "../../context";
 import { useUnmountEffect } from "@/hooks/core";
 import { useDesign } from "@/hooks/design";
 import './ColumnSetting.less';
 import { PlainOptionNode } from "./PlainOptionNode";
+import { getPopupContainer as getParentPopupContainer } from '@/utils/dom';
+import { CheckListState, ColumnSettingProps, PlainOption } from "./ColumnSettingType";
 
-interface CheckListState {
-    checkAll: boolean;
-    checkedList: React.Key[];
-    defaultCheckList: React.Key[];
-}
-
-export type PlainOption = Pick<TableColumnPropsWithKey, 'key' | 'dataIndex' | 'fixed' | 'hidden'> & {
-    label: React.ReactNode;
-    value: React.Key;
-}
 
 const DEFALT_CHECK_LIST_STATE: CheckListState = {
     checkAll: true,
@@ -40,11 +30,7 @@ const DEFALT_CHECK_LIST_STATE: CheckListState = {
     defaultCheckList: []
 }
 
-export interface ColumnSettingProps {
-    getPopupContainer: (triggerNode: HTMLElement) => HTMLElement;
-    onColumnsChange?: (data: ColumnChangeParam[]) => void;
-}
-
+/* eslint-disable */
 export const ColumnSetting: React.FC<ColumnSettingProps> = ({
     getPopupContainer,
     onColumnsChange,
@@ -69,14 +55,21 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
 
     const indeterminateMemo = useMemo(() => {
         const len = plainOptionsState.length;
-        let checkedLen = checkedList.length;
+        const checkedLen = checkedList.length;
         return checkedLen > 0 && checkedLen < len;
     }, [])
 
     const defaultRowSelection = useMemo(() => getDefaultRowSelection(), [getDefaultRowSelection]);
-    const columnsIgnoreIndexAndAction = useMemo(() => {
-        return getColumns({ ignoreIndex: true, ignoreAction: true })
-    }, [getColumns])
+    const columnsIgnoreIndexAndAction = useMemo(() => getColumns({ ignoreIndex: true, ignoreAction: true }), [getColumns])
+
+    const handleCheckAllChangeCb = useCallback(handleCheckAllChange, [plainOptionsState, checkedList])
+    const handleCheckIndexChangeCb = useCallback(handleCheckIndexChange, [])
+    const handleCheckSelectChangeCb = useCallback(handleCheckSelectChange, [defaultRowSelection])
+    const resetCb = useCallback(reset, [checkListState, defaultCheckList, cachePlainOptionsState])
+    const handleColumnFixedCb = useCallback(handleColumnFixed, [checkedList])
+    const handlePlainOptionDragEndCb = useCallback(handlePlainOptionDragEnd, [])
+    const handleCheckedListChangeCb = useCallback(handleCheckedListChange, [checkListState, plainOptionsState])
+    const getPopoverPopupContainerCb = useCallback(getPopoverPopupContainer, [])
 
     useUnmountEffect(() => {
         hasInit.current = null
@@ -90,11 +83,11 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
         }, 0)
     }, [columnsIgnoreIndexAndAction])
     useEffect(() => {
-        if(hasInit.current) {
+        if (hasInit.current) {
             setColumnsWithCache(plainOptionsState)
-            const data: ColumnChangeParam[] = plainOptionsState.map((col) => {
-                return { dataIndex: col.value, fixed: col.fixed, hidden: col.hidden ?? false };
-            });
+            const data: ColumnChangeParam[] = plainOptionsState.map((col) => ({
+                dataIndex: col.value, fixed: col.fixed, hidden: col.hidden ?? false
+            }));
             onColumnsChange?.(data)
         }
     }, [plainOptionsState])
@@ -164,15 +157,13 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
         }
     }
     function handleCheckAllChange(e: CheckboxChangeEvent) {
-        const checkAll = e.target.checked;
+        const chAll = e.target.checked;
         const checkList = plainOptionsState.map((item) => item.value);
-        setCheckListState({ ...checkListState, checkAll, checkedList: checkAll ? checkList : [] })
-        setPlainOptionsState(ops => {
-            return ops.map(op => {
-                op.hidden = !checkAll
-                return op;
-            })
-        })
+        setCheckListState({ ...checkListState, checkAll: chAll, checkedList: chAll ? checkList : [] })
+        setPlainOptionsState(ops => ops.map(op => {
+            op.hidden = !chAll
+            return op;
+        }))
     }
     function handleCheckIndexChange(e: CheckboxChangeEvent) {
         setShowIndexColumn(e.target.checked);
@@ -210,58 +201,56 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
         }))
     }
 
-    const renderTitle = () => {
-        return (
-            <div className="flex items-center justify-between">
-                <Checkbox
-                    indeterminate={indeterminateMemo}
-                    checked={checkAll}
-                    onChange={handleCheckAllChange}
-                >
-                    <FormattedMessage id="components.table.setting.columns.showAll" />
-                </Checkbox>
-                <Checkbox
-                    checked={checkIndexState}
-                    onChange={handleCheckIndexChange}
-                >
-                    <FormattedMessage id="components.table.setting.columns.showIndex" />
-                </Checkbox>
-                <Checkbox
-                    checked={checkSelectState}
-                    onChange={handleCheckSelectChange}
-                    disabled={!!!defaultRowSelection}
-                >
-                    <FormattedMessage id="components.table.setting.columns.showSelect" />
-                </Checkbox>
-                <Button size="small" type="link" onClick={reset}>
-                    <FormattedMessage id="components.common.reset" />
-                </Button>
-            </div>
-        )
-    }
+    const renderTitle = () => (
+        <div className="flex items-center justify-between">
+            <Checkbox
+                indeterminate={indeterminateMemo}
+                checked={checkAll}
+                onChange={handleCheckAllChangeCb}
+            >
+                <FormattedMessage id="components.table.setting.columns.showAll" />
+            </Checkbox>
+            <Checkbox
+                checked={checkIndexState}
+                onChange={handleCheckIndexChangeCb}
+            >
+                <FormattedMessage id="components.table.setting.columns.showIndex" />
+            </Checkbox>
+            <Checkbox
+                checked={checkSelectState}
+                onChange={handleCheckSelectChangeCb}
+                disabled={!defaultRowSelection}
+            >
+                <FormattedMessage id="components.table.setting.columns.showSelect" />
+            </Checkbox>
+            <Button size="small" type="link" onClick={resetCb}>
+                <FormattedMessage id="components.common.reset" />
+            </Button>
+        </div>
+    )
+    const leftIconClassName = useCallback((item: PlainOption) => {
+        const active = item.fixed === 'left'
+        const disabled = !checkedList.includes(item.value)
+        return classNames(`${prefixCls}-fixed-left`, {
+            active,
+            disabled
+        }, 'text-[rgba(0,0,0,45%)] cursor-pointer')
+    }, [checkedList])
+    const rightIconClassName = useCallback((item: PlainOption) => {
+        const active = item.fixed === 'right'
+        const disabled = !checkedList.includes(item.value)
+        return classNames(`${prefixCls}-fixed-right`, {
+            active,
+            disabled
+        }, 'text-[rgba(0,0,0,45%)] cursor-pointer transform rotate-180')
+    }, [checkedList])
     const renderContent = () => {
-        function leftIconClassName(item: PlainOption) {
-            const active = item.fixed === 'left'
-            const disabled = !checkedList.includes(item.value)
-            return classNames(`${prefixCls}-fixed-left`, {
-                active,
-                disabled
-            }, 'text-[rgba(0,0,0,45%)] cursor-pointer')
-        }
-        function rightIconClassName(item: PlainOption) {
-            const active = item.fixed === 'right'
-            const disabled = !checkedList.includes(item.value)
-            return classNames(`${prefixCls}-fixed-right`, {
-                active,
-                disabled
-            }, 'text-[rgba(0,0,0,45%)] cursor-pointer transform rotate-180')
-        }
         const plainOptionNodes = plainOptionsState
             .map((item) => (
                 <PlainOptionNode
                     key={item.key}
                     item={item}
-                    onFixed={handleColumnFixed}
+                    onFixed={handleColumnFixedCb}
                     getPopupContainer={getPopupContainer}
                     leftIconClassName={leftIconClassName}
                     rightIconClassName={rightIconClassName}
@@ -269,7 +258,7 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
             ))
         return (
             <ScrollContainer className="w-full">
-                <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={handlePlainOptionDragEnd}>
+                <DndContext modifiers={[restrictToVerticalAxis]} onDragEnd={handlePlainOptionDragEndCb}>
                     <SortableContext
                         items={plainOptionsState.map((i) => i.key)}
                         strategy={verticalListSortingStrategy}
@@ -277,7 +266,7 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
                         <Checkbox.Group
                             ref={columnListRef}
                             value={checkedList}
-                            onChange={handleCheckedListChange}
+                            onChange={handleCheckedListChangeCb}
                         >
                             {plainOptionNodes}
                         </Checkbox.Group>
@@ -301,11 +290,11 @@ export const ColumnSetting: React.FC<ColumnSettingProps> = ({
                 placement="bottomLeft"
                 trigger="click"
                 overlayClassName="w-110"
-                getPopupContainer={getPopoverPopupContainer}
+                getPopupContainer={getPopoverPopupContainerCb}
                 title={renderTitle()}
                 content={renderContent()}
             >
-                <SettingOutlined width={'1em'} height={'1em'} />
+                <SettingOutlined width="1em" height="1em" />
             </Popover>
         </Tooltip>
     )

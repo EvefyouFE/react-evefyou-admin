@@ -38,7 +38,7 @@ export function routeAntdBreadCrumbHandle({
                 }))
             }
         })
-};
+}
 
 export function handleFn(option: RouteHandleOption = {}): RouteHandle {
     const crumb = routeAntdBreadCrumbHandle(option);

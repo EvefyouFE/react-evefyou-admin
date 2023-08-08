@@ -1,5 +1,5 @@
 import { BasicTableProps } from "../props";
-import { TableHookMethods } from "./table";
+import { TableHookMethods } from "./tableHook";
 
 export interface UseTableScrollHooksMethods extends Pick<TableHookMethods,
   'getRowSelection' | 'getViewColumns'> {

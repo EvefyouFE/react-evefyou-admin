@@ -1,5 +1,4 @@
-
-import { ConfigEnv, UserConfig, UserConfigExport, defineConfig } from 'vite';
+import { ConfigEnv, UserConfig, defineConfig } from 'vite';
 import { generateModifyVars } from './build/generate/generateModifyVars';
 import { loadEnv } from 'vite';
 import { wrapperEnv } from "./build/utils";
@@ -10,8 +9,7 @@ import moment from 'moment';
 import cssnanoPlugin from "cssnano";
 import postcssPresetEnv from 'postcss-preset-env';
 import { createVitePlugins } from "./build/vite/plugins";
-import { getAppConfigSrc, getAppConfigSrcUrl } from './build/vite/plugins/html';
-import { fileURLToPath } from 'node:url';
+import { getAppConfigSrc } from './build/vite/plugins/html';
 
 const { dependencies, devDependencies, name, version } = pkg;
 const __APP_INFO__ = {

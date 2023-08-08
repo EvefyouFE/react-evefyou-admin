@@ -1,8 +1,7 @@
-import { useLocale } from '@/locales';
 import { LoginByMessageReq } from '@models/auth';
 import { Button, Form, Input } from 'antd';
 import { FC } from 'react';
-import { FormattedMessage } from 'react-intl';
+import { useLocale } from '@/locales';
 
 export const LoginByMessage: FC = () => {
     const { formatById } = useLocale();
@@ -35,7 +34,7 @@ export const LoginByMessage: FC = () => {
                             marginLeft: '1rem'
                         }}
                     >
-                        <FormattedMessage id="login.form.btn.sendMessage" />
+                        {formatById('login.form.btn.sendMessage')}
                     </Button>
                 </div>
             </Form.Item>
@@ -43,7 +42,7 @@ export const LoginByMessage: FC = () => {
                 type="primary"
                 className='w-full'
             >
-                <FormattedMessage id="login.form.btn.submit" />
+                {formatById('login.form.btn.submit')}
             </Button>
         </Form>
     );

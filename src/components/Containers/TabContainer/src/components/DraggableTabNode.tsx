@@ -35,7 +35,7 @@ export const DraggableTabNode = ({ className, onActiveBarTransform, ...props }: 
                 `,
             );
         }
-    }, [className, isSorting, transform]);
+    }, [className, isSorting, onActiveBarTransform, transform, transition]);
 
     return React.cloneElement(props.children as React.ReactElement, {
         ref: setNodeRef,

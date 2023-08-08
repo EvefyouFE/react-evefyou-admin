@@ -1,8 +1,8 @@
 import { FetchQueryOptions, MutationOptions, QueryClient, QueryFunction, QueryKey, QueryObserverOptions, UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosRequestConfig } from "axios";
 import { values } from "ramda";
 import { defHttp } from "./request";
 import { FetchTypeEnum } from "@/enums/queryEnum";
-import { AxiosRequestConfig } from "axios";
 
 export interface FetchFn<T = any, D = any> {
     (cfg: AxiosRequestConfig<D>, opt: RequestOptions): T | Promise<T>
@@ -79,7 +79,7 @@ export async function fetchQuery<TData>(
     if (!opt.queryKey) {
         throw new Error('queryKey is needed in query fetch!')
     }
-    return await queryClient.fetchQuery(opt)
+    return queryClient.fetchQuery(opt)
 }
 
 
@@ -125,11 +125,11 @@ export function query<T, D>(
     optionsFn: FetchQueryOptionsFn<T, D>
 ) {
     const fn: Fn<T, D> = (cb) => (cfg, qopt, ropt) => cb(getOptions(optionsFn, cfg, qopt, ropt))
-    const asyncFn: AsyncFn<T, D> = (cb) => async (cfg, qopt, ropt) => await cb(getOptions(optionsFn, cfg, qopt, ropt))
+    const asyncFn: AsyncFn<T, D> = (cb) => async (cfg, qopt, ropt) => cb(getOptions(optionsFn, cfg, qopt, ropt))
     const resFn: Fn<Res<T>, D> = (cb) => (cfg, qopt, ropt = { isTransformResponse: false }) =>
         cb(getResOptions(optionsFn, cfg, qopt, ropt))
     const resAsyncFn: AsyncFn<Res<T>, D> = (cb) => async (cfg, qopt, ropt = { isTransformResponse: false }) =>
-        await cb(getResOptions(optionsFn, cfg, qopt, ropt))
+        cb(getResOptions(optionsFn, cfg, qopt, ropt))
     const multiFn: MultiFn<T, D> = (cb, cb2) => async (cfg, qopt, ropt = { isTransformResponse: false }) => {
         const options = getOptions(optionsFn, cfg, qopt, ropt)
         return cb(options) ?? await cb2(options)
@@ -157,6 +157,7 @@ export function getQueryKey<T = any, D = any>(
 ) {
     const queryKey = opt?.queryKey ?? cfg.url?.split('/').slice(1)
     const autoQueryKey = opt?.autoQueryKey ?? true
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return autoQueryKey && cfg.params ? [...queryKey ?? [], ...values(cfg.params)] : queryKey
 }
 

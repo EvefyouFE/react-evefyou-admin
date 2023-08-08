@@ -1,10 +1,10 @@
+import { atom } from "recoil";
 import { DEFAULT_PROJECT_CONFIG } from "@/config/app/project";
 import { DEFAULT_ROUTER_CONFIG } from "@/config/app/router";
 import { BaseSetting, ProjectConfig } from "@/types/config";
-import { defineRecoilSelectorState } from "@/hooks/state";
-import { atom } from "recoil";
+import { defineRecoilValue } from "@/hooks/state";
 
-interface AppState {
+export interface AppState {
     // project config
     projectConfig: ProjectConfig;
     routerConfig: RouterConfig;
@@ -20,9 +20,9 @@ export const appAtom = atom<AppState>({
     default: DEFAULT_APP_STATE
 });
 
-export const useAppRecoilState = defineRecoilSelectorState({
+export const useAppRecoilValue = defineRecoilValue({
     name: 'appState',
-    state: DEFAULT_APP_STATE as AppState,
+    state: DEFAULT_APP_STATE,
     getters: {
         getBaseSetting(state) {
             return state.projectConfig.baseSetting
@@ -61,8 +61,8 @@ export const useAppRecoilState = defineRecoilSelectorState({
         toggleCollapsed() {
             const menuSetting = this.getMenuSetting()
             this.setMenuSetting({
-                collapsed: !menuSetting.collapsed, 
-                showMenu: !menuSetting.showCollapsed ? menuSetting.collapsed : true 
+                collapsed: !menuSetting.collapsed,
+                showMenu: !menuSetting.showCollapsed ? menuSetting.collapsed : true
             })
         }
     }

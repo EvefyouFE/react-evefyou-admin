@@ -15,7 +15,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
 import WindiCSS from 'vite-plugin-windicss';
 
-export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
+export function createVitePlugins(viteEnv: ImportMetaEnv, isBuild: boolean) {
   const {
     VITE_USE_IMAGEMIN,
     VITE_USE_MOCK,

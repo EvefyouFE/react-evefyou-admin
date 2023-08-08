@@ -1,5 +1,3 @@
 import { BasicTableProps } from "@/components/Table";
 
-export interface TableContainerProps<T extends Recordable = any> extends BasicTableProps<T> {
-
-}
+export type TableContainerProps<T = any> = BasicTableProps<T>;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { CSSProperties } from "react";
 import { ObjectUtils } from "./utils";
 import { genUUID } from "@/utils/generate";
@@ -6,7 +7,7 @@ export type ScrollContainerDefaultProps = PropsWithChildrenCls<{
     __TYPE: 'ScrollContainer';
     id: string;
     style: CSSProperties;
-}> 
+}>
 
 export type ScrollContainerProps = ScrollContainerDefaultProps & Recordable
 

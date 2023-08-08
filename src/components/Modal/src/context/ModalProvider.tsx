@@ -1,14 +1,15 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
 import { FC, createContext, useState } from "react"
 import { ModalContextProps, ModalContextValue } from "../typing"
 
 const DEFAULT_MODAL_CONTEXT_VALUE = {
     dataMap: {
     },
-    setDataMap: () => {} ,
+    setDataMap: () => { },
     openMap: {
 
     },
-    setOpenMap: () => {} ,
+    setOpenMap: () => { },
 }
 
 export const ModalContext = createContext<ModalContextValue>(DEFAULT_MODAL_CONTEXT_VALUE)

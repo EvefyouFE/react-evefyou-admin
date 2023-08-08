@@ -1,32 +1,32 @@
-import { ReactComponent as QQLogoSvg } from '@/assets/logo/qq_logo.svg';
-import { ReactComponent as WechatLogoSvg } from '@/assets/logo/wechat_logo.svg';
-import { LoginTypeEnum } from '@/pages/constants/login';
 import { Space, Tabs, TabsProps } from 'antd';
 import classNames from 'classnames';
 import { FC, useState } from 'react';
-import { FormattedMessage } from 'react-intl';
 import './index.less';
 import { LoginByMessage } from './loginByMessage';
 import { LoginByQrCode } from './loginByQrCode';
 import { LoginByUsername } from './loginByUsername';
 import { useDesign } from "@/hooks/design";
 import { useAppContext } from "@/components/Application";
+import { ReactComponent as QQLogoSvg } from '@/assets/logo/qq_logo.svg';
+import { ReactComponent as WechatLogoSvg } from '@/assets/logo/wechat_logo.svg';
+import { LoginTypeEnum } from '@/pages/constants/login';
+import { formatById } from "@/locales";
 
 const loginTypeItems: TabsProps['items'] = [
     {
         key: LoginTypeEnum.username,
-        label: <FormattedMessage id="login.form.tabs.loginByUsername" />,
+        label: formatById('login.form.tabs.loginByUsername'),
     },
     {
         key: LoginTypeEnum.message,
-        label: <FormattedMessage id="login.form.tabs.loginByMessage" />,
+        label: formatById('login.form.tabs.loginByMessage'),
     },
 ];
 
 export const LoginForm: FC = () => {
     const [loginType, setLoginType] = useState<`${LoginTypeEnum}`>(LoginTypeEnum.username);
     const { prefixCls } = useDesign('login-form')
-    const {name} = useAppContext()
+    const { name } = useAppContext()
 
     let children;
     const formHeader = (
@@ -53,6 +53,7 @@ export const LoginForm: FC = () => {
             break;
         case LoginTypeEnum.wechat:
         case LoginTypeEnum.qq:
+        default:
             children = <LoginByQrCode loginType={loginType} />;
             break;
     }
@@ -63,10 +64,10 @@ export const LoginForm: FC = () => {
         <div className={rootClsName}>
             <Tabs
                 size="large"
-                centered={true}
+                centered
                 defaultActiveKey={LoginTypeEnum.username}
                 items={loginTypeItems}
-                animated={true}
+                animated
                 onTabClick={(key: string) => setLoginType(key as `${LoginTypeEnum}`)}
             />
             {children}
@@ -91,7 +92,7 @@ export const LoginForm: FC = () => {
                         onClick={() => setLoginType(LoginTypeEnum.qq)}
                     />
                 </Space>
-                <a>{'注册 >'}</a>
+                <a href="/">{'注册 >'}</a>
             </div>
         </div>
     );

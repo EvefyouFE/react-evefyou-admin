@@ -1,13 +1,19 @@
+import { isNil } from "ramda";
 import { cacheCipher } from '@/config/app/auth';
 import type { EncryptionParams } from '@/utils/cipher';
 import { AesEncryption } from '@/utils/cipher';
-import { isNil } from "ramda";
 
 export interface CreateStorageParams extends EncryptionParams {
   prefixKey: string;
   storage: Storage;
   hasEncrypt: boolean;
   timeout?: Nullable<number>;
+}
+export type StorageValue = Nullable<string | number | object | Recordable | undefined>;
+export interface StorageData {
+  value: StorageValue;
+  expire: Nullable<number>;
+  time: number;
 }
 export const createStorage = ({
   prefixKey = '',
@@ -31,9 +37,13 @@ export const createStorage = ({
    */
   const WebStorage = class WebStorage {
     private storage: Storage;
+
     private prefixKey?: string;
+
     private encryption: AesEncryption;
+
     private hasEncrypt: boolean;
+
     /**
      *
      * @param {*} storage
@@ -45,8 +55,8 @@ export const createStorage = ({
       this.hasEncrypt = hasEncrypt;
     }
 
-    private getKey(key: string) {
-      return `${this.prefixKey}${key}`.toUpperCase();
+    private getKey(k: string) {
+      return `${this.prefixKey || ''}${k}`.toUpperCase();
     }
 
     /**
@@ -56,7 +66,7 @@ export const createStorage = ({
      * @param {*} expire Expiration time in seconds
      * @memberof Cache
      */
-    set(key: string, value: any, expire: number | null = timeout) {
+    set(k: string, value: StorageValue, expire: number | null = timeout) {
       const stringData = JSON.stringify({
         value,
         time: Date.now(),
@@ -65,7 +75,7 @@ export const createStorage = ({
       const stringifyValue = this.hasEncrypt
         ? this.encryption.encryptByAES(stringData)
         : stringData;
-      this.storage.setItem(this.getKey(key), stringifyValue);
+      this.storage.setItem(this.getKey(k), stringifyValue);
     }
 
     /**
@@ -74,21 +84,22 @@ export const createStorage = ({
      * @param {*} def
      * @memberof Cache
      */
-    get(key: string, def: any = null): any {
-      const val = this.storage.getItem(this.getKey(key));
+    get(k: string, def: StorageValue = null): StorageValue {
+      const val = this.storage.getItem(this.getKey(k));
       if (!val) return def;
 
       try {
         const decVal = this.hasEncrypt ? this.encryption.decryptByAES(val) : val;
-        const data = JSON.parse(decVal);
+        const data = JSON.parse(decVal) as StorageData;
         const { value, expire } = data;
         if (isNil(expire) || expire >= new Date().getTime()) {
           return value;
         }
-        this.remove(key);
+        this.remove(k);
       } catch (e) {
         return def;
       }
+      return def;
     }
 
     /**
@@ -96,8 +107,8 @@ export const createStorage = ({
      * @param {string} key
      * @memberof Cache
      */
-    remove(key: string) {
-      this.storage.removeItem(this.getKey(key));
+    remove(k: string) {
+      this.storage.removeItem(this.getKey(k));
     }
 
     /**

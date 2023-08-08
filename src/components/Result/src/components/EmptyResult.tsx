@@ -8,8 +8,8 @@ interface EmptyResultProps {
     btnName?: string
 }
 
-export const EmptyResult: FC<EmptyResultProps> = ({back,title,subTitle,btnName}) => {
-    console.debug(back,title,subTitle,btnName)
+export const EmptyResult: FC<EmptyResultProps> = ({ back, title, subTitle, btnName }) => {
+    console.debug(back, title, subTitle, btnName)
     return (
         <Empty />
     )

@@ -1,8 +1,4 @@
-import { Icon } from "@/components/Icon";
-import {  useDesign } from "@/hooks/design";
-import { useLayoutSetting } from "@/hooks/setting";
-import { useTabs } from "@/hooks/components";
-import { useActiveItemsState } from "@/hooks/state/items";
+import { useFullscreen } from "ahooks";
 import { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { Tabs, TabsProps } from "antd";
@@ -12,12 +8,16 @@ import { useLocation, useNavigate } from "react-router";
 import { DndContextTabBar } from "./components/DndContextTabBar";
 import './index.less';
 import { TabBarExtraContent } from "./components/TabBarExtraContent";
-import { TabItem } from "./type";
 import { CommonContainer, CommonContainerInstance } from "../../CommonContainer";
-import { useFullscreen, useUpdate } from "ahooks";
 import { genUUID } from "@/utils/generate";
-import { useAppRecoilState } from "@/stores/app";
+import { useAppRecoilValue } from "@/stores/app";
+import { Icon } from "@/components/Icon";
+import { useDesign } from "@/hooks/design";
+import { useLayoutSettingValue } from "@/hooks/setting";
+import { useTabs } from "@/hooks/components/tabs";
+import { useTabItemsState } from "./hooks/useTabItemsState";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function translate2MenuItems(tabsMenuList: TabsMenuItem[]) {
     return tabsMenuList?.map((m, index) => ({
         key: index,
@@ -26,81 +26,87 @@ export function translate2MenuItems(tabsMenuList: TabsMenuItem[]) {
     }))
 }
 
-const CommonChildren = React.forwardRef(({ children }: {
+const ChildrenWraper = React.forwardRef(({ children }: {
     children: React.ReactNode,
-}, ref: React.ForwardedRef<CommonContainerInstance>) => {
-    return (
-        <CommonContainer ref={ref}>
-            {children}
-        </CommonContainer>
-    )
-})
+}, ref: React.ForwardedRef<CommonContainerInstance>) => (
+    <CommonContainer ref={ref}>
+        {children}
+    </CommonContainer>
+))
+ChildrenWraper.displayName = 'ChildrenWraper'
 
 export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
-    const [{ activeKeyState, itemsState }, {
-        items: {
+    const [{ activeKeyState }, {
+        itemsState: {
             set: setItems,
-            updateByKey,
         },
-        addAndActive: addItemAndActive,
-        active: changeActiveKey,
-        removeByKey: removeItemAndActive,
-        clear: removeAll,
+        addOrUpdateAndActive,
+        active,
+        removeByKey,
+        clear,
         removeLeft,
         removeOther,
         removeRight,
-    }] = useActiveItemsState<TabItem>();
+        getViewTabItems,
+    }] = useTabItemsState();
+    const itemsState = getViewTabItems()
     const newTabIndex = useRef(0);
     const location = useLocation();
-    const [,{getTabContainerSetting}] = useAppRecoilState()
+    const [, { getTabContainerSetting }] = useAppRecoilValue()
     const { indexRedirectPath, tabsMenuList } = getTabContainerSetting()
     const [className, setClassName] = useState('')
     const { getTabItem } = useTabs();
-    const { pageTabsNavHeightWithUnit } = useLayoutSetting()
+    const { pageTabsNavHeightWithUnit } = useLayoutSettingValue()
     const { prefixCls } = useDesign('tab-container')
     const containerRef = useRef<CommonContainerInstance>(null)
     const [, { toggleFullscreen }] = useFullscreen(getContainerElement)
     const navigate = useNavigate()
-    const update = useUpdate();
-    function onEdit(
+    const onEdit = useCallback((
         targetKey: React.MouseEvent | React.KeyboardEvent | string,
         action: 'add' | 'remove',
-    ) {
+    ) => {
         if (action === 'add') {
-            const newItem = { label: 'New Tab', children: 'Content of new Tab', key: `newTab${newTabIndex.current++}` }
-            addItemAndActive(newItem);
+            const newItem = { label: 'New Tab', children: 'Content of new Tab', key: `newTab${newTabIndex.current += 1}` }
+            addOrUpdateAndActive(newItem);
         } else {
-            removeItemAndActive(targetKey as string);
+            removeByKey(targetKey as string);
         }
-    }
+    }, [addOrUpdateAndActive, removeByKey])
+    const [childrenKeyState, setChildrenKeyState] = useState('')
+    const onChange = useCallback((activeKey: string) => {
+        active(activeKey)
+        activeKey
+            && !activeKey.startsWith('newTab')
+            && activeKey !== location.pathname
+            && navigate(activeKey)
+    }, [active, location.pathname, navigate])
 
+    const wrapChildren = useMemo(() => (
+        <ChildrenWraper ref={containerRef} key={childrenKeyState}>
+            {children}
+        </ChildrenWraper>
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    ), [childrenKeyState])
     useEffect(() => {
-        if (itemsState.length === 1) {
-            itemsState[0].closable = false;
-        } else if (itemsState.length > 1) {
-            itemsState[0].closable = true;
-        }
-        activeKeyState && !activeKeyState.startsWith('newTab') && navigate(activeKeyState as string)
-    }, [activeKeyState])
+        const path = location.pathname === '/' ? indexRedirectPath : location.pathname;
+        const locale = 'menu'.concat(path.replaceAll('/', '.'))
+        const pathItem = { ...getTabItem(path, locale, '', wrapChildren), forceRender: true }
+        addOrUpdateAndActive(pathItem)
+    }, [location.pathname, indexRedirectPath, getTabItem, wrapChildren, addOrUpdateAndActive])
 
-    useEffect(() => {
-        const newItem = getCurrentItem()
-        addItemAndActive(newItem)
-    }, [location.pathname])
-
-    const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => {
-        const handleOnDragEnd = useCallback(({ active, over }: DragEndEvent) => {
-            if (active.id !== over?.id) {
+    const useRenderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => {
+        const handleOnDragEnd = useCallback(({ active: activeItem, over }: DragEndEvent) => {
+            if (activeItem.id !== over?.id) {
                 setItems((prev) => {
-                    const activeIndex = prev.findIndex((i) => i.key === active.id);
+                    const activeIndex = prev.findIndex((i) => i.key === activeItem.id);
                     const overIndex = prev.findIndex((i) => i.key === over?.id);
                     return arrayMove(prev, activeIndex, overIndex);
                 });
             }
-        }, [setItems])
-        const handleOnActiveBarTransform = useCallback((className: string) => {
-            setClassName(className)
-        }, [setClassName])
+        }, [])
+        const handleOnActiveBarTransform = useCallback((cls: string) => {
+            setClassName(cls)
+        }, [])
         return (
             <DndContextTabBar
                 items={itemsState}
@@ -111,7 +117,6 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
             />
         )
     }
-
     const tabBarExtraContentItems = useMemo(() => translate2MenuItems(tabsMenuList), [tabsMenuList])
     const tabBarExtraContentPropsValue = {
         items: tabBarExtraContentItems,
@@ -126,20 +131,18 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
     const tabBarExtraContent = (
         <TabBarExtraContent {...tabBarExtraContentPropsValue} />
     )
+
     function onFullScreen() {
         toggleFullscreen()
     }
     function onRefresh() {
-        const currentItem = getCurrentItem(true)
-        updateByKey(currentItem)
-        changeActiveKey(currentItem.key)
-        update()
+        setChildrenKeyState(genUUID)
     }
     function onCloseAllTabs() {
-        removeAll()
+        clear()
     }
     function onCloseCurrentTab() {
-        activeKeyState && removeItemAndActive(activeKeyState)
+        activeKeyState && removeByKey(activeKeyState)
     }
     function onCloseLeftTabs() {
         activeKeyState && removeLeft(activeKeyState)
@@ -153,16 +156,6 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
     function getContainerElement() {
         return containerRef.current?.getElement()
     }
-    function getCurrentItem(randomKey: boolean = false) {
-        const path = location.pathname === '/' ? indexRedirectPath : location.pathname;
-        const locale = 'menu'.concat(path.replaceAll('/', '.'))
-        const wrapChildren = (
-            <CommonChildren ref={containerRef} key={randomKey ? genUUID() : undefined}>
-                {children}
-            </CommonChildren>
-        )
-        return { ...getTabItem(path, locale, '', wrapChildren), forceRender: true }
-    }
     return (
         <Tabs
             tabBarStyle={{
@@ -170,12 +163,12 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
             }}
             className={`${prefixCls} ${className} h-full`}
             size="small"
-            onChange={changeActiveKey}
+            onChange={onChange}
             activeKey={activeKeyState as string}
             type="editable-card"
             onEdit={onEdit}
             items={itemsState}
-            renderTabBar={renderTabBar}
+            renderTabBar={useRenderTabBar}
             tabBarExtraContent={tabBarExtraContent}
             destroyInactiveTabPane
             animated={{

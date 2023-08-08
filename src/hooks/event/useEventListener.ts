@@ -24,7 +24,7 @@ export type CreateFn = (
     addEvent: EventFn
 ) => CleanUpFn | void;
 export type Deps = Array<Partial<UseEventListenerParams>>;
-
+/* eslint-disable */
 export function useEventListener({
     el = window,
     type,
@@ -44,7 +44,7 @@ export function useEventListener({
             : listener;
 
         cleanup.current = () =>
-                el.removeEventListener(type, buildListener, options);
+            el.removeEventListener(type, buildListener, options);
 
         const element = el instanceof Element ? el : el.current;
         element && element.addEventListener(type, buildListener, options);

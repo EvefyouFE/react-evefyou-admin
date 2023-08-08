@@ -1,11 +1,11 @@
-import { useLayoutSetting } from '@/hooks/setting';
 import { Header as AntdHeader } from 'antd/es/layout/layout';
 import { FC } from 'react';
 import { HeaderAction } from './HeaderAction';
 import { HeaderLeft } from './HeaderLeft';
+import { useLayoutSettingValue } from '@/hooks/setting';
 
 export const Header: FC = () => {
-    const {headerHeightWithUnit} = useLayoutSetting()
+    const { headerHeightWithUnit } = useLayoutSettingValue()
     return (
         <AntdHeader
             className="flex items-center p-0 bg-white sticky top-0 z-10"

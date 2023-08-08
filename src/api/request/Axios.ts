@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { clone, is } from "ramda";
 import axios from 'axios';
 import qs from 'qs';
 import { ContentTypeEnum, RequestEnum } from '@/enums';
 import { AxiosCanceler } from "./axiosCancel";
-import { clone, is } from "ramda";
 import { CreateAxiosOptions } from "./axiosTransform";
 
 /**
@@ -11,6 +13,7 @@ import { CreateAxiosOptions } from "./axiosTransform";
  */
 export class VAxios {
   private axiosInstance: AxiosInstance;
+
   private readonly options: CreateAxiosOptions;
 
   constructor(options: CreateAxiosOptions) {
@@ -91,13 +94,13 @@ export class VAxios {
 
     // Request interceptor error capture
     requestInterceptorsCatch &&
-      is(Function,requestInterceptorsCatch) &&
+      is(Function, requestInterceptorsCatch) &&
       this.axiosInstance.interceptors.request.use(undefined, requestInterceptorsCatch);
 
     // Response result interceptor processing
     this.axiosInstance.interceptors.response.use((res: AxiosResponse<any>) => {
       res && axiosCanceler.removePending(res.config);
-      if (responseInterceptors && is(Function,responseInterceptors)) {
+      if (responseInterceptors && is(Function, responseInterceptors)) {
         res = responseInterceptors(res);
       }
       return res;
@@ -105,11 +108,11 @@ export class VAxios {
 
     // Response result interceptor error capture
     responseInterceptorsCatch &&
-      is(Function,responseInterceptorsCatch) &&
-      this.axiosInstance.interceptors.response.use(undefined, (error) => {
+      is(Function, responseInterceptorsCatch) &&
+      this.axiosInstance.interceptors.response.use(undefined, (error) =>
         // @ts-ignore
-        return responseInterceptorsCatch(this.axiosInstance, error);
-      });
+        responseInterceptorsCatch(this.axiosInstance, error)
+      );
   }
 
   /**
@@ -189,18 +192,18 @@ export class VAxios {
   request<T = any, D = any>(config: AxiosRequestConfig<D>, options?: RequestOptions): Promise<T> {
     let conf: CreateAxiosOptions = clone(config);
     // cancelToken 如果被深拷贝，会导致最外层无法使用cancel方法来取消请求
-    if(config.cancelToken){
-        conf.cancelToken = config.cancelToken
+    if (config.cancelToken) {
+      conf.cancelToken = config.cancelToken
     }
-    
+
     const transform = this.getTransform();
 
     const { requestOptions } = this.options;
 
-    const opt: RequestOptions = Object.assign({}, requestOptions, options);
+    const opt: RequestOptions = { ...requestOptions, ...options };
 
     const { beforeRequestHook, requestCatchHook, transformResponseHook } = transform || {};
-    if (beforeRequestHook && is(Function,beforeRequestHook)) {
+    if (beforeRequestHook && is(Function, beforeRequestHook)) {
       conf = beforeRequestHook(conf, opt);
     }
     conf.requestOptions = opt;
@@ -211,7 +214,7 @@ export class VAxios {
       this.axiosInstance
         .request<any, AxiosResponse<Res>>(conf)
         .then((res: AxiosResponse<Res>) => {
-          if (transformResponseHook && is(Function,transformResponseHook)) {
+          if (transformResponseHook && is(Function, transformResponseHook)) {
             try {
               const ret = transformResponseHook(res, opt);
               resolve(ret);
@@ -223,7 +226,7 @@ export class VAxios {
           resolve(res as unknown as Promise<T>);
         })
         .catch((e: Error | AxiosError) => {
-          if (requestCatchHook && is(Function,requestCatchHook)) {
+          if (requestCatchHook && is(Function, requestCatchHook)) {
             reject(requestCatchHook(e, opt));
             return;
           }

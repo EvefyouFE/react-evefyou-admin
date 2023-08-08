@@ -9,27 +9,26 @@ export interface UsePropsSetMethods<T> {
     resetProps: (props: T) => void;
 }
 
-export interface UsePropsMethods<T> extends UsePropsSetMethods<T> {
-}
+export type UsePropsMethods<T> = UsePropsSetMethods<T>;
 
 export type UsePropsReturnType<T> = [T, UsePropsMethods<T>]
 
-export function useProps<T extends Recordable>(props: T): UsePropsReturnType<T> {
+export function useProps<T>(props: T): UsePropsReturnType<T> {
     const [propsState, setPropsState] = usePropsState<T>(props);
 
     const setMethods: UsePropsSetMethods<T> = useMemo(() => {
-        function init(props: T) {
-            setProps(props)
+        function init(p: T) {
+            setProps(p)
         }
-        function initDebug(props: T, name?: string) {
-            console.log('initDebug...name:[' + name + ']', props)
-            setProps(props)
+        function initDebug(p: T, name?: string) {
+            console.log(`initDebug...name:[${name ?? ''}]`, p)
+            setProps(p)
         }
-        function setProps(props: T) {
-            setPropsState(p => ({ ...p, ...props }))
+        function setProps(pr: T) {
+            setPropsState(p => ({ ...p, ...pr }))
         }
-        function resetProps(props: T) {
-            setPropsState(props)
+        function resetProps(p: T) {
+            setPropsState(p)
         }
         return {
             init,
@@ -38,7 +37,7 @@ export function useProps<T extends Recordable>(props: T): UsePropsReturnType<T> 
             resetProps,
             setPropsState,
         }
-    }, [])
+    }, [setPropsState])
 
     return [propsState, setMethods]
 }

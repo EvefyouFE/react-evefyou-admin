@@ -1,16 +1,16 @@
+import { Locale, LoginByUsernameReq, UserInfo } from "@models/auth";
+import { MenuTreeList } from "@models/auth/memu";
+import { atom } from "recoil";
+import React from "react";
 import { mutationLogin, queryGetCurrentUser, queryLogout } from "@/api";
 import { DEFAULT_USER_INFO } from "@/config/user";
 import { PageEnum } from "@/enums";
-import { useMessage } from "@/hooks/web";
-import { defineRecoilSelectorState } from "@/hooks/state";
+import { getMessageHelper } from "@/hooks/web";
+import { defineRecoilValue } from "@/hooks/state";
 // import { setAuthCache } from "@/utils/auth";
-import { Locale, LoginByUsernameReq, UserInfo } from "@models/auth";
-import { MenuTreeList } from "@models/auth/memu";
 import { useAuthRecoilState } from "./auth";
-import { appAtom } from "./app";
-import { atom } from "recoil";
+import { AppState, appAtom } from "./app";
 import { router } from "@/routes";
-import React from "react";
 import { formatById } from "@/locales";
 
 export interface UserState {
@@ -32,7 +32,7 @@ export const userAtom = atom<UserState>({
     default: DEFAULT_USER_STATE
 });
 
-export const useUserRecoilState = defineRecoilSelectorState({
+export const useUserRecoilState = defineRecoilValue({
     name: 'userState',
     state: DEFAULT_USER_STATE,
     getters: {
@@ -40,8 +40,8 @@ export const useUserRecoilState = defineRecoilSelectorState({
             return state.userInfo?.menuList
         },
         getDefaultLocale(state) {
-            const appState = this.getState(appAtom)
-            const locale = appState?.projectConfig?.baseSetting?.locale as Locale
+            const appState: AppState = this.getState(appAtom)
+            const locale = appState?.projectConfig?.baseSetting?.locale
             return state.userInfo?.locale ?? locale
         },
         getUser(state) {
@@ -70,7 +70,7 @@ export const useUserRecoilState = defineRecoilSelectorState({
             // setAuthCache(USER_INFO_KEY, userInfo);
         },
     },
-    use: () => {
+    useFn: () => {
         const loginMutation = mutationLogin.useMutation()
         const [, permissionMethods] = useAuthRecoilState()
         return {
@@ -90,7 +90,7 @@ export const useUserRecoilState = defineRecoilSelectorState({
                 const { goHome = true } = options ?? {};
                 const { token } = await this.loginMutation.mutateAsync(params);
                 this.setToken(token);
-                return this.afterLoginAction(goHome);
+                return await this.afterLoginAction(goHome);
             } catch (error) {
                 return Promise.reject(error);
             }
@@ -104,7 +104,7 @@ export const useUserRecoilState = defineRecoilSelectorState({
                 this.setIsSessionTimeout(false);
             } else {
                 await this.refreshAuthAction();
-                goHome && router.navigate(userInfo?.homePath || PageEnum.BASE_HOME);
+                goHome && await router.navigate(userInfo?.homePath || PageEnum.BASE_HOME);
             }
             return userInfo;
         },
@@ -131,15 +131,15 @@ export const useUserRecoilState = defineRecoilSelectorState({
             goLogin && router.navigate(PageEnum.BASE_LOGIN);
         },
         confirmLoginOut() {
-          const { createConfirm } = useMessage();
-          createConfirm({
-            iconType: 'warning',
-            title: React.createElement('span', {}, [formatById('sys.app.logout.tip')]),
-            content: React.createElement('span',{}, formatById('sys.app.logout.msg')),
-            onOk: async () => {
-              await this.logout(true);
-            },
-          });
+            const { createConfirm } = getMessageHelper();
+            createConfirm({
+                iconType: 'warning',
+                title: React.createElement('span', {}, [formatById('sys.app.logout.tip')]),
+                content: React.createElement('span', {}, formatById('sys.app.logout.msg')),
+                onOk: async () => {
+                    await this.logout(true);
+                },
+            });
         },
     },
 }, userAtom)

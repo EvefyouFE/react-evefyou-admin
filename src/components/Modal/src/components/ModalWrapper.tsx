@@ -1,6 +1,6 @@
 import { useEventListener, useUpdateEffect } from "ahooks";
 import { Spin } from "antd";
-import React, { Suspense, createContext, useImperativeHandle, useRef, useState } from "react";
+import React, { Suspense, createContext, useCallback, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { ModalWrapperProps } from "../props";
 import { ModalWrapperInstance } from "../typing";
 import { ScrollContainer, ScrollContainerMethods } from "@/components/Containers";
@@ -21,12 +21,14 @@ export const ModalWrapper = React.forwardRef<ModalWrapperInstance, ModalWrapperP
         footerHeightOffset,
     } = props;
     const containerRef = useRef<ScrollContainerMethods>(null)
-    const [heightState, setHeightState] = useState<number|null>(null)
-
-    const instance: ModalWrapperInstance = {
+    const [heightState, setHeightState] = useState<number | null>(null)
+    const resetModalHeightCb = useCallback(resetModalHeight, [footerHeight, footerHeightOffset, headerHeight, height, isFullScreen])
+    const instance: ModalWrapperInstance = useMemo(() => ({
+        resetModalHeight: resetModalHeightCb,
+    }), [resetModalHeightCb])
+    useImperativeHandle(ref, () => ({
         resetModalHeight,
-    }
-    useImperativeHandle(ref, () => instance)
+    }))
 
     useEventListener('resize', () => {
         isAdaptive && resetModalHeight()
@@ -37,7 +39,7 @@ export const ModalWrapper = React.forwardRef<ModalWrapperInstance, ModalWrapperP
     }, [isFullScreen])
 
     function resetModalHeight() {
-        //calculate new height
+        // calculate new height
         const containerEl = containerRef.current?.getElement()
         if (!containerEl) return;
         const modalEl = containerEl.parentElement
@@ -58,25 +60,25 @@ export const ModalWrapper = React.forwardRef<ModalWrapperInstance, ModalWrapperP
             // max h = win h - top * 2 - header h - footer h - footer offset
             const modalComputedRect = getComputedStyle(modalEl)
             let defaultTop = 100
-            if(window.innerHeight <= 480) {
+            if (window.innerHeight <= 480) {
                 defaultTop = 10
-            } else if(window.innerHeight <= 540) {
+            } else if (window.innerHeight <= 540) {
                 defaultTop = 30
-            } else if(window.innerHeight <= 600) {
+            } else if (window.innerHeight <= 600) {
                 defaultTop = 60
             }
-            const top = Number.parseInt(modalComputedRect.top) || defaultTop
+            const top = Number.parseInt(modalComputedRect.top, 10) || defaultTop
             const maxHeight = bodyAndTopHeight - top * 2;
 
             const contentEl = containerRef.current?.getContent()
             const contentChildEl = contentEl?.children?.[0]
-            if(!contentChildEl || !contentChildEl.scrollHeight) return;
+            if (!contentChildEl || !contentChildEl.scrollHeight) return;
             const contentChildHeight = contentChildEl.scrollHeight
             console.log('contentChildHeight', contentChildHeight)
 
-            containerHeight = height ? height : contentChildHeight < maxHeight ? contentChildHeight : maxHeight;
+            containerHeight = height || (contentChildHeight < maxHeight ? contentChildHeight : maxHeight);
         }
-        //update container h
+        // update container h
         setHeightState(containerHeight)
     }
     return (
@@ -91,3 +93,5 @@ export const ModalWrapper = React.forwardRef<ModalWrapperInstance, ModalWrapperP
         </ScrollContainer>
     )
 })
+
+ModalWrapper.displayName = 'ModalWrapper'

@@ -63,9 +63,9 @@ export function formatOutside(id: Id, values?: Values) {
   const locale = getRecoil(userAtom).userInfo?.locale ?? 'zh-cn'
   switch (locale) {
     case 'en-us':
-      return IntlEn.formatMessage({ id }, values)?.toLocaleString()??id
+      return IntlEn.formatMessage({ id }, values)?.toLocaleString() ?? id
     case 'zh-cn':
     default:
-      return IntlZh.formatMessage({ id }, values)?.toLocaleString()??id
+      return IntlZh.formatMessage({ id }, values)?.toLocaleString() ?? id
   }
 }

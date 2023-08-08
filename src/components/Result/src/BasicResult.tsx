@@ -1,28 +1,26 @@
-import { FC, PropsWithChildren } from "react";
+import React from "react";
 import { EmptyResult } from "./components/EmptyResult";
 import { ErrorResult } from "./components/ErrorResult";
 import { NotExistResult } from "./components/NotExistResult";
 import { ForbiddenResult } from "./components/ForbiddenResult";
 
-export interface BasicResultProps extends PropsWithChildren {
-    code?: number
+export interface BasicResultProps {
+    code?: number;
+    children?: React.ReactElement;
 }
-export const BasicResult: FC<BasicResultProps> = ({
+export const BasicResult = ({
     code,
     children
-}) => {
+}: BasicResultProps): React.ReactElement => {
     switch (code) {
         case 200:
-            return children ? <>{children}</> : <EmptyResult />
+            return (children || <EmptyResult />)
         case 404:
-            return <NotExistResult />
+            return (<NotExistResult />)
         case 403:
-            return <ForbiddenResult />
+            return (<ForbiddenResult />)
         case 500:
         default:
-            return (
-                <ErrorResult />
-            )
-
+            return (<ErrorResult />)
     }
 }

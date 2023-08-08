@@ -7,13 +7,15 @@ import { RedoSetting } from "./components/settings/RedoSetting";
 import { SizeSetting } from "./components/settings/SizeSetting";
 import { TableSetting } from "./components/settings/TableSetting";
 import { DEFAULT_TABLE_SETTING } from "./constants";
-import { TableRenderComp, UseRednersProps } from "./types";
+import { UseRednersProps } from "./types/tableHook";
+import { TableRenderComp } from "./types/table";
 import { TableHeaderProps } from "./props";
 import { genUUID } from "@/utils/generate";
 
+// eslint-disable-next-line react-refresh/only-export-components
 const RenderTableSetting = React.memo(renderTableSettingFn)
 
-export function useRenders<T extends Recordable = any>(props: UseRednersProps<T>): TableRenderComp {
+export function useRenders<T = any>(props: UseRednersProps<T>): TableRenderComp {
     const {
         tableSetting,
         onReload,
@@ -31,8 +33,8 @@ export function useRenders<T extends Recordable = any>(props: UseRednersProps<T>
             onReload,
             onColumnsChange,
             tableRef,
-        }}/>
-        if(title || caption) {
+        }} />
+        if (title || caption) {
             titleProps.title ??= caption ?? title?.(dataSource)
         }
         const renderTableTitle = <TableTitle {...titleProps} />
@@ -41,7 +43,7 @@ export function useRenders<T extends Recordable = any>(props: UseRednersProps<T>
             renderTableTitle,
             ...headerProps
         }
-    }, [title, caption, dataSource, headerProps])
+    }, [tableSetting, onReload, onColumnsChange, tableRef, title, caption, titleProps, headerProps, dataSource])
 
     const tableHeader = renderHeaderFn(headerPropsMemo)
     return {
@@ -91,11 +93,11 @@ function renderHeaderFn(headerProps: TableHeaderProps) {
         renderTableTitle,
         renderToolbar
     } = headerProps
-    if(!renderHeaderTop 
-        && !renderTableSetting 
-        && !renderTableTitle 
+    if (!renderHeaderTop
+        && !renderTableSetting
+        && !renderTableTitle
         && !renderToolbar) return null;
     return (
-        <TableHeader {...headerProps}/>
+        <TableHeader {...headerProps} />
     )
 }

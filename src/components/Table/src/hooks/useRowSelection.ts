@@ -1,9 +1,10 @@
-import { genUUID } from "@/utils/generate";
 import { is, omit } from "ramda";
 import React, { Key, useCallback, useEffect, useMemo, useState } from "react";
 import { ROW_KEYS } from "../constants";
-import { UseRowSelectionReturnType } from "../types";
+import { UseRowSelectionReturnType } from "../types/tableRowSelection";
 import { BasicTableProps } from "../props";
+import { genUUID } from "@/utils/generate";
+
 
 export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>): UseRowSelectionReturnType<T> {
     const {
@@ -15,26 +16,25 @@ export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>)
     } = props;
     const isAutoCreateKeyMemo = useMemo(() => autoCreateKey && !rowKey, [autoCreateKey, rowKey])
     const getRowKey = useCallback((record: T): React.Key => {
-        if(!record) return genUUID()
-        let autoRowKey: React.Key|undefined = undefined;
+        if (!record) return genUUID()
+        let autoRowKey: React.Key | undefined;
         isAutoCreateKeyMemo && ROW_KEYS.forEach(k => {
-            autoRowKey ??= record[k] 
+            autoRowKey ??= record[k]
         })
-        const rowKeyValue = autoRowKey
-            ? autoRowKey
-            : is(Function, rowKey)
-                ? rowKey(record)
-                : (rowKey && record[rowKey]) || genUUID()
+        const rowKeyValue = autoRowKey || (is(Function, rowKey)
+            ? rowKey(record)
+            : (rowKey && record[rowKey]) || genUUID()) as React.Key
         return rowKeyValue
     }, [isAutoCreateKeyMemo, rowKey])
     const [selectedRowKeysState, setSelectedRowKeysState] = useState<Key[]>([]);
     const [selectedRowsState, setSelectedRowsState] = useState<T[]>([]);
-    const [hideRowSelectionState,setHideRowSelectionState] = useState(false)
-    const rowSelectionMemo = useMemo(() => (!rowSelection ? undefined: {
+    const [hideRowSelectionState, setHideRowSelectionState] = useState(false)
+    const rowSelectionMemo = useMemo(() => (!rowSelection ? undefined : {
         selectedRowKeys: selectedRowKeysState,
         onChange: handleRowSelectionChange,
         checkStrictly: rowSelection?.checkMode !== 'default',
         ...omit(['onChange', 'onSelect', 'checkStrictly'], rowSelection),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }), [selectedRowKeysState, rowSelection, hideRowSelectionState, childrenColumnName])
 
     useEffect(() => {
@@ -44,6 +44,7 @@ export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>)
     }, [rowSelection?.selectedRowKeys])
     useEffect(() => {
         onSelectionChange?.(selectedRowKeysState, selectedRowsState)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedRowKeysState])
 
     function handleRowSelectionChange(selectedRowKeys: Key[], selectedRows: T[]) {
@@ -53,12 +54,12 @@ export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>)
         if (!keys && !rows) return;
         const checkMode = rowSelection?.checkMode ?? 'complex'
         if (checkMode === 'complex') {
-            const rowsWithChild = rows && [rows[0]].reduce(function fn(acc,r) {
+            const rowsWithChild = rows && [rows[0]].reduce(function fn(acc, r) {
                 acc.push(r)
-                r?.[childrenColumnName]?.reduce(fn, acc)
+                is(Array, r?.[childrenColumnName]) && (r?.[childrenColumnName] as T[])?.reduce(fn, acc)
                 return acc
             }, [] as T[])
-            const keysWithChild = rowsWithChild && rowsWithChild.map(r=>getRowKey(r))
+            const keysWithChild = rowsWithChild && rowsWithChild.map(r => getRowKey(r))
             setSelectedRowKeysState(keysWithChild || [])
             setSelectedRowsState(rowsWithChild || [])
         } else {
@@ -99,7 +100,7 @@ export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>)
         function getRowSelection() {
             return hideRowSelectionState ? undefined : rowSelectionMemo;
         }
-        function hideRowSelection(flag: boolean = true) {
+        function hideRowSelection(flag = true) {
             return setHideRowSelectionState(flag);
         }
         function rowSelectionIsHidden() {
@@ -123,5 +124,6 @@ export function useRowSelection<T extends Recordable>(props: BasicTableProps<T>)
                 rowSelectionIsHidden,
             }
         ]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [rowSelectionMemo, getRowKey, childrenColumnName]);
 }

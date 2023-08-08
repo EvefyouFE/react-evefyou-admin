@@ -1,20 +1,22 @@
-import { Icon } from '@/components/Icon';
-import { useDesign } from '@/hooks/design';
+
 import { MenuTreeList } from '@models/auth/memu';
 import { ConfigProvider, Menu, MenuProps } from 'antd';
 import { FC, isValidElement, useMemo, useTransition } from 'react';
 import { useNavigate } from 'react-router';
 import './index.less';
 import { MenuItemLabel } from './MenuItemLabel';
-import { useAppRecoilState } from "@/stores/app";
+import { useAppRecoilValue } from "@/stores/app";
+import { Icon } from '@/components/Icon';
+import { useDesign } from '@/hooks/design';
 
 export type MenuItem = Required<MenuProps>['items'][number];
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const loopMenuItem = (menus?: MenuTreeList): MenuItem[] => {
     if (!menus) return [];
     const m = menus.map((item) => ({
         label: (<MenuItemLabel title={item.locale ? item.locale : item.name || ''} />),
-        key: item.key ? item.key : item.path!!,
+        key: item.key ? item.key : item.path,
         icon: isValidElement(item.icon) ? (
             item.icon
         ) : (
@@ -31,13 +33,13 @@ interface BasicMenuProps {
 }
 
 export const BasicMenu: FC<BasicMenuProps> = (props) => {
-    const { menuList, className } = props;
+    const { menuList, className = '' } = props;
 
     const navigate = useNavigate();
-    const [,startTrainsition] = useTransition();
-    const [,{getMenuSetting}] = useAppRecoilState()
-    const {collapsed} = getMenuSetting()
-    const {prefixCls} = useDesign('basic-menu')
+    const [, startTrainsition] = useTransition();
+    const [, { getMenuSetting }] = useAppRecoilValue()
+    const { collapsed } = getMenuSetting()
+    const { prefixCls } = useDesign('basic-menu')
 
     const newMenuList = loopMenuItem(menuList);
     const handleClick = (item: MenuItem) => {
@@ -46,11 +48,9 @@ export const BasicMenu: FC<BasicMenuProps> = (props) => {
         })
     }
 
-    const mode = useMemo(() => {
-        return collapsed 
-            ? "vertical"
-            : "inline" 
-    }, [collapsed])
+    const mode = useMemo(() => collapsed
+        ? "vertical"
+        : "inline", [collapsed])
 
     return (
         <ConfigProvider
@@ -67,8 +67,7 @@ export const BasicMenu: FC<BasicMenuProps> = (props) => {
                 defaultSelectedKeys={[newMenuList[0]?.key as string]}
                 items={newMenuList}
                 onClick={handleClick}
-            >
-            </Menu>
+            />
         </ConfigProvider>
     );
 };

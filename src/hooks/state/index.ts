@@ -1,23 +1,26 @@
-import { deepMergeObjectByKeys, deepSetObjectByKeys } from "@/utils/object"
 import { curry, includes, is } from "ramda"
-import { useMemo, useState } from "react"
+import React, { SetStateAction, useMemo, useState } from "react"
 import { GetCallback, GetRecoilValue, RecoilState, RecoilValueReadOnly, SelectorCallbackInterface, atom, selector, useRecoilState, useRecoilValue } from "recoil"
-
+import { deepMergeObjectByKeys, deepSetObjectByKeys } from "@/utils/object"
 
 function getterMethods<
-    State,
-    G extends Getters<State>,
->(getters: G, state: State, context: any) {
+    S,
+    G extends Getters<S>,
+>(getters: G, state: S, context: any) {
     return Object.keys(getters).reduce((acc, k: keyof G) => {
         const getter = getters[k]
-        const curriedGetter = curry(getter.bind(context)) as
-            G extends Record<keyof G, GetterFn<State, infer Args, infer R>>
-            ? GetterFn<State, Args, R>
+        const curriedGetter = curry(getter.bind(context))
+        const res = curriedGetter(state) as
+            G extends Record<keyof G, GetterFn<S, infer Args, infer R>>
+            ? (...args: Args) => R
             : unknown
-        const res = curriedGetter(state)
-        acc[k] = is(Function, res) ? res : () => res
+        acc[k] = is(Function, res)
+            ? res
+            : (() => res) as G extends Record<keyof G, GetterFn<S, infer Args, infer R>>
+            ? (...args: Args) => R
+            : unknown
         return acc;
-    }, {} as GetterMethods<State, G>)
+    }, {} as GetterMethods<S, G>)
 }
 function setterMethods<
     SE extends Setters
@@ -46,8 +49,8 @@ function actionMethods<
 
 function defineUseCallbackState<
     S extends CallbackState<any, any> | any,
-    CBM extends CallbackMethods<S extends CallbackState<infer St, any> ? St : S> =
-    CallbackMethods<S extends CallbackState<infer St, any> ? St : S>
+    CBM extends SetMethods<S extends CallbackState<infer St, any> ? St : S> =
+    SetMethods<S extends CallbackState<infer St, any> ? St : S>
 >(
     state: S
 ): (initialState?: S extends CallbackState<infer St, any> ? St : S)
@@ -67,13 +70,14 @@ function defineUseCallbackState<
 
 function defineUseCallbackRecoilState<
     S,
-    RS extends CallbackState<RecoilState<S>, any> | RecoilState<S>,
-    CBM extends CallbackMethods<any> = RS extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    RS extends CallbackState<RecoilState<S>, SetMethods<any>> | RecoilState<S>,
+    CBM extends SetMethods<any> = RS extends CallbackState<any, infer M> ? M : SetMethods<any>
 >(
     state: RS,
 ): () => [S, CBM] {
+
     function useCallbackState(): [S, CBM] {
-        const [stateAtom, methods] = is(Function, state) ? state() : [state, {}]
+        const [stateAtom, methods] = is(Function, state) ? state() : [state, undefined]
         const [s, set] = useRecoilState(stateAtom);
         return [s, { set, ...methods } as CBM];
     }
@@ -81,54 +85,75 @@ function defineUseCallbackRecoilState<
     return useCallbackState;
 }
 
-function getDefaultMethods<
-    State,
-    N extends string = 'state',
-    CBM extends Recordable = Recordable
+function getDefaultSetMethods<
+    S,
 >(
-    name: N,
-    defineState: State,
-    { set, ...rest }: CBM,
-    initialState?: State
+    set: React.Dispatch<SetStateAction<S>>,
+    initialState?: S
 ) {
-    const defaultMethods = {
-        get: () => defineState,
+    let defaultMethods = {
         set: (s) => set(s),
-        setProps: (props) => set((s: any) => ({ ...s, ...props })),
+        setProps: (props) => set((s: S) => ({ ...s, ...props })),
         reset: () => initialState && set(initialState),
-        deepSet: (keys, value) => {
-            if (!is(Object, defineState)) return;
-            const newState = deepSetObjectByKeys(keys, value, defineState as Recordable)
-            set(newState as State)
-        },
-        deepMerge: (keys, value) => {
-            if (!is(Object, defineState)) return;
-            const newState = deepMergeObjectByKeys(keys, value, defineState as Recordable)
-            set(newState as State)
-        },
-        [name]: defineState,
-        ...rest
-    } as (DefaultMethods<State, N> & CBM)
-    if (is(Array, defineState)) {
-        Object.assign(defaultMethods, {
-            add: (newItem: State extends [infer T] ? T : unknown) => {
-                defineState.push(newItem);
-                set([...defineState] as State)
+        deepSet: (keys, value) => set(s => {
+            const state = s
+            if (!is(Object, state)) return state;
+            const newState = deepSetObjectByKeys(keys, value, state as Recordable)
+            return newState as S
+        }),
+        deepMerge: (keys, value) => set(s => {
+            const state = s
+            if (!is(Object, state)) return state;
+            const newState = deepMergeObjectByKeys(keys, value, state as Recordable)
+            return newState as S
+        }),
+    } as (DefaultSetMethods<S>)
+    if (is(Array, initialState)) {
+        defaultMethods = Object.assign(defaultMethods, {
+            add: (newItem) => {
+                set(s => {
+                    const state = s as S extends Array<infer T> ? T[] : any[]
+                    state.push(newItem);
+                    return [...state] as S
+                })
             },
-            remove: (item: State extends [infer T] ? T : unknown) => {
-                const newPanes = defineState.filter((i) => i !== item);
-                set(newPanes as State);
+            remove: (item) => {
+                set(s => {
+                    const state = s as S extends Array<infer T> ? T[] : any[]
+                    const newPanes = state.filter((i) => i !== item);
+                    return newPanes as S
+                });
             },
-            removes: (items: [State extends [infer T] ? T : any]) => {
-                const leftItems = defineState.filter((item) => !includes(item, items))
-                set(leftItems as State)
+            removes: (items) => {
+                set(s => {
+                    const state = s as S extends Array<infer T> ? T[] : any[]
+                    const leftItems = state.filter((item) => !includes(item, items))
+                    return leftItems as S
+                })
             },
             clear: () => {
-                set([] as State)
+                set([] as S)
             }
-        })
+        } as ItemsDefaultMethods<S extends (infer T)[] ? T : any>
+        )
     }
-    return defaultMethods;
+    return defaultMethods as S extends (infer T)[] ? ItemsDefaultMethods<T> : DefaultSetMethods<S>
+}
+
+function getDefaultMethods<
+    S,
+    N extends string = 'state',
+    CBM extends SetMethods<S> = S extends CallbackState<S, infer M> ? M : SetMethods<S>
+>(
+    name: N,
+    defineState: S,
+    { set, ...rest }: CBM,
+) {
+    return {
+        get: () => defineState,
+        ...rest,
+        [name]: defineState,
+    } as (DefaultMethods<S, N> & CBM)
 }
 
 export function defineUseState<
@@ -137,35 +162,33 @@ export function defineUseState<
     G extends Getters<any> = Getters<S extends CallbackState<infer St, any> ? St : S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = S extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = S extends CallbackState<any, infer M> ? M : SetMethods<any>,
 >(
-    cfg: DefineUseStateConfig<S, N, G, SE, A, CBM>
+    config: StateConfig<S, N, G, SE, A, CBM>,
 ): UseState<S extends CallbackState<infer St, any> ? St : S, N, G, SE, A, CBM> {
-    const config = is(Function, cfg) ? cfg() : cfg
-    const { getters = {} as G, actions = {} as A, setters = {} as SE, name, state } = config
+    const { getters = {} as G, actions = {} as A, setters = {} as SE, name, useState: state } = config
     const useCallbackState = defineUseCallbackState(state)
 
     function useDefineState(
         initialState?: S extends CallbackState<infer St, any> ? St : S
     ): UseStateReturnType<S extends CallbackState<infer St, any> ? St : S, N, G, SE, A, CBM> {
         const [defineState, callbackMethods] = useCallbackState(initialState)
-        const defaultMethods = getDefaultMethods(name, defineState, callbackMethods, initialState)
-        let methods = {} as StateMethods<S extends CallbackState<infer St, any> ? St : S, N, G, SE, A, CBM>
-        if (actions) {
-            Object.assign(methods, {
-                ...actionMethods(actions, methods),
-            })
-        }
-        return useMemo(() => {
-            Object.assign(methods, {
-                ...defaultMethods,
-            })
-            Object.assign(methods, {
-                ...getterMethods(getters, defineState, methods),
-                ...setterMethods(setters, methods),
-            })
-            return [defineState, methods]
-        }, [defineState])
+        const { set } = callbackMethods
+        const defaultSetMethods = useMemo(() => getDefaultSetMethods(set, initialState), [initialState, set])
+        const defaultMethods = getDefaultMethods(name, defineState, callbackMethods)
+        const methods = {} as StateMethods<S extends CallbackState<infer St, any> ? St : S, N, G, SE, A, CBM>
+        Object.assign(methods, {
+            ...defaultSetMethods,
+            ...defaultMethods,
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const settersMemo = useMemo(() => setterMethods(setters, methods), [defaultSetMethods])
+        Object.assign(methods, {
+            ...getterMethods(getters, defineState, methods),
+            ...settersMemo,
+        })
+        actions && Object.assign(methods, actionMethods(actions, methods))
+        return [defineState, methods]
     }
 
     return useDefineState
@@ -178,45 +201,45 @@ export function defineRecoilState<
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = RS extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = RS extends CallbackState<any, infer M> ? M : SetMethods<any>
 >(
-    cfg: DefineUseRecoilStateConfig<S, RS, N, G, SE, A, CBM>,
+    config: RecoilStateConfig<S, RS, N, G, SE, A, CBM>,
 ): UseState<S, N, G, SE, A, CBM> {
-    const config = is(Function, cfg) ? cfg() : cfg
-    const { getters = {} as G, actions = {} as A, setters = {} as SE, name, state, defaultValue } = config
+    const { getters = {} as G, actions = {} as A, setters = {} as SE, name, useState: state, defaultValue } = config
 
-    const useCallbackState = defineUseCallbackRecoilState<S,RS,CBM>(state)
+    const useCallbackState = defineUseCallbackRecoilState<S, RS, CBM>(state)
 
     function useDefineState(): UseStateReturnType<S, N, G, SE, A, CBM> {
         const [defineState, callbackMethods] = useCallbackState()
-        let methods = {} as StateMethods<S, N, G, SE, A, CBM>
-        if (actions) {
-            Object.assign(methods, actionMethods(actions, methods))
-        }
-        const defaultMethods = getDefaultMethods(name, defineState, callbackMethods, defaultValue)
-        return useMemo(() => {
-            Object.assign(methods, {
-                ...defaultMethods,
-            })
-            Object.assign(methods, {
-                ...getterMethods(getters, defineState, methods),
-                ...setterMethods(setters, methods),
-            })
-            return [defineState, methods]
-        }, [defineState])
+        const { set } = callbackMethods
+        const defaultSetMethods = getDefaultSetMethods(set, defaultValue)
+        const methods = {} as StateMethods<S, N, G, SE, A, CBM>
+        const defaultMethods = getDefaultMethods(name, defineState, callbackMethods)
+        Object.assign(methods, {
+            ...defaultSetMethods,
+            ...defaultMethods,
+        })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        const settersMemo = useMemo(() => setterMethods(setters, methods), [defaultSetMethods])
+        Object.assign(methods, {
+            ...getterMethods(getters, defineState, methods),
+            ...settersMemo,
+        })
+        actions && Object.assign(methods, actionMethods(actions, methods))
+        return [defineState, methods]
     }
 
     return useDefineState
 }
 
 function getSelectorDefaultMethods<
-    State,
+    S,
     N extends string
->(key: N, atom: RecoilState<State>, defineState: State, { get, getCallback }: {
+>(key: N, atm: RecoilState<S>, defineState: S, { get, getCallback }: {
     get: GetRecoilValue,
     getCallback: GetCallback,
-}): SelectorDefaultMethods<State, N> {
-    let defaultMethods = {
+}): SelectorDefaultMethods<S, N> {
+    const defaultMethods = {
         getState: get,
         get: () => defineState,
         [key]: defineState,
@@ -227,28 +250,28 @@ function getSelectorDefaultMethods<
         deepSet: (keys, value) => {
             if (!is(Object, defineState) || is(Array, defineState) || is(Function, defineState)) return;
             const newState = deepSetObjectByKeys(keys, value, defineState as Recordable)
-            getCallback(set)(newState as State)
+            getCallback(set)(newState as S)
         },
         deepMerge: (keys, value) => {
             if (!is(Object, defineState) || is(Array, defineState) || is(Function, defineState)) return;
             const newState = deepMergeObjectByKeys(keys, value, defineState as Recordable)
-            getCallback(set)(newState as State)
+            getCallback(set)(newState as S)
         }
-    } as SelectorDefaultMethods<State, N>
+    } as SelectorDefaultMethods<S, N>
 
     function set({ set: s }: SelectorCallbackInterface) {
-        return (value: State|((state: State) => State)) => s(atom, value)
+        return (value: S | ((state: S) => S)) => s(atm, value)
     }
-    function setProps(state: State) {
+    function setProps(state: S) {
         return ({ set: s }: SelectorCallbackInterface) =>
-            (props: Partial<State>) =>
-                s(atom, { ...state, ...props })
+            (props: Partial<S>) =>
+                s(atm, { ...state, ...props })
     }
     function reset({ reset: rs }: SelectorCallbackInterface) {
-        return () => rs(atom)
+        return () => rs(atm)
     }
     function refresh({ refresh: rf }: SelectorCallbackInterface) {
-        return () => rf(atom)
+        return () => rf(atm)
     }
 
     return defaultMethods
@@ -260,9 +283,9 @@ export function defineRecoilSelector<
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
 >(
-    config: SelectorStateConfig<S, N, G, SE>,
+    config: RecoilValueConfig<S, N, G, SE>,
     atm?: RecoilState<S>
-): RecoilValueReadOnly<[S, SelectorStateMethods<S, N, G, SE>]> {
+): RecoilValueReadOnly<[S, RecoilValueMethods<S, N, G, SE>]> {
     const { getters = {} as G, setters = {} as SE, name: key, state } = config
     const stateAtom = atm ?? atom<S>({
         key: key.concat('Atom'),
@@ -271,14 +294,14 @@ export function defineRecoilSelector<
 
     const stateSelector = selector<[
         S,
-        SelectorStateMethods<S, N, G, SE>
+        RecoilValueMethods<S, N, G, SE>
     ]>({
         key: key.concat('Selector'),
         get: ({ get, getCallback }) => {
             const defineState = get(stateAtom)
-            let methods = {
+            const methods = {
                 ...getSelectorDefaultMethods(key, stateAtom, defineState, { get, getCallback }),
-            } as SelectorStateMethods<S, N, G, SE>
+            } as RecoilValueMethods<S, N, G, SE>
             Object.assign(methods, {
                 ...getterMethods(getters, defineState, methods),
                 ...setterMethods(setters, methods),
@@ -290,7 +313,7 @@ export function defineRecoilSelector<
     return stateSelector
 }
 
-export function defineRecoilStateAndSelector<
+export function defineRecoilValueAndSelector<
     S,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
@@ -298,38 +321,34 @@ export function defineRecoilStateAndSelector<
     A extends Actions = Actions,
     CB extends RecoilCallback = RecoilCallback,
 >(
-    config: SelectorStateConfig<S, N, G, SE, A, CB>,
+    config: RecoilValueConfig<S, N, G, SE, A, CB>,
     atm?: RecoilState<S>,
-    selector?: RecoilValueReadOnly<[S, SelectorStateMethods<S, N, G, SE>]
-    >
+    sel?: RecoilValueReadOnly<[S, RecoilValueMethods<S, N, G, SE>]>
 ): [
-        UseSelectorState<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}>,
-        RecoilValueReadOnly<[S, SelectorStateMethods<S, N, G, SE>]>
+        UseRecoilValue<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : object>,
+        RecoilValueReadOnly<[S, RecoilValueMethods<S, N, G, SE>]>
     ] {
-    const { actions = {} as A, use, ...rest } = config
+    const { actions = {} as A, useFn, ...rest } = config
     const stateAtom = atm ?? atom<S>({
         key: rest.name.concat('Atom'),
         default: rest.state
     });
-    const stateSelector = selector ?? defineRecoilSelector(rest, stateAtom)
+    const stateSelector = sel ?? defineRecoilSelector(rest, stateAtom)
 
-    function useDefineState(): UseSelectorStateReturnType<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}> {
-        const stateValue = useRecoilValue(stateSelector)
-        const [recoilState, recoilMethods] = useMemo(() => stateValue, [stateValue])
-        const useMethods = use?.()
-        let methods = {
+    function useDefineValue(): UseRecoilValueReturnType<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : object> {
+        const [recoilState, recoilMethods] = useRecoilValue(stateSelector)
+        const useMethods = useFn?.()
+        const methods = {
             ...useMethods,
             ...recoilMethods
-        } as SelectorStateAsyncMethods<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}>
-        if (actions) {
-            Object.assign(methods, actionMethods(actions, methods))
-        }
+        } as RecoilValueAsyncMethods<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : object>
+        actions && Object.assign(methods, actionMethods(actions, methods))
         return [recoilState, methods]
     }
-    return [useDefineState, stateSelector]
+    return [useDefineValue, stateSelector]
 }
 
-export function defineRecoilSelectorState<
+export function defineRecoilValue<
     S,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
@@ -337,8 +356,8 @@ export function defineRecoilSelectorState<
     A extends Actions = Actions,
     CB extends RecoilCallback = RecoilCallback,
 >(
-    config: SelectorStateConfig<S, N, G, SE, A, CB>,
-    atom?: RecoilState<S>,
-): UseSelectorState<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : {}> {
-    return defineRecoilStateAndSelector(config, atom)[0]
+    config: RecoilValueConfig<S, N, G, SE, A, CB>,
+    atm?: RecoilState<S>,
+): UseRecoilValue<S, N, G, SE, A, CB extends RecoilCallback<infer CBM> ? CBM : object> {
+    return defineRecoilValueAndSelector(config, atm)[0]
 }

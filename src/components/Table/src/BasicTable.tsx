@@ -1,19 +1,20 @@
-import { useDesign } from "@/hooks/design";
 import { TablePaginationConfig } from "antd";
 import Table, { ColumnType, TableProps } from "antd/es/table";
 import { FilterValue, SorterResult, TableCurrentDataSource } from "antd/es/table/interface";
 import classNames from "classnames";
 import { is, omit } from "ramda";
-import React, { ReactElement, Ref, createContext, useContext, useImperativeHandle, useMemo, useRef, useState } from "react";
+import React, { ReactElement, Ref, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { useColumns, useDataSource, usePagination, useRowSelection, useTableScroll } from "./hooks";
 import { BasicTableProps } from "./props";
 import { useRenders } from "./renders";
-import { SearchState, TableChangeParams, TableContextValue, BasicTableInstance } from "./types";
+import { SearchState, TableChangeParams } from "./types/table";
+import { TableContextValue, BasicTableInstance } from "./types/tableHook";
 import './index.less';
 import { useTableProps } from "./hooks/useTableProps";
+import { useDesign } from "@/hooks/design";
+import { TableContext } from "./context";
+import { deepCompareObj } from "@/utils/object";
 
-export const TableContext = createContext<TableContextValue | undefined>(undefined);
-export const useTableContext = () => useContext(TableContext) as TableContextValue;
 
 export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = any>(
     props: BasicTableProps<T>,
@@ -110,22 +111,28 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
         paginationMethods.setPagination(pagination)
 
         const params: TableChangeParams = {};
+
         if (sorter && is(Function, props.sortFn)) {
             if (is(Array, sorter)) {
+
                 const sortInfo = sorter.map(st => props.sortFn?.(st))
                 searchState.sortInfo = sortInfo;
                 params.sortInfo = sortInfo;
             } else {
+
                 const sortInfo = props.sortFn(sorter);
                 searchState.sortInfo = sortInfo;
                 params.sortInfo = sortInfo;
             }
         }
+
         if (filters && is(Function, props.filterFn)) {
+
             const filterInfo = props.filterFn(filters);
             searchState.filterInfo = filterInfo;
             params.filterInfo = filterInfo;
         }
+
         props.onTableChange?.(params)
     }
     return (
@@ -133,5 +140,5 @@ export const BasicTable = React.memo(React.forwardRef(<T extends Recordable = an
             <Table<T> ref={tableRef} {...propsValue} />
         </TableContext.Provider>
     )
-})) as <T extends Recordable = any>(p: BasicTableProps<T> & { ref?: Ref<BasicTableInstance> }) => ReactElement;
+}), deepCompareObj) as <T = any>(p: BasicTableProps<T> & { ref?: Ref<BasicTableInstance> }) => ReactElement;
 

@@ -20,14 +20,14 @@ export type UseBreakpointsReturn<K extends string = string> = {
 
 export function increaseWithUnit(target: string | number, delta: number): string | number {
     if (typeof target === 'number')
-      return target + delta
+        return target + delta
     const value = target.match(/^-?[0-9]+\.?[0-9]*/)?.[0] || ''
     const unit = target.slice(value.length)
     const result = (parseFloat(value) + delta)
     if (Number.isNaN(result))
-      return target
-    return result + unit
-  }
+        return target
+    return `${result}${unit}`
+}
 
 export const useBreakpoint = <K extends string = string>(
     breakpoints: Breakpoints<K>,
@@ -49,9 +49,8 @@ export const useBreakpoint = <K extends string = string>(
         if (!window) return false;
         return window.matchMedia(query).matches;
     }
-    const greaterOrEqual = (k: K) => {
-        return useMediaQuery(`(min-width: ${getValue(k)})`, options);
-    };
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const greaterOrEqual = (k: K) => useMediaQuery(`(min-width: ${getValue(k)})`, options);
 
     const shortcutMethods = Object.keys(breakpoints).reduce((shortcuts, k) => {
         Object.defineProperty(shortcuts, k, {
@@ -64,16 +63,20 @@ export const useBreakpoint = <K extends string = string>(
 
     return Object.assign(shortcutMethods, {
         greater(k: K) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             return useMediaQuery(`(min-width: ${getValue(k, 0.1)})`, options);
         },
         greaterOrEqual,
         smaller(k: K) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             return useMediaQuery(`(max-width: ${getValue(k, -0.1)})`, options);
         },
         smallerOrEqual(k: K) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             return useMediaQuery(`(max-width: ${getValue(k)})`, options);
         },
         between(a: K, b: K) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             return useMediaQuery(
                 `(min-width: ${getValue(a)}) and (max-width: ${getValue(
                     b,
@@ -107,9 +110,10 @@ export const useBreakpoint = <K extends string = string>(
                 (i) => [i, greaterOrEqual(i as K)] as const
             );
 
+            // eslint-disable-next-line react-hooks/rules-of-hooks
             return useMemo(
                 () => points.filter(([, v]) => v).map(([k]) => k),
-                points.map(([, v]) => v)
+                [points]
             );
         },
     });

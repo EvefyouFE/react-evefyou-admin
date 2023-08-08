@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import type { AxiosRequestConfig, Canceler } from 'axios';
 import axios from 'axios';
 import { is } from "ramda";
@@ -30,7 +31,7 @@ export class AxiosCanceler {
    */
   removeAllPending() {
     pendingMap.forEach((cancel) => {
-      cancel && is(Function,cancel) && cancel();
+      cancel && is(Function, cancel) && cancel();
     });
     pendingMap.clear();
   }

@@ -1,28 +1,25 @@
-
-import { Icon } from "@/components/Icon";
-import { useNativeProps } from "@/hooks/core";
 import { Button } from "antd";
 import classNames from "classnames";
 import { FC, PropsWithChildren, useMemo } from "react";
 import { ButtonProps } from "./props";
+import { Icon } from "@/components/Icon";
+import { useNativeProps } from "@/hooks/core";
 
 export const BasicButton: FC<PropsWithChildren<ButtonProps>> = ({
     preIcon,
     postIcon,
     color = '',
-    iconSize=14,
+    iconSize = 14,
     children,
     ...rest
 }) => {
     const { disabled } = rest;
-    const getButtonClass = useMemo(() => {
-        return classNames([
-            {
-                [`ant-btn-${color}`]: !!color,
-                [`is-disabled`]: disabled,
-            },
-        ]);
-    }, [color, disabled]);
+    const getButtonClass = useMemo(() => classNames([
+        {
+            [`ant-btn-${color}`]: !!color,
+            [`is-disabled`]: disabled,
+        },
+    ]), [color, disabled]);
 
     const nativeProps = useNativeProps(rest, { excludeDefaultKeys: false })
 

@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export const getEnumValue = (e: any, value: string): number => {
     return Number(Object.values(e).find((val) => val == value));
 };

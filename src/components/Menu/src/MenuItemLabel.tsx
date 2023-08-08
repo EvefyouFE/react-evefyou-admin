@@ -7,12 +7,10 @@ export interface MenuItemLabelProps {
     to?: string;
 }
 
-export const MenuItemLabel: FC<MenuItemLabelProps> = ({title, to}) => {
-    return to
-        ? (
-            <Link to={to} >
-                <FormattedMessage id={title} />
-            </Link>
-        )
-        : (<FormattedMessage id={title} />);
-}
+export const MenuItemLabel: FC<MenuItemLabelProps> = ({ title, to }) => to
+    ? (
+        <Link to={to} >
+            <FormattedMessage id={title} />
+        </Link>
+    )
+    : (<FormattedMessage id={title} />)

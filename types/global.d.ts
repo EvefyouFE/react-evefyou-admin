@@ -78,19 +78,28 @@ declare type Union<U = any, T = any> = {
     [key in keyof (U & T)]: (U & T)[key];
 };
 
-declare interface ViteEnv {
-    VITE_PORT: number;
-    VITE_USE_MOCK: boolean;
-    VITE_USE_PWA: boolean;
-    VITE_PUBLIC_PATH: string;
-    VITE_PROXY: [string, string][];
-    VITE_GLOB_APP_TITLE: string;
-    VITE_GLOB_APP_SHORT_NAME: string;
-    VITE_USE_CDN: boolean;
-    VITE_DROP_CONSOLE: boolean;
-    VITE_BUILD_COMPRESS: 'gzip' | 'brotli' | 'none';
-    VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE: boolean;
-    VITE_LEGACY: boolean;
-    VITE_USE_IMAGEMIN: boolean;
-    VITE_GENERATE_UI: string;
+declare type Value = string | number | object | Recordable
+
+interface ImportMetaEnv {
+    readonly MODE: string;
+    readonly DEV: boolean;
+    readonly PROD: boolean;
+    readonly VITE_PORT: number;
+    readonly VITE_USE_MOCK: boolean;
+    readonly VITE_USE_PWA: boolean;
+    readonly VITE_PUBLIC_PATH: string;
+    readonly VITE_PROXY: [string, string][];
+    readonly VITE_GLOB_APP_TITLE: string;
+    readonly VITE_GLOB_APP_SHORT_NAME: string;
+    readonly VITE_USE_CDN: boolean;
+    readonly VITE_DROP_CONSOLE: boolean;
+    readonly VITE_BUILD_COMPRESS: 'gzip' | 'brotli' | 'none';
+    readonly VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE: boolean;
+    readonly VITE_LEGACY: boolean;
+    readonly VITE_USE_IMAGEMIN: boolean;
+    readonly VITE_GENERATE_UI: string;
+}
+
+declare interface ImportMeta {
+    readonly env: ImportMetaEnv
 }

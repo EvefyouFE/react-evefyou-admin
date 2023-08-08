@@ -1,4 +1,3 @@
-import { Icon } from "@/components/Icon";
 import { DragOutlined } from "@ant-design/icons";
 import {
     useSortable
@@ -8,7 +7,9 @@ import React, { FC } from "react";
 import { FormattedMessage } from "react-intl";
 import './ColumnSetting.less';
 import { CSS } from "@dnd-kit/utilities";
-import { PlainOption } from "./ColumnSetting";
+import { Icon } from "@/components/Icon";
+import { PlainOption } from "./ColumnSettingType";
+
 
 interface PlainOptionNodeProps {
     item: PlainOption;
@@ -67,8 +68,8 @@ export const PlainOptionNode: FC<PlainOptionNodeProps> = ({
                 <Icon
                     icon="iconify:line-md:arrow-align-left"
                     className={leftIconClassName(item)}
-                    width={'1.2em'}
-                    height={'1.2em'}
+                    width="1.2em"
+                    height="1.2em"
                     onClick={() => onFixed(item, 'left')}
                 />
             </Tooltip>
@@ -82,8 +83,8 @@ export const PlainOptionNode: FC<PlainOptionNodeProps> = ({
                 <Icon
                     icon="iconify:line-md:arrow-align-left"
                     className={rightIconClassName(item)}
-                    width={'1.2em'}
-                    height={'1.2em'}
+                    width="1.2em"
+                    height="1.2em"
                     onClick={() => onFixed(item, 'right')}
                 />
             </Tooltip>

@@ -7,7 +7,7 @@ import { PluginOption } from "vite";
 
 export function configVisualizerConfig() {
   if (isReportMode()) {
-    console.log('isReportMode()',isReportMode())
+    console.log('isReportMode()', isReportMode())
     return visualizer({
       filename: './node_modules/.cache/visualizer/stats.html',
       open: true,

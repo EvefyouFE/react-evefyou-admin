@@ -1,17 +1,18 @@
-import React, { useCallback, useRef, useState } from "react";
-import { ModalHeader } from "./components/ModalHeader";
-import { BasicModalProps, ModalCloseProps, ModalFooterProps, ModalHeaderProps, ModalInnerProps } from "./props";
-import { ModalClose } from "./components/ModalClose";
-import { ModalFooter } from "./components/ModalFooter";
 import type { DraggableData, DraggableEvent } from 'react-draggable';
 import Draggable from 'react-draggable';
+import React, { useCallback, useRef, useState } from "react";
+import { ModalHeader } from "./components/ModalHeader";
+import { BasicModalProps, ModalCloseProps, ModalFooterProps, ModalHeaderProps } from "./props";
+import { ModalInnerProps } from "./typing";
+import { ModalClose } from "./components/ModalClose";
+import { ModalFooter } from "./components/ModalFooter";
 
 
 export function useRenders(props: BasicModalProps, innerProps: ModalInnerProps) {
-    const header = renderHeader(props, innerProps)
+    const header = useRenderHeader(props, innerProps)
     const closeIcon = renderClose(props, innerProps)
     const footer = renderFooter(props, innerProps)
-    const modalRender = renderModal(props, innerProps)
+    const modalRender = useRenderModal(props, innerProps)
     return {
         header,
         closeIcon,
@@ -20,7 +21,7 @@ export function useRenders(props: BasicModalProps, innerProps: ModalInnerProps) 
     }
 }
 
-export function renderModal(props: BasicModalProps, innerProps: ModalInnerProps) {
+export function useRenderModal(props: BasicModalProps, innerProps: ModalInnerProps) {
     console.debug(props)
     const {
         disabled: [disabledState]
@@ -40,7 +41,7 @@ export function renderModal(props: BasicModalProps, innerProps: ModalInnerProps)
             bottom: clientHeight - (targetRect.bottom - uiData.y),
         });
     };
-    return (modal: React.ReactNode) => (
+    const Comp = (modal: React.ReactNode) => (
         <Draggable
             disabled={disabledState}
             bounds={bounds}
@@ -50,9 +51,10 @@ export function renderModal(props: BasicModalProps, innerProps: ModalInnerProps)
             <div ref={draggleRef}>{modal}</div>
         </Draggable>
     )
+    return Comp
 }
 
-export function renderHeader(props: BasicModalProps, innerProps: ModalInnerProps) {
+export function useRenderHeader(props: BasicModalProps, innerProps: ModalInnerProps) {
     const {
         closeIconProps = {},
         headerProps,
@@ -60,7 +62,7 @@ export function renderHeader(props: BasicModalProps, innerProps: ModalInnerProps
     const { showFullscreen = true } = closeIconProps
     const {
         fullScreen: [, { toggle: toggleFullscreen }],
-        disabled: [disabledState,setDisabledState]
+        disabled: [disabledState, setDisabledState]
     } = innerProps
     const onDoubleClick = useCallback(handleTitleDbClick, [showFullscreen, toggleFullscreen])
     const propsValue: ModalHeaderProps = {
@@ -95,7 +97,7 @@ export function renderClose(props: BasicModalProps, innerProps: ModalInnerProps)
         ...closeIconProps,
     }
     // 取消事件
-    async function handleCancel(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    function handleCancel(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
         e?.stopPropagation();
         // 过滤自定义关闭按钮的空白区域
         closeModal()
@@ -123,7 +125,7 @@ export function renderFooter(props: BasicModalProps, innerProps: ModalInnerProps
         ...rest,
     }
     // 取消事件
-    async function handleCancel(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+    function handleCancel(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
         e?.stopPropagation();
         // 过滤自定义关闭按钮的空白区域
         closeModal()

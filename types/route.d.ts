@@ -1,8 +1,8 @@
 
 declare type PageModule = {
-    default: React.ComponentType<any>;
+    default: React.ComponentType<Recordable | object>;
     // 其他额外的属性
-    [key: string]: React.ComponentType<any>;
+    [key: string]: React.ComponentType<Recordable | object>;
 };
 
 declare type LazyModule = Promise<PageModule>;
@@ -22,7 +22,7 @@ declare interface RouteMenuItem {
     icon?: string;
 }
 
-declare type CrRouteObject = Omit<MRouteObject, 'children'|'lazy'> & Omit<RouteMenuItem,'path'> & {
+declare type CrRouteObject = Omit<MRouteObject, 'children' | 'lazy'> & Omit<RouteMenuItem, 'path'> & {
     children?: CrRouteObject[] | undefined;
     lazy?: LazyRouteFunction<CrRouteObject>;
 }

@@ -1,13 +1,13 @@
-import { PopConfirmButton } from "@/components/Button/src";
-import { BasicDropdown } from "@/components/Dropdown";
-import { Icon } from "@/components/Icon";
-import { usePermission } from "@/hooks/auth";
 import { MoreOutlined } from "@ant-design/icons";
 import { Button, Divider, Tooltip, TooltipProps } from "antd";
 import { is } from "ramda";
 import React, { FC } from "react";
 import { TableActionProps } from "../props";
-import { TableActionItem } from "../types";
+import { TableActionItem } from "../types/table";
+import { PopConfirmButton } from "@/components/Button/src";
+import { BasicDropdown } from "@/components/Dropdown";
+import { Icon } from "@/components/Icon";
+import { usePermission } from "@/hooks/auth";
 
 export const TableAction: FC<TableActionProps> = ({
     divider = true,
@@ -16,20 +16,15 @@ export const TableAction: FC<TableActionProps> = ({
     renderItem,
     renderDropdownHeader,
 }) => {
+    const { hasPermission } = usePermission();
     if (!items && dropDownItems) return null;
 
-    // 
-
-    const { hasPermission } = usePermission();
-
-    const getTooltip = (data: string | TooltipProps): TooltipProps => {
-        return {
-            //TODO 这里要绑定table
-            // getPopupContainer: () => undefined ?? document.body,
-            placement: 'bottom',
-            ...(is(String, data) ? { title: data } : data),
-        };
-    }
+    const getTooltip = (data: string | TooltipProps): TooltipProps => ({
+        // TODO 这里要绑定table
+        // getPopupContainer: () => undefined ?? document.body,
+        placement: 'bottom',
+        ...(is(String, data) ? { title: data } : data),
+    })
 
     const getItem = (item: TableActionItem) => {
         if (renderItem) return renderItem(item);
@@ -53,19 +48,17 @@ export const TableAction: FC<TableActionProps> = ({
             : ActionButton;
     }
 
-    const getDropdownItems = () => {
-        return dropDownItems
-            ?.filter((action) => hasPermission(action.auth) && action.show)
-            .map((action, index, array) => {
-                const { key, popConfirmProps, title } = action;
-                return {
-                    key,
-                    popConfirmProps,
-                    title,
-                    divider: index < array.length - 1 ? divider : false,
-                };
-            });
-    }
+    const getDropdownItems = () => dropDownItems
+        ?.filter((action) => hasPermission(action.auth) && action.show)
+        .map((action, index, array) => {
+            const { key, popConfirmProps, title } = action;
+            return {
+                key,
+                popConfirmProps,
+                title,
+                divider: index < array.length - 1 ? divider : false,
+            };
+        })
 
     const DropdownHeader = renderDropdownHeader ? renderDropdownHeader() : (
         <Button icon={<MoreOutlined />} type="link" size="small" />
@@ -74,16 +67,14 @@ export const TableAction: FC<TableActionProps> = ({
     return (
         <div>
             {
-                items?.map((item, index) => {
-                    return (
-                        <React.Fragment key={item.key}>
-                            {getItem(item)}
-                            {divider && index < items.length - 1 ? (
-                                <Divider type="vertical" className="action-divider" />
-                            ) : undefined}
-                        </React.Fragment>
-                    )
-                })
+                items?.map((item, index) => (
+                    <React.Fragment key={item.key}>
+                        {getItem(item)}
+                        {divider && index < items.length - 1 ? (
+                            <Divider type="vertical" className="action-divider" />
+                        ) : undefined}
+                    </React.Fragment>
+                ))
             }
             {
                 dropDownItems ? (

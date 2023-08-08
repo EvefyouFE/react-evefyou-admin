@@ -1,6 +1,7 @@
-import { useMountEffect, useUnmountEffect } from "@/hooks/core";
-import { useDesign} from "@/hooks/design";
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { MouseEventHandler, forwardRef, useImperativeHandle, useRef } from "react";
+import { useMountEffect, useUnmountEffect } from "@/hooks/core";
+import { useDesign } from "@/hooks/design";
 import { ScrollContainerBase, ScrollContainerProps } from "./ScrollContainerBase";
 import { classNames } from "./utils";
 import './index.less'
@@ -24,13 +25,13 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
     const yBarRef = useRef<HTMLDivElement>(null);
     const isXBarClicked = useRef(false);
     const isYBarClicked = useRef(false);
-    const lastPageX = useRef<number|null>(null);
-    const lastPageY = useRef<number|null>(null);
-    const scrollXRatio = useRef<number|null>(null);
-    const scrollYRatio = useRef<number|null>(null);
-    const frame = useRef<number|null>(null);
+    const lastPageX = useRef<number | null>(null);
+    const lastPageY = useRef<number | null>(null);
+    const scrollXRatio = useRef<number | null>(null);
+    const scrollYRatio = useRef<number | null>(null);
+    const frame = useRef<number | null>(null);
     const initialized = useRef(false);
-    const {prefixCls} = useDesign('scroll-container')
+    const { prefixCls } = useDesign('scroll-container')
 
     const calculateContainerHeight = () => {
         const containerStyles = getComputedStyle(containerRef.current!);
@@ -42,7 +43,7 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
                 containerRef.current!.style.height = containerStyles.maxHeight;
             } else {
                 containerRef.current!.style.height =
-                    contentRef.current!.offsetHeight + parseFloat(containerStyles.paddingTop) + parseFloat(containerStyles.paddingBottom) + parseFloat(containerStyles.borderTopWidth) + parseFloat(containerStyles.borderBottomWidth) + 'px';
+                    `${contentRef.current!.offsetHeight + parseFloat(containerStyles.paddingTop) + parseFloat(containerStyles.paddingBottom) + parseFloat(containerStyles.borderTopWidth) + parseFloat(containerStyles.borderBottomWidth)}px`;
             }
         }
     };
@@ -51,7 +52,7 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
         // horizontal scroll
         const totalWidth = contentRef.current!.scrollWidth;
         const ownWidth = contentRef.current!.clientWidth;
-        scrollXRatio.current =  ownWidth / totalWidth;
+        scrollXRatio.current = ownWidth / totalWidth;
 
         const bottom = (containerRef.current!.clientHeight - xBarRef.current!.clientHeight) * -1;
 
@@ -59,31 +60,31 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
         // vertical scroll
         const totalHeight = contentRef.current!.scrollHeight;
         const ownHeight = contentRef.current!.clientHeight;
-        scrollYRatio.current =  ownHeight / totalHeight;
-        
+        scrollYRatio.current = ownHeight / totalHeight;
+
         const right = (containerRef.current!.clientWidth - yBarRef.current!.clientWidth) * -1;
 
 
-        frame.current =  window.requestAnimationFrame(() => {
+        frame.current = window.requestAnimationFrame(() => {
             if (scrollXRatio.current! >= 1) {
                 addClass(xBarRef.current!, 'scroll-container-hidden');
             } else {
                 removeClass(xBarRef.current!, 'scroll-container-hidden');
-                xBarRef.current!.style.cssText = 'width:' + Math.max(scrollXRatio.current! * 100, 10) + '%; left:' + (contentRef.current!.scrollLeft / totalWidth) * 100 + '%;bottom:' + bottom + 'px;';
+                xBarRef.current!.style.cssText = `width:${Math.max(scrollXRatio.current! * 100, 10)}%; left:${(contentRef.current!.scrollLeft / totalWidth) * 100}%;bottom:${bottom}px;`;
             }
 
             if (scrollYRatio.current! >= 1) {
                 addClass(yBarRef.current!, 'scroll-container-hidden');
             } else {
                 removeClass(yBarRef.current!, 'scroll-container-hidden');
-                yBarRef.current!.style.cssText = 'height:' + Math.max(scrollYRatio.current! * 100, 10) + '%; top: calc(' + (contentRef.current!.scrollTop / totalHeight) * 100 + '% - ' + xBarRef.current!.clientHeight + 'px);right:' + right + 'px;';
+                yBarRef.current!.style.cssText = `height:${Math.max(scrollYRatio.current! * 100, 10)}%; top: calc(${(contentRef.current!.scrollTop / totalHeight) * 100}% - ${xBarRef.current!.clientHeight}px);right:${right}px;`;
             }
         });
     };
 
     const onYBarMouseDown: MouseEventHandler<HTMLDivElement> = (event) => {
-        isYBarClicked.current =  true;
-        lastPageY.current =  event.pageY;
+        isYBarClicked.current = true;
+        lastPageY.current = event.pageY;
         addClass(yBarRef.current!, 'scroll-container-grabbed');
         addClass(document.body, 'scroll-container-grabbed');
 
@@ -93,8 +94,8 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
     };
 
     const onXBarMouseDown: MouseEventHandler<HTMLDivElement> = (event) => {
-        isXBarClicked.current =  true;
-        lastPageX.current =  event.pageX;
+        isXBarClicked.current = true;
+        lastPageX.current = event.pageX;
         addClass(xBarRef.current!, 'scroll-container-grabbed');
         addClass(document.body, 'scroll-container-grabbed');
 
@@ -104,9 +105,9 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
     };
 
     const onDocumentMouseMove = (event: MouseEvent) => {
-        if (isXBarClicked.current!) {
+        if (isXBarClicked.current) {
             onMouseMoveForXBar(event);
-        } else if (isYBarClicked.current!) {
+        } else if (isYBarClicked.current) {
             onMouseMoveForYBar(event);
         } else {
             onMouseMoveForXBar(event);
@@ -117,9 +118,9 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
     const onMouseMoveForXBar = (event: MouseEvent) => {
         const deltaX = event.pageX - lastPageX.current!;
 
-        lastPageX.current =  event.pageX;
+        lastPageX.current = event.pageX;
 
-        frame.current =  window.requestAnimationFrame(() => {
+        frame.current = window.requestAnimationFrame(() => {
             contentRef.current!.scrollLeft += deltaX / scrollXRatio.current!;
         });
     };
@@ -127,9 +128,9 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
     const onMouseMoveForYBar = (event: MouseEvent) => {
         const deltaY = event.pageY - lastPageY.current!;
 
-        lastPageY.current =  event.pageY;
+        lastPageY.current = event.pageY;
 
-        frame.current =  window.requestAnimationFrame(() => {
+        frame.current = window.requestAnimationFrame(() => {
             contentRef.current!.scrollTop += deltaY / scrollYRatio.current!;
         });
     };
@@ -141,8 +142,8 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
 
         document.removeEventListener('mousemove', onDocumentMouseMove);
         document.removeEventListener('mouseup', onDocumentMouseUp);
-        isXBarClicked.current =  false;
-        isYBarClicked.current =  false;
+        isXBarClicked.current = false;
+        isYBarClicked.current = false;
     };
 
     const refresh = () => {
@@ -153,16 +154,16 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
         moveBar();
         window.addEventListener('resize', moveBar);
         calculateContainerHeight();
-        initialized.current =  true;
+        initialized.current = true;
     });
 
     useUnmountEffect(() => {
-        if (initialized.current!) {
+        if (initialized.current) {
             window.removeEventListener('resize', moveBar);
         }
 
         if (frame.current!) {
-            window.cancelAnimationFrame(frame.current!);
+            window.cancelAnimationFrame(frame.current);
         }
     });
 
@@ -176,7 +177,7 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
     }));
 
     const otherProps = ScrollContainerBase.getOtherProps(props);
-    const className = classNames("scroll-container component clearfix",prefixCls, props.className);
+    const className = classNames("scroll-container component clearfix", prefixCls, props.className);
 
     return (
         <div ref={containerRef} id={props.id} className={className} style={props.style} {...otherProps}>
@@ -185,8 +186,10 @@ export const ScrollContainer = forwardRef<ScrollContainerMethods, ScrollContaine
                     {props.children}
                 </div>
             </div>
-            <div ref={xBarRef} className="scroll-container-bar scroll-container-bar-x" onMouseDown={onXBarMouseDown}></div>
-            <div ref={yBarRef} className="scroll-container-bar scroll-container-bar-y" onMouseDown={onYBarMouseDown}></div>
+            <div ref={xBarRef} className="scroll-container-bar scroll-container-bar-x" onMouseDown={onXBarMouseDown} />
+            <div ref={yBarRef} className="scroll-container-bar scroll-container-bar-y" onMouseDown={onYBarMouseDown} />
         </div>
     );
 });
+
+ScrollContainer.displayName = 'ScrollContainer'

@@ -1,10 +1,10 @@
-import { getPopupContainer } from "@/utils/dom";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Tooltip } from "antd";
 import { is } from "ramda";
 import React, { Children, PropsWithChildren } from "react";
 import './BasicHelp.less';
 import { BasicHelpProps } from "./props";
+import { getPopupContainer } from "@/utils/dom";
 import { useDesign } from "@/hooks/design";
 
 export const BasicHelp: React.FC<PropsWithChildren<BasicHelpProps>> = ({
@@ -17,7 +17,7 @@ export const BasicHelp: React.FC<PropsWithChildren<BasicHelpProps>> = ({
     children,
     ...rest
 }) => {
-    const {prefixCls} = useDesign('basic-help')
+    const { prefixCls } = useDesign('basic-help')
     const getTooltipStyle = { color, fontSize };
     const getOverlayStyle = { maxWidth };
     function renderTitle() {
@@ -28,16 +28,12 @@ export const BasicHelp: React.FC<PropsWithChildren<BasicHelpProps>> = ({
         }
 
         if (is(Array, textList)) {
-            return textList.map((text, index) => {
-                return (
-                    <p key={text}>
-                        <>
-                            {showIndex ? `${index + 1}. ` : ''}
-                            {text}
-                        </>
-                    </p>
-                );
-            });
+            return textList.map((tx, index) => (
+                <p key={tx}>
+                    {showIndex ? `${index + 1}. ` : ''}
+                    {tx}
+                </p>
+            ));
         }
         return null;
     }
@@ -53,7 +49,7 @@ export const BasicHelp: React.FC<PropsWithChildren<BasicHelpProps>> = ({
         >
             <span className={prefixCls}>
                 {
-                    Children ? children : <InfoCircleOutlined/>
+                    Children ? children : <InfoCircleOutlined />
                 }
             </span>
         </Tooltip>

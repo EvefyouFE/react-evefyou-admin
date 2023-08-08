@@ -1,11 +1,12 @@
 import { Col, Form } from "antd";
-import { FC, useMemo } from "react";
+import { FC, memo, useMemo } from "react";
 import { BasicFormItemProps } from "../props";
 import { Item } from "./render";
+import { deepCompareObj } from "@/utils/object";
 
 
 
-export const BasicFormItem: FC<BasicFormItemProps> = (props: BasicFormItemProps) => {
+export const BasicFormItemFn: FC<BasicFormItemProps> = (props: BasicFormItemProps) => {
     const {
         formProps,
         colProps,
@@ -19,6 +20,7 @@ export const BasicFormItem: FC<BasicFormItemProps> = (props: BasicFormItemProps)
 
     const renderCallbackParams = useMemo(() => ({
         props: itemProps,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         values: getFieldsValue(),
         field: itemProps?.name?.toString() || ''
     }), [itemProps, getFieldsValue])
@@ -43,3 +45,5 @@ export const BasicFormItem: FC<BasicFormItemProps> = (props: BasicFormItemProps)
         </Col>
     ) : null;
 }
+
+export const BasicFormItem = memo(BasicFormItemFn, deepCompareObj)

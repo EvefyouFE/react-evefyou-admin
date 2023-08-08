@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { ConfigProvider } from 'antd';
 import moment from 'moment';
 import 'moment/dist/locale/zh-cn';
+import { useRecoilValue } from "recoil";
 import { Suspense, useEffect } from 'react';
 import { IntlProvider } from 'react-intl';
 import { RouterProvider } from 'react-router-dom';
@@ -11,7 +14,6 @@ import { localeConfig } from './config/locale/localeConfig';
 import { LoadingFallback } from "./components/Fallback";
 import { useUserRecoilState } from "./stores/user";
 import { appAtom } from "./stores/app";
-import { useRecoilValue } from "recoil";
 import { router } from "./routes";
 import { AxiosInterceptor } from "./api/request/AxiosInterceptor";
 
@@ -29,15 +31,11 @@ const App: React.FC = () => {
     }, [locale]);
 
     const getLocale = () => {
-        const lang = localeConfig.find((item) => {
-            return item.key === locale.toLowerCase();
-        });
+        const lang = localeConfig.find((item) => item.key === locale.toLowerCase());
         return lang?.messages;
     };
     const getAntdLocale = () => {
-        const lang = localeConfig.find((item) => {
-            return item.key === locale.toLowerCase();
-        });
+        const lang = localeConfig.find((item) => item.key === locale.toLowerCase());
         return lang?.antdMessages;
     };
 
@@ -55,11 +53,11 @@ const App: React.FC = () => {
                 }
                 throw err;
             }}>
-                <AxiosInterceptor/>
+                <AxiosInterceptor />
                 <NProgress>
                     <Suspense fallback={<LoadingFallback />}>
                         <AppProvider>
-                            <RouterProvider router={router}/>
+                            <RouterProvider router={router} />
                         </AppProvider>
                     </Suspense>
                 </NProgress>

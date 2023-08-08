@@ -1,18 +1,18 @@
-import { useLogout } from "@/hooks/auth"
 import { FC } from "react"
 import { FormattedMessage } from "react-intl"
+import { useLogout } from "@/hooks/auth"
 
 interface LogoutProps {
-    locale?: string
+    locale?: string;
 }
 
 export const Logout: FC<LogoutProps> = ({
-    locale
+    locale = ''
 }) => {
-    const {onLogout} = useLogout()
+    const { onLogout } = useLogout()
     return (
-        <span onClick={onLogout}>
-            <FormattedMessage id={locale} defaultMessage={"登出"}/>
+        <span role="button" tabIndex={0} onClick={onLogout} onKeyUp={onLogout}>
+            <FormattedMessage id={locale} defaultMessage="登出" />
         </span>
     )
 }

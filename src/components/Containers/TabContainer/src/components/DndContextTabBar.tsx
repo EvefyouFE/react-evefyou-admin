@@ -5,9 +5,9 @@ import {
     SortableContext,
 } from '@dnd-kit/sortable';
 import { TabsProps } from 'antd';
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import { DraggableTabNode } from './DraggableTabNode';
-import { TabItem } from '../type';
+import { TabItem } from '../typing';
 
 type RenderTabBar = Required<TabsProps>['renderTabBar']
 type RenderTabBarProps = Parameters<RenderTabBar>[0]
@@ -28,8 +28,8 @@ export const DndContextTabBar: FC<DndContextTabBarProps> = ({
     ...rest
 }) => {
     const sensor = useSensor(PointerSensor, { activationConstraint: { distance: 10 } });
-    const onActiveBarTransform = (className: string) => {handleOnActiveBarTransform(className)};
-    const onDragEnd = (event: DragEndEvent) => {handleOnDragEnd(event)};
+    const onActiveBarTransform = useCallback((className: string) => { handleOnActiveBarTransform(className) }, [handleOnActiveBarTransform]);
+    const onDragEnd = (event: DragEndEvent) => { handleOnDragEnd(event) };
 
     return (
         <DndContext sensors={[sensor]} onDragEnd={onDragEnd}>

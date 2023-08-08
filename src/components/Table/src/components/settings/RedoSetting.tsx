@@ -10,19 +10,17 @@ export type RedoSettingProps = Partial<TooltipProps> & {
 export const RedoSetting: React.FC<RedoSettingProps> = ({
     redo,
     getPopupContainer
-}) => {
-    return (
-        <Tooltip
-            className="cursor-pointer"
-            placement="top"
-            getPopupContainer={getPopupContainer}
-            title={
-                <span>
-                    {<FormattedMessage id="components.common.refresh" />}
-                </span>
-            }
-        >
-            <RedoOutlined onClick={redo} />
-        </Tooltip>
-    )
-}
+}) => (
+    <Tooltip
+        className="cursor-pointer"
+        placement="top"
+        getPopupContainer={getPopupContainer}
+        title={
+            <span>
+                <FormattedMessage id="components.common.refresh" />
+            </span>
+        }
+    >
+        <RedoOutlined onClick={redo} />
+    </Tooltip>
+)

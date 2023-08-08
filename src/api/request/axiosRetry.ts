@@ -1,3 +1,10 @@
+/* eslint-disable no-promise-executor-return */
+/* eslint-disable class-methods-use-this */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable no-unsafe-optional-chaining */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { AxiosError, AxiosInstance } from 'axios';
 /**
  *  请求重试机制
@@ -16,7 +23,7 @@ export class AxiosRetry {
       return Promise.reject(error);
     }
     config.__retryCount += 1;
-    //请求返回后config的header不正确造成重试请求失败,删除返回headers采用默认headers
+    // 请求返回后config的header不正确造成重试请求失败,删除返回headers采用默认headers
     delete config.headers;
     return this.delay(waitTime).then(() => axiosInstance(config));
   }

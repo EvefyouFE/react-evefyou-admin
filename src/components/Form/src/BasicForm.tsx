@@ -5,17 +5,18 @@ import { BasicFormAction } from "./components/BasicFormAction";
 import { BasicFormItem } from "./components/BasicFormItem";
 import { useFormItems } from "./hooks";
 import { BasicFormActionProps, BasicFormProps } from "./props";
-import { BasicFormInstance } from "./types/form";
+import { BasicFormInstance } from "./types/formHooks";
 import { usePropsState } from "@/hooks/core";
 import { genUUID } from "@/utils/generate";
 import { useFormProps } from "./hooks/useFormProps";
+import { deepCompareObj } from "@/utils/object";
 
-export const BasicForm = React.memo(React.forwardRef(<T extends Recordable = any>(
+export const BasicForm = React.memo(React.forwardRef(<T = any>(
   props: PropsWithChildrenCls<BasicFormProps>,
   ref: React.ForwardedRef<BasicFormInstance<T>>
 ) => {
-  const {children} = props;
-  
+  const { children } = props;
+
   const [propsState, propsMethods] = useFormProps(props)
 
   const {
@@ -48,7 +49,7 @@ export const BasicForm = React.memo(React.forwardRef(<T extends Recordable = any
       return 24;
     }
     const colSpan = baseColProps?.span
-    const site = Number.parseFloat(colSpan + '') / Number.parseFloat(rowSpan + '')
+    const site = Number.parseFloat(`${colSpan ?? ''}`) / Number.parseFloat(`${rowSpan}`)
     if (items?.length && (items.length * site) > 3 / 4) {
       return rowSpan
     }
@@ -75,19 +76,20 @@ export const BasicForm = React.memo(React.forwardRef(<T extends Recordable = any
       {children}
       {
         !children && <Row {...rowPropsValue}>
-        {
-          itemsMemo.map((item) => (
-            <BasicFormItem key={genUUID()} {...item} />
-          ))
-        }
-        {
-          showAction && <Col span={actionColSpan} className="h-full">
-          <BasicFormAction {...actionPropsValue} />
-        </Col>
-        }
-        
-      </Row>
+          {
+            itemsMemo.map((item) => (
+              <BasicFormItem key={genUUID()} {...item} />
+            ))
+          }
+          {
+            showAction && <Col span={actionColSpan} className="h-full">
+              <BasicFormAction {...actionPropsValue} />
+            </Col>
+          }
+
+        </Row>
       }
     </Form>
   )
-})) as <T extends Recordable = any>(p: PropsWithChildrenCls<BasicFormProps> & { ref?: Ref<BasicFormInstance<T>> }) => ReactElement;
+}), deepCompareObj) as <T = any>(p: PropsWithChildrenCls<BasicFormProps> & { ref?: Ref<BasicFormInstance<T>> }) => ReactElement;
+

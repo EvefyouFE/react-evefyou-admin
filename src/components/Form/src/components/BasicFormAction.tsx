@@ -1,10 +1,11 @@
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Form, Space } from "antd";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { FormattedMessage } from "react-intl";
 import { BasicFormActionProps } from "../props";
+import { deepCompareObj } from "@/utils/object";
 
-export function BasicFormAction({
+export function BasicFormActionFn({
     expand,
     showExpand = false,
     showReset = true,
@@ -28,8 +29,9 @@ export function BasicFormAction({
         text: <FormattedMessage id="components.common.reset" />,
         ...resetBtnOptions
     }), [resetBtnOptions])
+
     return (
-        <div style={{ textAlign: textAlign }}>
+        <div style={{ textAlign }}>
             <Space size={size}>
                 {renderSubmitBefore}
                 {
@@ -74,3 +76,5 @@ export function BasicFormAction({
         </div>
     )
 }
+
+export const BasicFormAction = memo(BasicFormActionFn, deepCompareObj)

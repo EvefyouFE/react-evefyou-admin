@@ -1,13 +1,11 @@
 import { ModalProps } from "antd";
 import { ButtonType } from "antd/es/button";
 import React, { MouseEventHandler, PropsWithChildren } from "react";
-import { ModalInstance } from "./typing";
-import { Actions } from "ahooks/lib/useBoolean";
 
 export interface ModalFooterProps extends Partial<ModalProps> {
     okType?: ButtonType;
-    onOk?: React.MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>;
-    onCancel?: React.MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>;
+    onOk?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
+    onCancel?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
     insertFooter?: React.ReactNode;
     centerFooter?: React.ReactNode;
     appendFooter?: React.ReactNode;
@@ -21,10 +19,10 @@ export interface ModalCloseProps {
 }
 
 export interface ModalHeaderProps extends Partial<ModalProps> {
-    helpMessage?: string[]|string;
+    helpMessage?: string[] | string;
     onDoubleClick?: MouseEventHandler;
-    onMouseOver?: React.MouseEventHandler<HTMLDivElement>;
-    onMouseOut?: React.MouseEventHandler<HTMLDivElement>;
+    onMouseOver?: <T>(event?: React.MouseEvent<T, MouseEvent>) => void;
+    onMouseOut?: <T>(event?: React.MouseEvent<T, MouseEvent>) => void;
 }
 
 export interface ModalWrapperProps extends PropsWithChildren {
@@ -43,11 +41,4 @@ export interface BasicModalProps extends Partial<ModalProps> {
     wrapperProps?: ModalWrapperProps;
     onCancel?: (e: React.MouseEvent<HTMLSpanElement>) => void;
     name?: string;
-}
-
-export interface ModalInnerProps {
-    fullScreen: [boolean, Actions];
-    instance: ModalInstance;
-    okLoadingState: boolean;
-    disabled: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
 }

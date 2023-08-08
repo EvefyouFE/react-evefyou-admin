@@ -1,13 +1,13 @@
-import { LoginTypeEnum } from "@/pages/constants/login";
 import { QRCode } from "antd";
 import { FC } from "react";
+import { LoginTypeEnum } from "@/pages/constants/login";
 
 export interface LoginByQrCodeProps {
     loginType: `${LoginTypeEnum}`
 }
 
 const getQRCodeIcon = (loginType: `${LoginTypeEnum}`) => {
-    switch(loginType) {
+    switch (loginType) {
         case LoginTypeEnum.wechat:
             return 'src/assets/logo/wechat_logo.svg';
         case LoginTypeEnum.qq:
@@ -18,14 +18,14 @@ const getQRCodeIcon = (loginType: `${LoginTypeEnum}`) => {
 };
 
 export const LoginByQrCode: FC<LoginByQrCodeProps> = (props) => {
-    const {loginType} = props;
+    const { loginType } = props;
     return (
         <div className="flex justify-center items-center h-72">
-            <QRCode 
+            <QRCode
                 value="hello"
                 size={160}
                 icon={getQRCodeIcon(loginType)}
-                />
+            />
         </div>
     )
 };

@@ -11,7 +11,7 @@ export enum ComponentPermissionEnum {
 }
 
 export enum ControlPermissionEnum {
-    ADD='add',
-    EDIT='edit',
-    DELETE='delete',
+    ADD = 'add',
+    EDIT = 'edit',
+    DELETE = 'delete',
 }

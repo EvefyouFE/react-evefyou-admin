@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { DownOutlined, FullscreenOutlined, RedoOutlined } from "@ant-design/icons";
 import { Dropdown, MenuProps } from "antd";
 import { FC } from "react";
@@ -49,6 +51,7 @@ export const TabBarExtraContent: FC<TabBarExtraContentProps> = ({
                                 onCloseOtherTabs()
                                 break;
                             case '5':
+                            default:
                                 onCloseAllTabs()
                                 break;
                         }

@@ -20,10 +20,11 @@ export const useMediaQuery = (
 
     const [matches, setMatches] = useState(false);
 
-    isSupported &&
-        useEffect(() => {
-            let mediaQuery: MediaQueryList | undefined;
-            const updateMatches = () => {
+    useEffect(() => {
+        let mediaQuery: MediaQueryList | undefined;
+        let updateMatches = () => { };
+        if (isSupported) {
+            updateMatches = () => {
                 mediaQuery = window!.matchMedia(query);
                 setMatches(!!mediaQuery?.matches)
             };
@@ -31,12 +32,15 @@ export const useMediaQuery = (
             mediaQuery &&
                 'addEventListener' in mediaQuery &&
                 mediaQuery.addEventListener('change', updateMatches);
-            return () => {
+        }
+        return () => {
+            if (isSupported) {
                 mediaQuery &&
                     'removeEventListener' in mediaQuery &&
                     mediaQuery.removeEventListener('change', updateMatches);
-            };
-        }, [query]);
+            }
+        };
+    }, [isSupported, query, window]);
 
     return matches;
 };

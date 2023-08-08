@@ -1,5 +1,4 @@
-import { BasicHelp } from "@/components/Basic/src/BasicHelp";
-import { formatById } from "@/locales";
+/* eslint-disable react-refresh/only-export-components */
 import { Col, Divider, Form } from "antd";
 import { Rule, RuleObject } from "antd/es/form";
 import classNames from "classnames";
@@ -8,7 +7,8 @@ import React, { useMemo } from "react";
 import { itemComponentMap } from "../../itemComponentMap";
 import { ItemInnerProps } from "../props";
 import { createPlaceholderMessage, validator } from "../utils/helper";
-
+import { BasicHelp } from "@/components/Basic/src/BasicHelp";
+import { formatById } from "@/locales";
 
 function renderLabelHelpMessage({
     label,
@@ -46,7 +46,7 @@ function renderLabelHelpMessage({
  * @param param0 渲染项包裹的组件 Input、Select...
  * @returns 
  */
-export function renderItemComponentFn({
+export function useRenderItemComponentFn({
     name = '',
     itemComponent,
     itemComponentProps,
@@ -63,6 +63,7 @@ export function renderItemComponentFn({
 
     let itemComponentPropsValue: Recordable;
     if (is(Function, itemComponentProps)) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         itemComponentPropsValue = itemComponentProps(renderCallbackParams!)
     } else {
         itemComponentPropsValue = itemComponentProps || {}
@@ -77,9 +78,10 @@ export function renderItemComponentFn({
 
     const realItemComponentProps: Recordable = {
         allowClear: true,
-        //input 没有该属性
+        // input 没有该属性
         // getPopupContainer: (trigger: Element) => trigger.parentNode,
-        disabled: disabled ? disabled : itemComponentPropsValue.disabled ? itemComponentPropsValue.disabled : false,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        disabled: disabled || (itemComponentPropsValue.disabled ? itemComponentPropsValue.disabled : false),
         size,
         ...itemComponentPropsValue,
     }
@@ -87,6 +89,7 @@ export function renderItemComponentFn({
     const isCreatePlaceholder = !realItemComponentProps.disabled && autoSetPlaceHolder;
     // RangePicker place is an array
     if (isCreatePlaceholder && itemComponent !== 'RangePicker' && itemComponent) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         realItemComponentProps.placeholder =
             itemComponentPropsValue?.placeholder || createPlaceholderMessage(itemComponent);
     }
@@ -96,9 +99,12 @@ export function renderItemComponentFn({
         [changeEvent]: (...args: Nullable<Recordable>[]) => {
             const [e] = args;
             if (realItemComponentProps[changeEvent]) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 realItemComponentProps[changeEvent](...args);
             }
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const target = e ? e.target : null;
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             const value = target ? (isCheck ? target.checked : target.value) : e;
             setFieldValue(name, value)
         }
@@ -124,7 +130,7 @@ export function renderItemComponentFn({
  * @param props 渲染项 form.item
  * @returns 
  */
-export function renderItemFn(props: Partial<ItemInnerProps>) {
+export function useRenderItemFn(props: Partial<ItemInnerProps>) {
     const {
         itemComponent,
         itemComponentProps,
@@ -142,7 +148,7 @@ export function renderItemFn(props: Partial<ItemInnerProps>) {
 
     const itemContent = renderItemContent
         ? renderItemContent(renderCallbackParams!)
-        : <ItemComponent {...props}/>
+        : <ItemComponent {...props} />
 
     const label = renderLabelHelpMessage(props)
 
@@ -153,45 +159,45 @@ export function renderItemFn(props: Partial<ItemInnerProps>) {
             return dynamicRules(renderCallbackParams!) || [];
         }
 
-        let rules: Rule[] = clone(defRules);
+        let ruls: Rule[] = clone(defRules);
 
         const requiredValue = is(Function, required) ? required(renderCallbackParams!) : required;
         if (requiredValue) {
-            if (!rules || !rules.length) {
-                rules = [{ required: requiredValue, validator }];
+            if (!ruls || !ruls.length) {
+                ruls = [{ required: requiredValue, validator }];
             } else {
-                const requiredIndex: number = rules.findIndex((rule) => Reflect.has(rule, 'required'));
+                const requiredIndex: number = ruls.findIndex((rule) => Reflect.has(rule, 'required'));
                 if (requiredIndex === -1) {
-                    rules.push({ required: requiredValue, validator });
+                    ruls.push({ required: requiredValue, validator });
                 }
             }
         }
-        const requiredRuleIndex: number = rules.findIndex(
+        const requiredRuleIndex: number = ruls.findIndex(
             (rule) => Reflect.has(rule, 'required') && !Reflect.has(rule, 'validator'),
         );
         if (requiredRuleIndex !== -1) {
-            const rule = rules[requiredRuleIndex];
+            const rule = ruls[requiredRuleIndex];
             if (itemComponent && !is(Function, rule)) {
                 if (!Reflect.has(rule, 'type')) {
                     rule.type = itemComponent === 'InputNumber' ? 'number' : 'string';
                 }
-                rule.message = rule.message;
+                // ruls.message = rule.message;
                 if (itemComponent.includes('Input') || itemComponent.includes('Textarea')) {
                     rule.whitespace = true;
                 }
-                //这里跟itemComponent耦合不合理，待优化
+                // 这里跟itemComponent耦合不合理，待优化
                 // const valueFormat = !is(Function, itemComponentProps) && itemComponentProps?.valueFormat;
                 // setRuleTypeForComponent(rule, itemComponent, valueFormat);
             }
         }
 
         // Maximum input length rule check
-        const characterInx = rules.findIndex((rule) => !is(Function, rule) && rule.max);
-        const ruleWithMax = rules[characterInx] as RuleObject
+        const characterInx = ruls.findIndex((rule) => !is(Function, rule) && rule.max);
+        const ruleWithMax = ruls[characterInx] as RuleObject
         if (characterInx !== -1 && !ruleWithMax.validator) {
-            ruleWithMax.message ??= formatById('components.form.max.tip', {max: ruleWithMax.max});
+            ruleWithMax.message ??= formatById('components.form.max.tip', { max: ruleWithMax.max });
         }
-        return rules;
+        return ruls;
     }, [itemComponent, renderCallbackParams, defRules, dynamicRules, required,])
 
     return (
@@ -210,5 +216,5 @@ export function renderItemFn(props: Partial<ItemInnerProps>) {
 
 }
 
-export const ItemComponent = React.memo(renderItemComponentFn)
-export const Item = React.memo(renderItemFn)
+export const ItemComponent = React.memo(useRenderItemComponentFn)
+export const Item = React.memo(useRenderItemFn)

@@ -10,10 +10,9 @@ export type BasicBreadcrumbProps = BreadcrumbProps & {
 }
 
 export const BasicBreadcrumb: FC<BasicBreadcrumbProps> = ({
-    back = false,
     ...rest
 }) => {
-    const {prefixCls} = useDesign('basic-breadcrumb')
+    const { prefixCls } = useDesign('basic-breadcrumb')
     const matches = useMatches() as {
         data: CrumbData;
         handle: RouteHandle;

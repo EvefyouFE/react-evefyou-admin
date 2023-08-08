@@ -1,7 +1,7 @@
-import { formatById } from "@/locales";
 import { Button, Result } from "antd";
 import { FC } from "react";
 import { useNavigate } from "react-router";
+import { formatById } from "@/locales";
 
 interface ForbiddenResultProps {
     back?: string

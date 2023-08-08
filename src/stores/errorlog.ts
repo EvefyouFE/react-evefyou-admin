@@ -1,10 +1,11 @@
-import { DEFAULT_PROJECT_CONFIG } from "@/config/app/project"
-import { ErrorTypeEnum } from "@/enums";
-import { defineRecoilSelectorState } from "@/hooks/state";
-import { ErrorLogInfo } from "@/types/store";
-import { formatToDateTime } from "@/utils/dateUtil";
 import { is } from "ramda";
 import { atom } from "recoil";
+import { AxiosError } from "axios";
+import { DEFAULT_PROJECT_CONFIG } from "@/config/app/project"
+import { ErrorTypeEnum } from "@/enums";
+import { defineRecoilValue } from "@/hooks/state";
+import { ErrorLogInfo } from "@/types/store";
+import { formatToDateTime } from "@/utils/dateUtil";
 
 export interface ErrorLogState {
     errorLogInfoList: Nullable<ErrorLogInfo[]>;
@@ -21,7 +22,7 @@ export const errorLogAtom = atom({
     default: DEFAULT_ERROR_LOG_STATE
 })
 
-export const useErrorLogRecoilState = defineRecoilSelectorState({
+export const useErrorLogRecoilState = defineRecoilValue({
     name: 'errorLogState',
     state: DEFAULT_ERROR_LOG_STATE,
     getters: {
@@ -33,8 +34,8 @@ export const useErrorLogRecoilState = defineRecoilSelectorState({
         },
     },
     setters: {
-        setErrorLogListCount(errorLogListCount: number|((c:number) => number)): void {
-            if(is(Function, errorLogListCount)) {
+        setErrorLogListCount(errorLogListCount: number | ((c: number) => number)): void {
+            if (is(Function, errorLogListCount)) {
                 this.set(log => {
                     const count = errorLogListCount(log.errorLogListCount)
                     return {
@@ -43,10 +44,10 @@ export const useErrorLogRecoilState = defineRecoilSelectorState({
                     }
                 })
             }
-            this.setProps({errorLogListCount: errorLogListCount as number})
+            this.setProps({ errorLogListCount: errorLogListCount as number })
         },
         setErrorLogInfoList(errorLogInfoList: ErrorLogInfo[]): void {
-            this.setProps({errorLogInfoList})
+            this.setProps({ errorLogInfoList })
         },
     },
     actions: {
@@ -54,9 +55,9 @@ export const useErrorLogRecoilState = defineRecoilSelectorState({
             const item = {
                 ...info,
                 time: formatToDateTime(new Date()),
-            };
+            }
             this.setErrorLogInfoList([item, ...(this.errorLogState.errorLogInfoList || [])])
-            this.setErrorLogListCount(c => c+1)
+            this.setErrorLogListCount(c => c + 1)
         },
 
         /**
@@ -64,12 +65,12 @@ export const useErrorLogRecoilState = defineRecoilSelectorState({
          * @param error
          * @returns
          */
-        addAjaxErrorInfo(error) {
+        addAjaxErrorInfo(error: AxiosError) {
             const { useErrorHandle } = DEFAULT_PROJECT_CONFIG;
             if (!useErrorHandle) {
                 return;
             }
-            const errInfo: Partial<ErrorLogInfo> = {
+            const errInfo: ErrorLogInfo = {
                 message: error.message,
                 type: ErrorTypeEnum.AJAX,
             };
@@ -82,9 +83,10 @@ export const useErrorLogRecoilState = defineRecoilSelectorState({
                 errInfo.name = 'Ajax Error!';
                 errInfo.file = '-';
                 errInfo.stack = JSON.stringify(data);
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                 errInfo.detail = JSON.stringify({ params, method, headers });
             }
-            this.addErrorLogInfo(errInfo as ErrorLogInfo);
+            this.addErrorLogInfo(errInfo);
         },
     },
 }, errorLogAtom)

@@ -1,9 +1,9 @@
-import { queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
-import { Icon } from "@/components/Icon";
-import { useList } from "@/hooks/components";
 import { List } from "antd";
 import classNames from "classnames";
 import { FC, memo, useMemo } from "react";
+import { queryGetMessageList, queryGetNoticeList, queryGetTodoList } from "@/api";
+import { Icon } from "@/components/Icon";
+import { useList } from "@/hooks/components/list";
 
 export interface ReminderListDataItem {
     icon?: string;
@@ -27,24 +27,25 @@ export const ReminderList: FC<ReminderListProps> = ({
     type,
     className
 }) => {
-    const {current,onChange} = useList()
+    const { current, onChange } = useList()
     const pageSize = 3;
-    const params = {current, pageSize}
-    
-    const {data: noticeListRes} = queryGetNoticeList.useQuery({params})
-    const {data: messageListRes} = queryGetMessageList.useQuery({params})
-    const {data: todoListRes} = queryGetTodoList.useQuery({params})
+    const params = { current, pageSize }
+
+    const { data: noticeListRes } = queryGetNoticeList.useQuery({ params })
+    const { data: messageListRes } = queryGetMessageList.useQuery({ params })
+    const { data: todoListRes } = queryGetTodoList.useQuery({ params })
 
     const data = useMemo(() => {
-        switch(type) {
-            case ReminderListTypeEnum.notice: 
-            return noticeListRes?.resultData;
-            case ReminderListTypeEnum.message: 
-            return messageListRes?.resultData;
-            case ReminderListTypeEnum.todo: 
-            return todoListRes?.resultData;
+        switch (type) {
+            case ReminderListTypeEnum.notice:
+                return noticeListRes?.resultData;
+            case ReminderListTypeEnum.message:
+                return messageListRes?.resultData;
+            case ReminderListTypeEnum.todo:
+            default:
+                return todoListRes?.resultData;
         }
-    }, [type])
+    }, [messageListRes?.resultData, noticeListRes?.resultData, todoListRes?.resultData, type])
 
     const rootClsName = classNames(className, "w-full border border-solid border-neutral-300")
     const itemIconClsName = classNames("h-full", "w-16 flex-none flex items-center justify-center")
@@ -62,16 +63,15 @@ export const ReminderList: FC<ReminderListProps> = ({
                 return 'bg-orange-100 border-orange-500 text-orange-500';
         }
     }
-
     return (
         <List
             className={rootClsName}
-            pagination={{ 
-                position: 'bottom', 
-                align: 'center', 
+            pagination={{
+                position: 'bottom',
+                align: 'center',
                 onChange,
                 ...params
-             }}
+            }}
             dataSource={data}
             renderItem={(item: ReminderListDataItem) => (
                 <List.Item className="flex w-full min-h-24 items-center justify-between" key={item.title} >

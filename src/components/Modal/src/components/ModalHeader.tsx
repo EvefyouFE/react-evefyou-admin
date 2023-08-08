@@ -1,6 +1,6 @@
-import { BasicTittle } from "@/components/Basic";
 import { FC } from "react";
 import { ModalHeaderProps } from "../props";
+import { BasicTittle } from "@/components/Basic";
 
 export const ModalHeader: FC<ModalHeaderProps> = ({
     helpMessage,
@@ -8,12 +8,10 @@ export const ModalHeader: FC<ModalHeaderProps> = ({
     onDoubleClick,
     onMouseOver,
     onMouseOut,
-}) => {
-    return (
-        <div onMouseOver={onMouseOver} onMouseOut={onMouseOut}>
-            <BasicTittle helpMessage={helpMessage} onDoubleClick={onDoubleClick} className="items-center">
-                {title}
-            </BasicTittle>
-        </div>
-    )
-}
+}) => (
+    <div onMouseOver={onMouseOver} onMouseOut={onMouseOut} onFocus={() => onMouseOver?.()} onBlur={() => onMouseOut?.()}>
+        <BasicTittle helpMessage={helpMessage} onDoubleClick={onDoubleClick} className="items-center">
+            {title}
+        </BasicTittle>
+    </div>
+)

@@ -3,18 +3,18 @@ import { equals, filter, findIndex, isNil, map, propEq } from 'ramda'
 import {
     createContext,
     memo,
+    useMemo,
     useRef
 } from 'react'
 import { useLocation } from 'react-router'
 import { Children, KeepAliveComponentMemo as KeepAliveComponent } from './KeepAliveComponent'
 
-export interface context {
+export interface Context {
     destroy: (params: string[], render?: boolean) => void,
     isActive: boolean
 }
-export const KeepAliveContext = createContext<context>({ destroy: () => { }, isActive: false })
+export const KeepAliveContext = createContext<Context>({ destroy: () => { }, isActive: false })
 interface Props {
-    activeName?: string
     includes?: Array<string>
     excludes?: Array<string>
     maxLen?: number
@@ -22,15 +22,13 @@ interface Props {
     active?: boolean
 }
 
-const KeepAlive = ({ children, excludes, includes, maxLen = 5, active=true }: Props,) => {
-    if(!active) return <>{children}</>
-
+const KeepAlive = ({ children, excludes, includes, maxLen = 5, active = true }: Props,) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const components = useRef<Array<{ name: string; ele: Children }>>([])
     const { pathname } = useLocation()
     const update = useUpdate()
-    
-    //如果没有配置include，exclude 则不缓存
+
+    // 如果没有配置include，exclude 则不缓存
     if (isNil(excludes) && isNil(includes)) {
         components.current = [
             {
@@ -63,25 +61,29 @@ const KeepAlive = ({ children, excludes, includes, maxLen = 5, active=true }: Pr
             ]
         }
     }
-    //销毁缓存的路由 
-    function destroy(params: string[], render = false) {
-        components.current = filter(({ name }) => {
-            if (params.includes(name)) {
-                return false
-            }
-            return true
-        }, components.current)
-       //是否需要立即刷新 一般是不需要的
-        if (render) {
-            update()
-        }
-    }
 
     const activeIndex = findIndex(propEq('name', pathname))(components.current)
-    const context = {
-        destroy,
-        isActive: activeIndex !== -1
-    }
+    const context = useMemo(() => {
+        // 销毁缓存的路由 
+        function destroy(params: string[], render = false) {
+            components.current = filter(({ name }) => {
+                if (params.includes(name)) {
+                    return false
+                }
+                return true
+            }, components.current)
+            // 是否需要立即刷新 一般是不需要的
+            if (render) {
+                update()
+            }
+        }
+        return {
+            destroy,
+            isActive: activeIndex !== -1
+        }
+    }, [activeIndex, update])
+
+    if (!active) return children
     return (
         <>
             <div ref={containerRef} className="keep-alive" />

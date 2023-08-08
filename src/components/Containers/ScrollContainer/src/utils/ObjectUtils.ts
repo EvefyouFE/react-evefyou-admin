@@ -1,6 +1,7 @@
+/* eslint-disable */
 export default class ObjectUtils {
     static getMergedProps(props: any, defaultProps: any): any {
-        return Object.assign({}, defaultProps, props);
+        return { ...defaultProps, ...props };
     }
 
     static getDiffProps(props: any, defaultProps: any): any {
@@ -16,7 +17,6 @@ export default class ObjectUtils {
             .filter((key) => !obj2.hasOwnProperty(key))
             .reduce((result: any, current: any) => {
                 result[current] = obj1[current];
-
                 return result;
             }, {});
     }

@@ -9,34 +9,31 @@ const items = [
         key: '1',
         label: (
             <a target="_blank" rel="noopener noreferrer" href="https://www.baidu.com">
-                <FormattedMessage id="layout.header.user.dropdown.item.document"/>
+                <FormattedMessage id="layout.header.user.dropdown.item.document" />
             </a>
         )
     },
     {
         key: '2',
         label: (
-            <FormattedMessage id="layout.header.user.dropdown.item.setting"/>
+            <FormattedMessage id="layout.header.user.dropdown.item.setting" />
         )
     },
     {
         key: '3',
         label: (
-            <Logout locale="layout.header.user.dropdown.item.logout"/>
+            <Logout locale="layout.header.user.dropdown.item.logout" />
         )
     },
 ]
 
 export const UserDropdown: FC<PropsWithCls> = ({
-    className
-}) => {
-
-    return (
-        <Dropdown menu={{items}}>
-            <div className={`${className} flex justify-center items-center`}>
-                <Avatar icon={<LogoSvg />}></Avatar>
-                <span className="ml-2">Evef</span>
-            </div>
-        </Dropdown>
-    )
-}
+    className = ''
+}) => (
+    <Dropdown menu={{ items }}>
+        <div className={`${className} flex justify-center items-center`}>
+            <Avatar icon={<LogoSvg />} />
+            <span className="ml-2">Evef</span>
+        </div>
+    </Dropdown>
+)

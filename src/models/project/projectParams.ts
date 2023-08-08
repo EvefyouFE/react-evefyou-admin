@@ -1,4 +1,4 @@
-import { PageReq } from "..";
+import { PageReq } from "../base";
 
 export interface ProjectReq extends PageReq {
     title?: string;

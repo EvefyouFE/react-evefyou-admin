@@ -18,5 +18,5 @@ export const enUS_sys = {
     'sys.api.success.tip': 'Success message',
     'sys.api.timeoutMessage': 'Login timed out, please log in again!',
     'sys.api.apiTimeoutMessage': 'The interface request timed out, please refresh the page and try again!',
-    'sys.api.networkExceptionMsg':'The network is abnormal, please check whether your network connection is normal!',
+    'sys.api.networkExceptionMsg': 'The network is abnormal, please check whether your network connection is normal!',
 };

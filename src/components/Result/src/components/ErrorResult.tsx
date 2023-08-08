@@ -1,7 +1,7 @@
-import { useLocale } from "@/locales";
 import { Button, Result } from "antd";
 import { FC } from "react";
 import { useNavigate } from "react-router";
+import { useLocale } from "@/locales";
 
 interface ErrorResultProps {
     back?: string
@@ -10,8 +10,8 @@ interface ErrorResultProps {
     btnName?: string
 }
 
-export const ErrorResult: FC<ErrorResultProps> = ({back,title,subTitle,btnName}) => {
-    const {formatById} = useLocale();
+export const ErrorResult: FC<ErrorResultProps> = ({ back, title, subTitle, btnName }) => {
+    const { formatById } = useLocale();
     const navigate = useNavigate();
     return (
         <Result

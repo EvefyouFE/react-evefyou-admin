@@ -1,20 +1,24 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+import { useCallback, useEffect } from "react";
 import type { AxiosError, AxiosResponse } from 'axios';
-import { useMessage } from '@/hooks/web';
+import { getMessageHelper } from '@/hooks/web';
 import { ResultEnum, SessionTimeoutProcessingEnum } from '@/enums';
 import { useLocale } from "@/locales";
 import { useUserRecoilState } from "@/stores/user";
 import { useErrorLogRecoilState } from "@/stores/errorlog";
-import { useCallback, useEffect } from "react";
 import { DEFAULT_PROJECT_CONFIG } from "@/config/app/project";
 import { defHttp } from ".";
 
-const { createErrorModal } = useMessage();
+const { createErrorModal } = getMessageHelper();
 
 const stp = DEFAULT_PROJECT_CONFIG.sessionTimeoutProcessing;
 
 export const AxiosInterceptor = () => {
   const { formatById } = useLocale()
-  const [userState, { setIsSessionTimeout, setToken, logout }] = useUserRecoilState()
+  const [, { setIsSessionTimeout, setToken, logout }] = useUserRecoilState()
   const [errorlog, { addAjaxErrorInfo }] = useErrorLogRecoilState()
 
   const handleResInterceptor = useCallback((res: AxiosResponse<Res>) => {
@@ -29,7 +33,7 @@ export const AxiosInterceptor = () => {
         break;
       default:
     }
-  }, [userState])
+  }, [logout, setToken])
 
   const handleErrorInterceptor = useCallback((error: any) => {
     const { response, config } = error || {};
@@ -95,7 +99,7 @@ export const AxiosInterceptor = () => {
         error({ content: errMessage, key: `global_error_message_status_${status}` });
       }
     }
-  }, [userState])
+  }, [formatById, logout, setIsSessionTimeout, setToken])
 
   useEffect(() => {
     const errorInterceptor = (error: AxiosError) => {
@@ -104,7 +108,7 @@ export const AxiosInterceptor = () => {
     }
     const interceptor = defHttp.getAxios().interceptors.response.use(undefined, errorInterceptor)
     return () => defHttp.getAxios().interceptors.response.eject(interceptor)
-  }, [errorlog])
+  }, [addAjaxErrorInfo, errorlog])
 
   useEffect(() => {
     const resInterceptor = (res: AxiosResponse<Res>) => {
