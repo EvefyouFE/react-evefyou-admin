@@ -57,13 +57,12 @@ export const ScrollContainer = forwardRef<
       ) {
         containerRef.current!.style.height = containerStyles.maxHeight;
       } else {
-        containerRef.current!.style.height = `${
-          contentRef.current!.offsetHeight +
+        containerRef.current!.style.height = `${contentRef.current!.offsetHeight +
           parseFloat(containerStyles.paddingTop) +
           parseFloat(containerStyles.paddingBottom) +
           parseFloat(containerStyles.borderTopWidth) +
           parseFloat(containerStyles.borderBottomWidth)
-        }px`;
+          }px`;
       }
     }
   };
@@ -93,9 +92,8 @@ export const ScrollContainer = forwardRef<
         xBarRef.current!.style.cssText = `width:${Math.max(
           scrollXRatio.current! * 100,
           10,
-        )}%; left:${
-          (contentRef.current!.scrollLeft / totalWidth) * 100
-        }%;bottom:${bottom}px;`;
+        )}%; left:${(contentRef.current!.scrollLeft / totalWidth) * 100
+          }%;bottom:${bottom}px;`;
       }
 
       if (scrollYRatio.current! >= 1) {
@@ -105,9 +103,8 @@ export const ScrollContainer = forwardRef<
         yBarRef.current!.style.cssText = `height:${Math.max(
           scrollYRatio.current! * 100,
           10,
-        )}%; top: calc(${
-          (contentRef.current!.scrollTop / totalHeight) * 100
-        }% - ${xBarRef.current!.clientHeight}px);right:${right}px;`;
+        )}%; top: calc(${(contentRef.current!.scrollTop / totalHeight) * 100
+          }% - ${xBarRef.current!.clientHeight}px);right:${right}px;`;
       }
     });
   };
@@ -210,7 +207,7 @@ export const ScrollContainer = forwardRef<
   const className = classNames(
     'scroll-container component clearfix',
     prefixCls,
-    props.className,
+    props.className ?? '',
   );
 
   return (
