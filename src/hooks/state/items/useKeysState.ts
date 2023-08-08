@@ -1,7 +1,9 @@
 import React from "react";
-import { useItemsState } from ".";
+import { defineItemsState } from "./useItemsState";
 
-export const useKeysState = <K = React.Key, N extends string = string>(
-    initialState?: K[],
-    name : N = 'keysState' as N,
-) => useItemsState<K,N>(initialState, name)
+export const defineKeysState = <K = React.Key, N extends string = 'keysState'>(
+    initialState: K[] = [] as K[],
+    name: N = 'keysState' as N,
+) => defineItemsState<K, N>(initialState, name)
+
+export const useKeysState = defineKeysState()

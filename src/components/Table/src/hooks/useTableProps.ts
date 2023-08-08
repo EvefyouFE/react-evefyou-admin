@@ -1,15 +1,14 @@
-import { useProps } from "@/hooks"
-import { BasicTableProps } from "../props"
-import { UseTablePropsReturnType, UseTablePropsSetMethods } from "../types"
 import { useMemo } from "react"
-import { TableRowSelectionProps } from "../props"
 import { SizeType } from "antd/es/config-provider/SizeContext"
+import { useProps } from "@/hooks/core"
+import { BasicTableProps, TableRowSelectionProps } from "../props"
+import { UseTablePropsReturnType, UseTablePropsSetMethods } from "../types/tableHook"
 
-export function useTableProps<T extends Recordable = any>(props: BasicTableProps<T>): UseTablePropsReturnType<T> {
+export function useTableProps<T = any>(props: BasicTableProps<T>): UseTablePropsReturnType<T> {
     const [propsState, propsMethods] = useProps(props)
-    const {setProps} = propsMethods
+    const { setProps } = propsMethods
     const setMethods: UseTablePropsSetMethods<T> = useMemo(() => {
-        function setShowIndexColumn(value: boolean = true) {
+        function setShowIndexColumn(value = true) {
             setProps({ showIndexColumn: !!value })
         }
         function setRowSelection(value?: TableRowSelectionProps<T>) {
@@ -18,7 +17,7 @@ export function useTableProps<T extends Recordable = any>(props: BasicTableProps
         function setSize(value: SizeType = 'middle') {
             setProps({ size: value })
         }
-        function setHeight(value: number = 0) {
+        function setHeight(value = 0) {
             value && setProps({ height: value })
         }
         return {
@@ -28,6 +27,6 @@ export function useTableProps<T extends Recordable = any>(props: BasicTableProps
             setSize,
             setHeight,
         }
-    }, [])
+    }, [propsMethods, setProps])
     return [propsState, setMethods]
 }

@@ -1,16 +1,18 @@
-import { usePermission, useUnmountEffect } from "@/hooks";
-import { formatById } from "@/locales";
-import { genUUID } from "@/utils";
 import { clone, is } from "ramda";
+import { ColumnType } from "antd/es/table";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { DEFAULT_ALIGN, ROW_KEYS } from "../constants";
 import { BasicTableProps, TableColumnProps, TableColumnPropsWithKey } from "../props";
-import { CellFormat, GetColumnsParams, UseColumnsReturnType } from "../types";
-import { ColumnType } from "antd/es/table";
+import { CellFormat } from "../types/table";
+import { GetColumnsParams, UseColumnsReturnType } from "../types/tableColumns";
 import { formatToDate } from "@/utils/dateUtil";
+import { useUnmountEffect } from "@/hooks/core";
+import { usePermission } from "@/hooks/auth";
+import { formatById } from "@/locales";
+import { genUUID } from "@/utils/generate";
 
 
-function handleItem<T extends Recordable>(item: TableColumnProps<T>, ellipsis?: boolean) {
+function handleItem<T>(item: TableColumnProps<T>, ellipsis?: boolean) {
     item.align ??= DEFAULT_ALIGN;
     item.key ??= is(String, item?.dataIndex) ? item?.dataIndex : genUUID();
     item.ellipsis ??= ellipsis;
@@ -18,10 +20,10 @@ function handleItem<T extends Recordable>(item: TableColumnProps<T>, ellipsis?: 
     item.hidden ??= false
 }
 
-function handleIndexColumn<T extends Recordable = any>(
+function handleIndexColumn<T = any>(
     columnsState: TableColumnProps<T>[],
-    showIndexColumn: boolean = true,
-    isTreeTable: boolean = false,
+    showIndexColumn = true,
+    isTreeTable = false,
     indexColumn?: ColumnType<T>,
 ) {
     if (isTreeTable) return;
@@ -50,8 +52,12 @@ function handleIndexColumn<T extends Recordable = any>(
         })
     }
 }
-function handleActionColumn<T extends Recordable = any>(columnsState: TableColumnProps<T>[], children: ColumnType<T>['render'], actionColumn?: ColumnType<T>) {
-    if (!actionColumn) return columnsState;
+function handleActionColumn<T = any>(
+    columnsState: TableColumnProps<T>[],
+    children: ColumnType<T>['render'],
+    actionColumn?: ColumnType<T>
+) {
+    if (!actionColumn) return;
 
     const defaultProps: TableColumnProps<T> = {
         key: 'action',
@@ -77,7 +83,7 @@ function handleActionColumn<T extends Recordable = any>(columnsState: TableColum
     }
 }
 
-export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>): UseColumnsReturnType<T> {
+export function useColumns<T = any>(props: BasicTableProps<T>): UseColumnsReturnType<T> {
     const {
         columns,
         isTreeTable,
@@ -99,6 +105,7 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
         if (columns?.length && !isInited.current) {
             const newColumns = clone(columns)
             setColumnsState(newColumns);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             cacheColumns = columns?.filter((c) => !c.type || c.type === 'normal')
             isInited.current = true
         }
@@ -128,9 +135,7 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
                     const { format, edit, type = 'normal' } = c;
                     const isCustomColumn = type === 'normal'
                     if (!c.render && format && !edit && isCustomColumn) {
-                        c.render = (...args) => {
-                            return formatCell(format, ...args)
-                        }
+                        c.render = (...args) => formatCell(format, ...args)
                     }
                     return c
                 })
@@ -143,8 +148,8 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
                 setColumnsState([])
                 return;
             }
-            const columns = clone(columnList);
-            setColumnsState(columns as TableColumnProps<T>[])
+            const cols = clone(columnList);
+            setColumnsState(cols as TableColumnProps<T>[])
         }
         function resetColumns() {
             setColumnsState(cacheColumns)
@@ -154,12 +159,12 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
                 setColumnsState([])
                 return;
             }
-            const columns = clone(columnList);
+            const cols = clone(columnList);
             const columnIdxs: number[] = [];
             let sortChange = false;
             let newColumns: TableColumnProps<T>[] = cacheColumns.map((item, index) => {
-                const newColIdx = columns.findIndex((c) => c.key === (item.key ?? item.dataIndex))
-                const newCol = columns[newColIdx]
+                const newColIdx = cols.findIndex((c) => c.key === (item.key ?? item.dataIndex))
+                const newCol = cols[newColIdx]
                 columnIdxs.push(newColIdx)
                 if (index !== newColIdx) {
                     sortChange = true;
@@ -177,17 +182,17 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
         }
         function getColumns(opt?: GetColumnsParams) {
             const { ignoreIndex, ignoreAction, sort } = opt || {};
-            let columns = columnsState;
+            let cols = columnsState;
             if (ignoreIndex) {
-                columns = columns.filter((item) => item.type !== 'index');
+                cols = cols.filter((item) => item.type !== 'index');
             }
             if (ignoreAction) {
-                columns = columns.filter((item) => item.type !== 'action');
+                cols = cols.filter((item) => item.type !== 'action');
             }
             if (sort) {
-                columns = sortFixedColumn(columns);
+                cols = sortFixedColumn(cols);
             }
-            return columns as TableColumnPropsWithKey<T>[]
+            return cols as TableColumnPropsWithKey<T>[]
         }
         function getCacheColumns() {
             return cacheColumns as TableColumnPropsWithKey<T>[];
@@ -205,6 +210,7 @@ export function useColumns<T extends Recordable = any>(props: BasicTableProps<T>
             getCacheColumns,
             getShowIndexColumn,
         }]
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [columnsState,
         isTreeTable,
         indexColumnConfig,
@@ -220,23 +226,19 @@ function sortFixedColumn<T>(columns: TableColumnProps<T>[]) {
     const fixedRightColumns: TableColumnProps<T>[] = [];
     const defColumns: TableColumnProps<T>[] = [];
     for (const column of columns) {
-        if (column.hidden) {
-            continue;
-        }
         if (column.fixed === 'left') {
             fixedLeftColumns.push(column);
-            continue;
-        }
-        if (column.fixed === 'right') {
+        } else if (column.fixed === 'right') {
             fixedRightColumns.push(column);
-            continue;
+        } else if (!column.hidden) {
+            defColumns.push(column);
         }
-        defColumns.push(column);
+
     }
     return [...fixedLeftColumns, ...defColumns, ...fixedRightColumns]
 }
 
-export function formatCell(format: CellFormat, text: string, record: Recordable, index: number) {
+export function formatCell<T>(format: CellFormat<T>, text: string, record: T, index: number) {
     if (!format) {
         return text;
     }
@@ -244,7 +246,7 @@ export function formatCell(format: CellFormat, text: string, record: Recordable,
         return format(text, record, index)
     }
     if (is(Map, format)) {
-        return format.get(text);
+        return format.get(text) as string;
     }
     try {
         const DATE_FORMAT_PREFIX = 'date|';
@@ -258,6 +260,6 @@ export function formatCell(format: CellFormat, text: string, record: Recordable,
         }
     } catch (error) {
         console.error('单元格日期格式化失败：', format, text)
-        return text;
     }
+    return text;
 }

@@ -1,5 +1,6 @@
-import { DEFAULT_MENU_SETTING } from '@/config';
 import { assocPath } from 'ramda';
+import { LazyRouteFunction, RouteObject } from "react-router";
+import { DEFAULT_MENU_SETTING } from '@/config/app/project';
 import { crumbLoaderFn, handleFn, homeLoaderFn } from './props';
 import { wrapComponent } from './props/element';
 import { errorBoundary } from './props/errorElemnt';
@@ -10,7 +11,7 @@ import { errorBoundary } from './props/errorElemnt';
  * @param excludePath 
  * @returns [routePaths, 带'/'的routePaths]
  */
-function handleFilePath(filePath: string, excludePath: string = ''): string[][] {
+function handleFilePath(filePath: string, excludePath = ''): string[][] {
     const routePaths = filePath
         // 去除 src/pages 不相关的字符
         .replace(excludePath, '')
@@ -36,8 +37,8 @@ function handleFilePath(filePath: string, excludePath: string = ''): string[][] 
  * { 'path': () => import() } => { 'path': ( { 'path': () => import() } | (() => import()) )  }
  */
 function generatePathConfig(modules: ModulesObject, excludePath: string): RouteModulesObject {
-    return Object.keys(modules).reduce((acc,filePath) => {
-        const pathss =handleFilePath(filePath,excludePath)
+    return Object.keys(modules).reduce((acc, filePath) => {
+        const pathss = handleFilePath(filePath, excludePath)
         return assocPath(pathss[1].length === 0 ? pathss[0] : pathss[1], modules[filePath], acc);
     }, {});
 }
@@ -46,14 +47,14 @@ function generatePathConfig(modules: ModulesObject, excludePath: string): RouteM
  * 将文件路径配置映射为 react-router 路由
  * { 'path': { 'path': () => import() } | ...  } => routes
  */
-function mapPathConfigToRoute(cfg: RoutePathConfig, isPageView: boolean = false): CrRouteObject[] {
+function mapPathConfigToRoute(cfg: RoutePathConfig, isPageView = false): CrRouteObject[] {
     // route 的子节点为数组
     return Object.entries(cfg).map(([path, child]: [string, LazyModuleFn | ModulesObject]) => {
-        //扩展菜单配置
+        // 扩展菜单配置
         const locale = 'menu'.concat(path.replaceAll('/', '.'))
         const name = path.slice(path.lastIndexOf('/') + 1)
         const icon = DEFAULT_MENU_SETTING.menuIconMap[path.slice(path.lastIndexOf('/') + 1)]
-            || DEFAULT_MENU_SETTING.menuIconMap['default']
+            || DEFAULT_MENU_SETTING.menuIconMap.default
 
         // () => import() 语法判断
         if (typeof child === 'function') {
@@ -76,7 +77,7 @@ function mapPathConfigToRoute(cfg: RoutePathConfig, isPageView: boolean = false)
         const { $, ...rest } = child;
         const children = mapPathConfigToRoute(rest, isPageView);
         return {
-            path: path,
+            path,
             // layout 处理
             // element: wrapElemnt($),
             // lazy: async () => ({Component: wrapComponent($)}),
@@ -107,14 +108,18 @@ function handleRoutesUndifinedPath(routes?: CrRouteObject[]): CrRouteObject[] | 
             return [...acc, {
                 ...cur,
                 element: cur.children[0].element,
-                lazy: cur.children[0].lazy,
+                lazy: cur.children[0].lazy as LazyRouteFunction<RouteObject>,
                 children: undefined
             }];
-        } else if (cur && cur.children) {
-            return [...acc, {
-                ...cur,
-                children: handleRoutesUndifinedPath(cur.children)
-            }]
+        }
+        if (cur && cur.children) {
+            return [
+                ...acc,
+                {
+                    ...cur,
+                    children: handleRoutesUndifinedPath(cur.children)
+                }
+            ]
         }
         return [...acc, cur];
     }, [] as CrRouteObject[]);
@@ -122,10 +127,12 @@ function handleRoutesUndifinedPath(routes?: CrRouteObject[]): CrRouteObject[] | 
 
 function generateCrRoutes(): CrRouteObject[] {
     // 扫描 src/pages 下的所有具有路由文件
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const viewModules = import.meta.glob<PageModule>('/src/pages/views/**/$*.{ts,tsx}');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const loginModules = import.meta.glob<PageModule>('/src/pages/login/**/$*.{ts,tsx}');
-    const { $: $viewFn, ...viewsPathConfig } = generatePathConfig(viewModules, '/src/pages/views/');
-    const { $: $loginFn, ...loginPathConfig } = generatePathConfig(loginModules, '/src/pages/login/');
+    const { $: $viewFn, ...viewsPathConfig } = generatePathConfig(viewModules as ModulesObject, '/src/pages/views/');
+    const { $: $loginFn, ...loginPathConfig } = generatePathConfig(loginModules as ModulesObject, '/src/pages/login/');
     const viewRoutes = mapPathConfigToRoute(viewsPathConfig, true);
     const viewRoutesWithoutUndefined = handleRoutesUndifinedPath(viewRoutes);
 
@@ -159,13 +166,14 @@ export const crRoutes = generateCrRoutes();
 
 
 function generateCrViewsPaths() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const viewModules = import.meta.glob('/src/pages/views/**/$*.{ts,tsx}');
-    return Object.keys(viewModules).reduce((acc, filePath) => {
+    return Object.keys(viewModules as object).reduce((acc, filePath) => {
         const pathss = handleFilePath(filePath, '/src/pages/views/');
         const paths = pathss[1];
-        const path = paths?.length > 0 && paths[paths.length-1]
-        if(path && path !== '/index') 
-            acc.push(path.replace('/index',''));
+        const path = paths?.length > 0 && paths[paths.length - 1]
+        if (path && path !== '/index')
+            acc.push(path.replace('/index', ''));
         return acc;
     }, [] as string[]);
 }

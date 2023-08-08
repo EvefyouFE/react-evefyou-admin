@@ -1,16 +1,24 @@
+import { ModalFunc } from 'antd/es/modal/confirm';
+import { Modal, ModalFuncProps, message, notification } from 'antd';
+import { is } from 'ramda';
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  InfoCircleFilled,
+} from '@ant-design/icons';
+import { formatById } from '@/locales';
 
-import { ModalFunc } from "antd/es/modal/confirm";
-import { Modal, ModalFuncProps, message, notification } from "antd";
-import { is } from "ramda";
-import { CheckCircleFilled, CloseCircleFilled, InfoCircleFilled } from "@ant-design/icons";
-import { formatById } from "@/locales";
-
-export declare type NotificationPlacement = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight';
+export declare type NotificationPlacement =
+  | 'topLeft'
+  | 'topRight'
+  | 'bottomLeft'
+  | 'bottomRight';
 export declare type IconType = 'success' | 'info' | 'error' | 'warning';
 export interface ModalOptionsEx extends Omit<ModalFuncProps, 'iconType'> {
   iconType: 'warning' | 'success' | 'error' | 'info';
 }
-export type ModalOptionsPartial = Partial<ModalOptionsEx> & Pick<ModalOptionsEx, 'content'>;
+export type ModalOptionsPartial = Partial<ModalOptionsEx> &
+  Pick<ModalOptionsEx, 'content'>;
 
 interface ConfirmOptions {
   info: ModalFunc;
@@ -23,21 +31,24 @@ interface ConfirmOptions {
 function getIcon(iconType: string) {
   if (iconType === 'warning') {
     return <InfoCircleFilled className="modal-icon-warning" />;
-  } else if (iconType === 'success') {
-    return <CheckCircleFilled className="modal-icon-success" />;
-  } else if (iconType === 'info') {
-    return <InfoCircleFilled className="modal-icon-info" />;
-  } else {
-    return <CloseCircleFilled className="modal-icon-error" />;
   }
+  if (iconType === 'success') {
+    return <CheckCircleFilled className="modal-icon-success" />;
+  }
+  if (iconType === 'info') {
+    return <InfoCircleFilled className="modal-icon-info" />;
+  }
+  return <CloseCircleFilled className="modal-icon-error" />;
 }
 
 function renderContent({ content }: Pick<ModalOptionsEx, 'content'>) {
   if (is(String, content)) {
-    return <div dangerouslySetInnerHTML={{__html:`<div>${content as string}</div>`}}></div>;
-  } else {
-    return content;
+    // eslint-disable-next-line react/no-danger
+    return (
+      <div dangerouslySetInnerHTML={{ __html: `<div>${content}</div>` }} />
+    );
   }
+  return content;
 }
 
 /**
@@ -55,14 +66,15 @@ function createConfirm(options: ModalOptionsEx): ConfirmOptions {
   return Modal.confirm(opt) as unknown as ConfirmOptions;
 }
 
-const getBaseOptions = () => {
-  return {
-    okText: formatById('common.text.ok'),
-    centered: true,
-  };
-};
+const getBaseOptions = () => ({
+  okText: formatById('common.text.ok'),
+  centered: true,
+});
 
-function createModalOptions(options: ModalOptionsPartial, icon: string): ModalOptionsPartial {
+function createModalOptions(
+  options: ModalOptionsPartial,
+  icon: string,
+): ModalOptionsPartial {
   return {
     ...getBaseOptions(),
     ...options,
@@ -87,6 +99,7 @@ function createWarningModal(options: ModalOptionsPartial) {
   return Modal.warning(createModalOptions(options, 'warning'));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 notification.config({
   placement: 'topRight',
   duration: 3,
@@ -95,11 +108,11 @@ notification.config({
 /**
  * @description: message
  */
-export function useMessage() {
+export function getMessageHelper() {
   return {
     createMessage: message,
     notification,
-    createConfirm: createConfirm,
+    createConfirm,
     createSuccessModal,
     createErrorModal,
     createInfoModal,

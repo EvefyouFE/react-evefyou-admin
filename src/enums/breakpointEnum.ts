@@ -1,4 +1,4 @@
-import { enum2Obj } from "@/utils";
+import { enum2Obj } from "@/utils/model";
 
 export enum BreakpointsAntdEnum {
   XS = 480,

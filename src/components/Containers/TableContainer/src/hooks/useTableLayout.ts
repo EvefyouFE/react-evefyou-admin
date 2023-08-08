@@ -1,9 +1,9 @@
 import { useLayoutEffect, useMemo } from "react";
 import { useDebounceFn, useEventListener } from "ahooks";
-import { getViewportOffset } from "@/utils";
+import { getViewportOffset } from "@/utils/dom";
 import { TableContainerProps } from "../props";
 import { UseTableLayoutHooksMethods, UseTableLayoutReturnType } from "../typing";
-import { useMountEffect } from "@/hooks";
+import { useMountEffect } from "@/hooks/core";
 
 export function useTableLayout(
     props: TableContainerProps,
@@ -18,18 +18,19 @@ export function useTableLayout(
         openSearchForm = true,
     } = props;
     const {
-        tableInstance: {getDataSource, getPagination,setHeight, getElement: getTableElemnt},
-        instance: {getElement: getTableContainerElemnt}
+        tableInstance: { getDataSource, getPagination, setHeight, getElement: getTableElemnt },
+        instance: { getElement: getTableContainerElemnt }
     } = methods;
     const canResizeMemo = useMemo(() => canResize && !scroll?.y, [canResize, scroll])
     // const [heightState,setHeightState] = useState(0)
-    const { run } = useDebounceFn(resetTableHeight, { wait: 100 })
+    const { run } = useDebounceFn(resetTableHeight, { wait: 100 }) as { run: () => void }
     let paginationEl: HTMLElement | null;
     let footerEl: HTMLElement | null;
     let bodyEl: HTMLElement | null;
 
     useLayoutEffect(() => {
         run()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [canResizeMemo, getDataSource])
 
     // useEffect(() => {
@@ -48,7 +49,7 @@ export function useTableLayout(
         calcTableHeight()
     }
 
-    async function calcTableHeight() {
+    function calcTableHeight() {
         const tableEl = getTableElemnt?.()
         if (!tableEl) return;
 
@@ -79,7 +80,7 @@ export function useTableLayout(
         if (pagination) {
             paginationEl = tableEl.querySelector('.ant-pagination') as HTMLElement;
             if (paginationEl) {
-                const offsetHeight = paginationEl.offsetHeight;
+                const { offsetHeight } = paginationEl;
                 const paginationRect = getComputedStyle(paginationEl)
                 const marginHeight = Number.parseFloat(paginationRect.marginTop) + Number.parseFloat(paginationRect.marginBottom)
                 paginationHeight += marginHeight + (offsetHeight || 0);
@@ -95,7 +96,7 @@ export function useTableLayout(
             if (!footerEl) {
                 footerEl = tableEl.querySelector('.ant-table-footer') as HTMLElement;
             } else {
-                const offsetHeight = footerEl.offsetHeight;
+                const { offsetHeight } = footerEl;
                 footerHeight += offsetHeight || 0;
             }
         }
@@ -111,11 +112,11 @@ export function useTableLayout(
         }
 
         let bodyHeightIncludeBottom = 0;
-        let paddingHeight = 28;
+        const paddingHeight = 28;
         const tableContainerEl = getTableContainerElemnt?.()
-        if(!tableContainerEl) return;
+        if (!tableContainerEl) return;
         const formEl = tableContainerEl?.querySelector('.ant-form')
-        if(!formEl) return;
+        if (!formEl) return;
         const formContentEl = formEl?.children[0] as HTMLDivElement
         if (tableContainerEl && canResizeParent) {
             const containerPadding = 14;
@@ -135,7 +136,7 @@ export function useTableLayout(
             // Table height from bottom
             bodyHeightIncludeBottom = getViewportOffset(headEl).bottomIncludeBody;
         }
-        let layoutfooterHeight = 48
+        const layoutfooterHeight = 48
 
         let height =
             bodyHeightIncludeBottom -

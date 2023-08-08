@@ -1,18 +1,20 @@
 import nProgress from 'nprogress';
-import { FC, PropsWithChildren, useEffect } from "react";
+import React, { useEffect } from 'react';
 
 nProgress.configure({
-    showSpinner: false,
+  showSpinner: false,
 });
 
-export const NProgress: FC<PropsWithChildren> = ({children}) => {
-    useEffect(() => {
-        nProgress.done();
-        return () => {
-            nProgress.start();
-        };
-    }, [])
-    return (
-        <>{children}</>
-    )
-}
+export const NProgress = ({
+  children,
+}: {
+  children: React.ReactElement;
+}): React.ReactElement => {
+  useEffect(() => {
+    nProgress.done();
+    return () => {
+      nProgress.start();
+    };
+  }, []);
+  return children;
+};

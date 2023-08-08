@@ -1,10 +1,11 @@
-import { formatById } from "@/locales";
 import { TablePaginationConfig } from "antd";
 import { isEmpty } from "ramda";
 import { useEffect, useMemo, useState } from "react";
 import { PAGE_SIZE, PAGE_SIZE_OPTIONS } from "../constants";
 import { BasicTableProps } from "../props";
-import { UsePaginationReturnType } from "../types";
+import { UsePaginationReturnType } from "../types/tablePagination";
+import { formatById } from "@/locales";
+
 
 export const DEFAULT_PAGINATION_PROPS: TablePaginationConfig = {
     current: 1,
@@ -17,14 +18,14 @@ export const DEFAULT_PAGINATION_PROPS: TablePaginationConfig = {
     showQuickJumper: true,
 }
 
-export function usePagination({pagination}: BasicTableProps): UsePaginationReturnType {
-    const [paginationState, setPaginationState] = useState<TablePaginationConfig|false>(pagination??{})
+export function usePagination({ pagination }: BasicTableProps): UsePaginationReturnType {
+    const [paginationState, setPaginationState] = useState<TablePaginationConfig | false>(pagination ?? {})
 
     useEffect(() => {
-        if(pagination) {
+        if (pagination) {
             setPaginationState(p => ({
                 ...p,
-                ...(isEmpty(paginationState) ? DEFAULT_PAGINATION_PROPS : paginationState),
+                ...(isEmpty(p) ? DEFAULT_PAGINATION_PROPS : p),
                 ...pagination,
             }))
         }
@@ -34,7 +35,7 @@ export function usePagination({pagination}: BasicTableProps): UsePaginationRetur
         function getPagination() {
             return paginationState
         }
-        function setPagination(info: Partial<TablePaginationConfig|false>) {
+        function setPagination(info: Partial<TablePaginationConfig | false>) {
             setPaginationState({
                 ...paginationState,
                 ...info,

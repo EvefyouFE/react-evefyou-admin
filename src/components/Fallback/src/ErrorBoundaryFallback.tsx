@@ -1,8 +1,3 @@
-import { BasicResult } from "@/components/Result";
-import { FC } from "react";
+import { BasicResult } from '@/components/Result';
 
-export const ErrorBoundaryFallback: FC = () => {
-    return (
-        <BasicResult code={500} />
-    );
-}
+export const ErrorBoundaryFallback = () => <BasicResult code={500} />;

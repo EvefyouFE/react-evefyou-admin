@@ -1,2 +1,2 @@
 export * from "./TabContainer";
-export * from "./type.d";
+export * from "./typing";

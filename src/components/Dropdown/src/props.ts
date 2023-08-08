@@ -5,7 +5,7 @@ import { DropMenuItem } from "./typing";
 
 
 export interface BasicDropdownProps extends PropsWithChildren<DropdownProps> {
-    popconfirm: Boolean,
+    popconfirm: boolean,
     onClick?: MenuItemType['onClick'];
     selectedKeys?: string[];
     items?: DropMenuItem[];

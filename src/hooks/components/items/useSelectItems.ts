@@ -78,13 +78,13 @@ export function useSelectItems<T extends Item<K>, K extends React.Key = string>(
     }
     function removeRight(key: K) {
         const idx = items.findIndex(item => item.key === key)
-        idx !== -1 && idx != items.length - 1 && setItems(items.slice(0, idx+1))
+        idx !== -1 && idx !== items.length - 1 && setItems(items.slice(0, idx + 1))
         const idx2 = selectedKeys.findIndex(k => k === key)
-        idx2 !== -1 && idx2 != selectedKeys.length - 1 && setSelectedKeys(selectedKeys.slice(0, idx2+1))
+        idx2 !== -1 && idx2 !== selectedKeys.length - 1 && setSelectedKeys(selectedKeys.slice(0, idx2 + 1))
     }
     function removeOther(key: K) {
-        const item = items.find(item => item.key === key)
-        if(items.length !== 1 && item) {
+        const item = items.find(im => im.key === key)
+        if (items.length !== 1 && item) {
             setItems([item])
             setSelectedKeys([key])
         }

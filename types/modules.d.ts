@@ -1,7 +1,7 @@
 import { SortOrder, SorterResult } from "antd/es/table/interface"
 import React from "react"
 import { GetRecoilValue, RecoilState, RecoilValue } from "recoil"
-import {RouteObject} from 'react-router'
+import { RouteObject } from 'react-router'
 
 declare global {
     declare type MGetRecoilValue = GetRecoilValue

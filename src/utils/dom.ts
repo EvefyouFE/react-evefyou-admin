@@ -35,8 +35,8 @@ export function getViewportOffset(element: Element): ViewportOffsetResult {
   const docClientLeft = doc.clientLeft;
   const docClientTop = doc.clientTop;
 
-  const pageXOffset = window.pageXOffset;
-  const pageYOffset = window.pageYOffset;
+  const pageXOffset = window.scrollX;
+  const pageYOffset = window.scrollY;
 
   const box = getBoundingClientRect(element);
 
@@ -50,11 +50,11 @@ export function getViewportOffset(element: Element): ViewportOffsetResult {
   const left = offsetLeft - scrollLeft;
   const top = offsetTop - scrollTop;
 
-  const clientWidth = window.document.documentElement.clientWidth;
-  const clientHeight = window.document.documentElement.clientHeight;
+  const { clientWidth } = window.document.documentElement;
+  const { clientHeight } = window.document.documentElement;
   return {
-    left: left,
-    top: top,
+    left,
+    top,
     right: clientWidth - rectWidth - left,
     bottom: clientHeight - rectHeight - top,
     rightIncludeBody: clientWidth - left,
@@ -70,7 +70,7 @@ export function getViewportOffset(element: Element): ViewportOffsetResult {
 export function getHeight(el: HTMLElement): number {
   if (el) {
     let height = el.offsetHeight;
-    let style = getComputedStyle(el);
+    const style = getComputedStyle(el);
 
     height -= parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
 
@@ -83,13 +83,13 @@ export function getHeight(el: HTMLElement): number {
 export function addClass(element: HTMLElement, className: string): void {
   if (element && className) {
     if (element.classList) element.classList.add(className);
-    else element.className += ' ' + className;
+    else element.className += ` ${className}`;
   }
 }
 
 export function removeClass(element: HTMLElement, className: string): void {
   if (element && className) {
     if (element.classList) element.classList.remove(className);
-    else element.className = element.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+    else element.className = element.className.replace(new RegExp(`(^|\\b)${className.split(' ').join('|')}(\\b|$)`, 'gi'), ' ');
   }
 }

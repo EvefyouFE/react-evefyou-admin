@@ -14,7 +14,7 @@ export interface ErrorLogInfo {
     // Type of error
     type: ErrorTypeEnum;
     // Error file
-    file: string;
+    file?: string;
     // Error name
     name?: string;
     // Error message
@@ -22,9 +22,9 @@ export interface ErrorLogInfo {
     // Error stack
     stack?: string;
     // Error detail
-    detail: string;
+    detail?: string;
     // Error url
-    url: string;
+    url?: string;
     // Error time
     time?: string;
 }

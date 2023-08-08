@@ -1,13 +1,10 @@
 import { useMemo } from "react";
 import { BasicFormItemProps, BasicFormProps } from "../props";
 
-export interface UseFormItemsMethods {
-
-}
 
 export type UseFormItemsReturnType = [
     BasicFormItemProps[],
-    UseFormItemsMethods
+    object
 ]
 
 export function useFormItems(props: BasicFormProps): UseFormItemsReturnType {
@@ -15,15 +12,16 @@ export function useFormItems(props: BasicFormProps): UseFormItemsReturnType {
         items,
         showExpand = false,
     } = props;
-    //过滤、
+    // 过滤、
     const itemsMemo = useMemo(() => {
         if (!items?.length) return []
-        let itemsValue = items.filter((item) => item.canRender??true);
+        const itemsValue = items.filter((item) => item.canRender ?? true);
         return itemsValue.map(item => ({
             formProps: props,
             ...item,
         }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [items, showExpand, props])
 
-    return [itemsMemo,{}]
+    return [itemsMemo, {}]
 }

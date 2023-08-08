@@ -1,7 +1,8 @@
-import { LOCK_INFO_KEY } from "@/enums";
-import { Persistent, defineRecoilSelectorState } from "@/utils";
 import { atom } from "recoil";
-import { useUserRecoilState } from ".";
+import { Persistent } from "@/utils/cache/persistent";
+import { LOCK_INFO_KEY } from "@/enums";
+import { defineRecoilValue } from "@/hooks/state";
+import { useUserRecoilState } from "./user";
 import { LockInfo } from "@/types/store";
 
 interface LockState {
@@ -17,7 +18,7 @@ export const lockAtom = atom({
     default: DEFAULT_LOCK_STATE
 })
 
-export const useLockRecoilState = defineRecoilSelectorState({
+export const useLockRecoilState = defineRecoilValue({
     name: 'lockState',
     state: DEFAULT_LOCK_STATE,
     getters: {
@@ -35,7 +36,7 @@ export const useLockRecoilState = defineRecoilSelectorState({
             this.set({ lockInfo: null })
         },
     },
-    callback: () => {
+    useFn: () => {
         const [{ userInfo }, { login }] = useUserRecoilState()
         return {
             login,
@@ -50,7 +51,7 @@ export const useLockRecoilState = defineRecoilSelectorState({
             }
             const tryLogin = async () => {
                 try {
-                    const username = this.userInfo?.username??'';
+                    const username = this.userInfo?.username ?? '';
                     const res = await this.login({
                         username,
                         password: password!,
@@ -66,7 +67,7 @@ export const useLockRecoilState = defineRecoilSelectorState({
                     return false;
                 }
             };
-            return await tryLogin();
+            return tryLogin();
         },
     }
 }, lockAtom)

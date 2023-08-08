@@ -214,8 +214,8 @@ export default [
         code: 200,
         data: {
           token: '123abcdefg',
-          username: body.username,
-          role: body.username,
+          username: 'evef',
+          roles: ['admin'],
         },
         msg: 'success',
       };

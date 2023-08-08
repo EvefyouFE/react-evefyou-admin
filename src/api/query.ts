@@ -1,21 +1,31 @@
-import { FetchQueryOptions, QueryClient, QueryKey, UseMutationOptions, UseQueryOptions, UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
-import { Res } from "@models/index";
+import { FetchQueryOptions, MutationOptions, QueryClient, QueryFunction, QueryKey, QueryObserverOptions, UseMutationOptions, UseQueryOptions, useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosRequestConfig } from "axios";
 import { values } from "ramda";
-import { defHttp } from "./request/request";
+import { defHttp } from "./request";
 import { FetchTypeEnum } from "@/enums/queryEnum";
 
-export interface FetchFn<T = any, Params = any> {
+export interface FetchFn<T = any, D = any> {
+    (cfg: AxiosRequestConfig<D>, opt: RequestOptions): T | Promise<T>
+}
+export interface FetchQueryOptionsFn<T = any, D = any> {
+    (cfg?: AxiosRequestConfig<D>, options?: RequestOptions): UseQueryOptions<T>
+}
+export interface FetchMutationOptionsFn<T = any, D = any> {
+    (cfg?: AxiosRequestConfig<D>, options?: RequestOptions): UseMutationOptions<T, unknown, D>
+}
+
+export interface ExtQueryOptions<T> extends QueryObserverOptions<T> {
+    fetchType?: FetchTypeEnum;
+    autoQueryKey?: boolean;
+}
+
+export interface ExtMutationOptions<T, D> extends MutationOptions<T, unknown, D> {
+    fetchType?: FetchTypeEnum;
+}
+
+export interface FetchFnParams<T = any, Params = any> {
     (params?: Params): T | Promise<T>
 }
-
-
-
-export interface FetchOptions {
-    url: string;
-    queryKey?: QueryKey;
-    type?: FetchTypeEnum;
-}
-
 
 export const queryClient = new QueryClient({
     defaultOptions: {
@@ -30,178 +40,185 @@ export const queryClient = new QueryClient({
         },
     },
 });
-export function getFetchFn<T = any, Params = any>({ url, type = FetchTypeEnum.getOne }: FetchOptions): FetchFn<T, Params> {
+export function getFetchFn<T = any, D = any, QK extends QueryKey = QueryKey>(
+    { fetchType: type = FetchTypeEnum.getOne }: ExtQueryOptions<T> | ExtMutationOptions<T, D>,
+    cfg: AxiosRequestConfig<D>,
+    opt?: RequestOptions
+): QueryFunction<T, QK> {
     switch (type) {
         case FetchTypeEnum.create:
-            return async (params?: Params) => defHttp.post({
-                url,
-                params
-            })
+            return async () => defHttp.post<T, D>(cfg, opt)
         case FetchTypeEnum.update:
-            return async (params?: Params) => defHttp.put({
-                url,
-                params
-            })
+            return async () => defHttp.put<T, D>(cfg, opt)
         case FetchTypeEnum.delete:
-            return async (params?: Params) => defHttp.delete({
-                url,
-                params
-            })
+            return async () => defHttp.delete<T, D>(cfg, opt)
         case FetchTypeEnum.getOne:
         case FetchTypeEnum.getList:
         case FetchTypeEnum.getPage:
         case FetchTypeEnum.batch:
         default:
-            return (params?: Params) => defHttp.get({
-                url,
-                params
-            })
+            return () => defHttp.get<T, D>(cfg, opt)
     }
 }
-
-export interface FetchFnParams<T = any, Params = any> {
-    (params?: Params): T | Promise<T>
-}
-
-export function getQueryOptionsFn<F extends FetchFn<T>, T = any>(
-    queryKey: QueryKey,
-    fn: F
+export function useQueryData<TData>(
+    opt: ExtQueryOptions<TData>
 ) {
-    return (params?: F extends FetchFn<any, infer P> ? P : unknown) => ({
-        queryKey: params ? [...queryKey, ...values(params || {})] : queryKey,
-        queryFn: () => fn(params),
-    }) as UseQueryOptions<T>
+    return useQuery<TData>(opt)
 }
-
-export function getMutaionOptions<F extends FetchFn>(
-    fn: F
-) {
-    return {
-        mutationFn: fn,
-    } as UseMutationOptions<
-        F extends FetchFn<infer T> ? T : unknown,
-        unknown,
-        F extends FetchFn<any, infer P> ? P : unknown
-    >
-}
-
-export function useQueryRes<
-    T, TError = unknown, TQueryKey extends QueryKey = QueryKey
->(
-    options: UseQueryOptions<Res<T>, TError, Res<T>, TQueryKey>
-) {
-    const { data, ...rest } = useQuery(options)
-    return {
-        data: data?.data,
-        ...rest
-    } as UseQueryResult<T | undefined, TError>
-}
-
 export function getQueryData<TData>(
-    options: UseQueryOptions<TData>
+    opt: UseQueryOptions<TData>
 ) {
-    if (!options.queryKey) {
+    if (!opt.queryKey) {
         throw new Error('queryKey is needed in query!')
     }
-    return queryClient.getQueryData<TData>(options.queryKey)
+    return queryClient.getQueryData<TData>(opt.queryKey)
 }
-export function getQueryDataRes<TData>(
-    options: UseQueryOptions<Res<TData>>
-) {
-    const res = getQueryData(options)
-    return res?.data
-}
-
 export async function fetchQuery<TData>(
-    options: FetchQueryOptions<TData>
+    opt: FetchQueryOptions<TData>
 ) {
-    if (!options.queryKey) {
+    if (!opt.queryKey) {
         throw new Error('queryKey is needed in query fetch!')
     }
-    return await queryClient.fetchQuery(options)
-}
-export async function fetchQueryRes<T>(
-    options: FetchQueryOptions<Res<T>>
-) {
-    const res = await fetchQuery(options)
-    return res?.data
+    return queryClient.fetchQuery(opt)
 }
 
-export function query<Params, TData>(
-    optionsFn: (params?: Params) => UseQueryOptions<Res<TData>>
+
+interface CbFn<T, R> {
+    (opt: ExtQueryOptions<T>): R;
+}
+interface RtFn<T, D, R> {
+    (
+        cfg?: AxiosRequestConfig<D>,
+        qopt?: ExtQueryOptions<T>,
+        ropt?: RequestOptions
+    ): R;
+}
+interface Fn<T, D> {
+    <R>(cb: CbFn<T, R>): RtFn<T, D, R>
+}
+interface AsyncFn<T, D> {
+    <R>(cb: CbFn<T, Promise<R>>): RtFn<T, D, Promise<R>>
+}
+interface MultiFn<T, D> {
+    <R>(cb: CbFn<T, R>, cb2: CbFn<T, Promise<R>>): RtFn<T, D, Promise<R>>
+}
+
+function getOptions<T, D>(
+    optionsFn: FetchQueryOptionsFn<T, D>,
+    cfg?: AxiosRequestConfig<D>,
+    qopt?: ExtQueryOptions<T>,
+    ropt?: RequestOptions,
 ) {
+    return { ...optionsFn(cfg, ropt), ...qopt }
+}
+function getResOptions<T, D>(
+    optionsFn: FetchQueryOptionsFn<T, D>,
+    cfg?: AxiosRequestConfig<D>,
+    qopt?: ExtQueryOptions<Res<T>>,
+    ropt?: RequestOptions,
+) {
+    const options = { ...(optionsFn(cfg, ropt) as Res<T>), ...qopt }
+    const queryKey = [...options.queryKey ?? [], 'res']
+    return { ...options, queryKey, ...qopt }
+}
+export function query<T, D>(
+    optionsFn: FetchQueryOptionsFn<T, D>
+) {
+    const fn: Fn<T, D> = (cb) => (cfg, qopt, ropt) => cb(getOptions(optionsFn, cfg, qopt, ropt))
+    const asyncFn: AsyncFn<T, D> = (cb) => async (cfg, qopt, ropt) => cb(getOptions(optionsFn, cfg, qopt, ropt))
+    const resFn: Fn<Res<T>, D> = (cb) => (cfg, qopt, ropt = { isTransformResponse: false }) =>
+        cb(getResOptions(optionsFn, cfg, qopt, ropt))
+    const resAsyncFn: AsyncFn<Res<T>, D> = (cb) => async (cfg, qopt, ropt = { isTransformResponse: false }) =>
+        cb(getResOptions(optionsFn, cfg, qopt, ropt))
+    const multiFn: MultiFn<T, D> = (cb, cb2) => async (cfg, qopt, ropt = { isTransformResponse: false }) => {
+        const options = getOptions(optionsFn, cfg, qopt, ropt)
+        return cb(options) ?? await cb2(options)
+    }
+    const multiResFn: MultiFn<Res<T>, D> = (cb, cb2) => async (cfg, qopt, ropt = { isTransformResponse: false }) => {
+        const options = getResOptions(optionsFn, cfg, qopt, ropt)
+        return cb(options) ?? await cb2(options)
+    }
     return {
         optionsFn,
-        useQuery: (cfg?: {
-            params?: Params,
-            options?: UseQueryOptions<Res<TData>>
-        }) => useQuery({ ...optionsFn(cfg?.params), ...cfg?.options }),
-        useQueryRes: (cfg?: {
-            params?: Params,
-            options?: UseQueryOptions<Res<TData>>
-        }) => useQueryRes({ ...optionsFn(cfg?.params), ...cfg?.options }),
-        getQueryData: (cfg?: {
-            params?: Params,
-            options?: UseQueryOptions<Res<TData>>
-        }) => getQueryData({ ...optionsFn(cfg?.params), ...cfg?.options }),
-        getQueryDataRes: (cfg?: {
-            params?: Params,
-            options?: UseQueryOptions<Res<TData>>
-        }) => getQueryDataRes({ ...optionsFn(cfg?.params), ...cfg?.options }),
-        fetchQuery: (cfg?: {
-            params?: Params,
-            options?: FetchQueryOptions<Res<TData>>
-        }) => fetchQuery({ ...optionsFn(cfg?.params), ...cfg?.options }),
-        fetchQueryRes: (cfg?: {
-            params?: Params,
-            options?: FetchQueryOptions<Res<TData>>
-        }) => fetchQueryRes({ ...optionsFn(cfg?.params), ...cfg?.options }),
+        useQuery: fn(useQueryData),
+        getQueryData: fn(getQueryData),
+        fetchQuery: asyncFn(fetchQuery),
+        useQueryRes: resFn(useQueryData),
+        getQueryDataRes: resFn(getQueryData),
+        fetchQueryRes: resAsyncFn(fetchQuery),
+        getOrFetchData: multiFn(getQueryData, fetchQuery),
+        getOrFetchDataRes: multiResFn(getQueryData, fetchQuery),
     }
 }
 
-export function queryFetch<F extends FetchFn<Res<any>>, T = F extends FetchFn<Res<infer T>> ? T : unknown>(
-    queryKey: QueryKey,
-    fn: F
+export function getQueryKey<T = any, D = any>(
+    cfg: AxiosRequestConfig<D>,
+    opt?: ExtQueryOptions<T>,
 ) {
-    return query(getQueryOptionsFn<F, Res<T>>(queryKey, fn))
+    const queryKey = opt?.queryKey ?? cfg.url?.split('/').slice(1)
+    const autoQueryKey = opt?.autoQueryKey ?? true
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    return autoQueryKey && cfg.params ? [...queryKey ?? [], ...values(cfg.params)] : queryKey
 }
 
-export function queryFetchOptions<T extends Res<any> = Res<any>, Params = any>(
-    { url,
-        queryKey,
-        type = FetchTypeEnum.getOne, }: FetchOptions
-) {
-    return queryFetch(queryKey ?? url.split('/').slice(1), getFetchFn<T, Params>({ url, type }))
-}
-
-export function queryFetchUrl<T extends Res<any> = Res<any>, Params = any>(
-    url: string
-) {
-    return queryFetchOptions<T,Params>({ url })
-}
-
-export function mutaion<TData = unknown, TError = unknown, TVariables = void, TContext = unknown>(
-    options: UseMutationOptions<TData, TError, TVariables, TContext>
+export function getQueryOptionsFn<T = any, D = any>(
+    cfg: AxiosRequestConfig<D>,
+    qopt: ExtQueryOptions<T> = { fetchType: FetchTypeEnum.getOne },
+    ropt?: RequestOptions
 ) {
     return {
-        useMutation: (ext?: UseMutationOptions<TData, TError, TVariables, TContext>) => useMutation({ ...options, ...ext }),
+        queryKey: getQueryKey(cfg, qopt),
+        queryFn: getFetchFn(qopt, cfg, ropt),
+    } as UseQueryOptions<T>
+}
+export function queryFetch<T, D = any>(
+    d_cfg: AxiosRequestConfig<D>,
+    qopt: ExtQueryOptions<T> = { fetchType: FetchTypeEnum.getOne },
+    d_ropt?: RequestOptions
+) {
+    const queryOptionsFn = (
+        cfg?: AxiosRequestConfig<D>,
+        ropt?: RequestOptions
+    ) => getQueryOptionsFn({ ...d_cfg, ...cfg }, qopt, { ...d_ropt, ...ropt })
+    return query(queryOptionsFn)
+}
+export function queryFetchPage<T, D = any>(
+    d_cfg: AxiosRequestConfig<D>,
+    qopt: ExtQueryOptions<T> = { fetchType: FetchTypeEnum.getPage },
+    d_ropt?: RequestOptions
+) {
+    return queryFetch(d_cfg, qopt, d_ropt)
+}
+
+export function mutaion<T = any, D = void>(
+    optionFn: FetchMutationOptionsFn<T, D>
+) {
+    return {
+        useMutation: (
+            opt?: UseMutationOptions<T, unknown, D>,
+            cfg?: AxiosRequestConfig<D>,
+            ropt?: RequestOptions
+        ) => useMutation({ ...optionFn(cfg, ropt), ...opt }),
     }
 }
-
-export function mutationFetch<F extends FetchFn>(
-    fn: F
+export function getMutaionOptionsFn<T = any, D = any>(
+    cfg: AxiosRequestConfig<D>,
+    ropt?: RequestOptions,
+    qopt?: ExtMutationOptions<T, D>,
 ) {
-    return mutaion(getMutaionOptions(fn))
+    return {
+        mutationFn: getFetchFn({ fetchType: FetchTypeEnum.create, ...qopt }, cfg, ropt),
+    } as UseMutationOptions<T, unknown, D>
 }
 
-export function mutationFetchOptions<T = any, Params = any>(
-    { url, type = FetchTypeEnum.create }: FetchOptions
+export function mutationFetch<T = any, D = any>(
+    d_cfg: AxiosRequestConfig<D>,
+    d_ropt?: RequestOptions,
+    qopt?: ExtMutationOptions<T, D>,
 ) {
-    return mutationFetch(getFetchFn<T, Params>({ url, type }))
-}
-
-export function mutationFetchUrl<T = any, Params = any>(
-    url: string
-) {
-    return mutationFetchOptions<T, Params>(({ url }))
+    const mutationOptionsFn = (
+        cfg?: AxiosRequestConfig<D>,
+        ropt?: RequestOptions
+    ) => getMutaionOptionsFn({ ...d_cfg, ...cfg }, { ...d_ropt, ...ropt }, qopt)
+    return mutaion(mutationOptionsFn)
 }

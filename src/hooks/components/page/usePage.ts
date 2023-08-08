@@ -4,13 +4,13 @@ import { useState } from "react";
 
 
 export function usePage(initialPagePrams?: PageReq) {
-    const [pageParams, setPageParams] = useState(initialPagePrams ?? {current:1,pageSize:10});
+    const [pageParams, setPageParams] = useState(initialPagePrams ?? { current: 1, pageSize: 10 });
 
-    const setCurrent = (current: number) => setPageParams((p) => ({...p, current}))
-    const setPageSize = (pageSize: number) => setPageParams((p) => ({...p, pageSize}))
+    const setCurrent = (current: number) => setPageParams((p) => ({ ...p, current }))
+    const setPageSize = (pageSize: number) => setPageParams((p) => ({ ...p, pageSize }))
 
     const onChange = (page: number, pageSize: number) => {
-        setPageParams({current:page, pageSize});
+        setPageParams({ current: page, pageSize });
     }
 
     // const showTotal = (total: number, range: [number, number]) => {

@@ -4,8 +4,8 @@ export function useLogout() {
     const navigate = useNavigate()
 
     const onLogout = () => {
-        //清理token 缓存
-        
+        // 清理token 缓存
+
         navigate('/login')
     }
 

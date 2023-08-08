@@ -1,5 +1,6 @@
+import { omit, pick } from "ramda";
 import { createLocalStorage, createSessionStorage } from '@/utils/cache';
-import { Memory } from './memory';
+import { Cache, Memory } from './memory';
 import {
     TOKEN_KEY,
     USER_INFO_KEY,
@@ -10,9 +11,8 @@ import {
     APP_SESSION_CACHE_KEY,
     MULTIPLE_TABS_KEY,
 } from '@/enums';
-import { DEFAULT_CACHE_TIME } from '@/config';
+import { DEFAULT_CACHE_TIME } from '@/config/app/auth';
 import { UserInfo } from "@/models";
-import { omit, pick } from "ramda";
 import { ProjectConfig } from "@/types/config";
 import { LockInfo } from "@/types/store";
 
@@ -42,8 +42,8 @@ const sessionMemory = new Memory(DEFAULT_CACHE_TIME);
 function initPersistentMemory() {
     const localCache = ls.get(APP_LOCAL_CACHE_KEY);
     const sessionCache = ss.get(APP_SESSION_CACHE_KEY);
-    localCache && localMemory.resetCache(localCache);
-    sessionCache && sessionMemory.resetCache(sessionCache);
+    localCache && localMemory.resetCache(localCache as Cache);
+    sessionCache && sessionMemory.resetCache(sessionCache as Cache);
 }
 
 export class Persistent {
@@ -79,6 +79,7 @@ export class Persistent {
         sessionMemory.remove(key);
         immediate && ss.set(APP_SESSION_CACHE_KEY, sessionMemory.getCache);
     }
+
     static clearSession(immediate = false): void {
         sessionMemory.clear();
         immediate && ss.clear();
@@ -93,21 +94,21 @@ export class Persistent {
         }
     }
 }
-
-window.addEventListener('beforeunload', function () {
+function handler() {
     // TOKEN_KEY 在登录或注销时已经写入到storage了，此处为了解决同时打开多个窗口时token不同步的问题
     // LOCK_INFO_KEY 在锁屏和解锁时写入，此处也不应修改
     ls.set(APP_LOCAL_CACHE_KEY, {
         ...omit([LOCK_INFO_KEY], localMemory.getCache),
-        ...pick([TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY], ls.get(APP_LOCAL_CACHE_KEY)),
+        ...pick([TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY], ls.get(APP_LOCAL_CACHE_KEY)) as object,
     });
     ss.set(APP_SESSION_CACHE_KEY, {
         ...omit([LOCK_INFO_KEY], sessionMemory.getCache),
-        ...pick([TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY], ss.get(APP_SESSION_CACHE_KEY)),
+        ...pick([TOKEN_KEY, USER_INFO_KEY, LOCK_INFO_KEY], ss.get(APP_SESSION_CACHE_KEY)) as object,
     });
-});
+}
+window.addEventListener('beforeunload', handler);
 
-function storageChange(e: any) {
+function storageChange(e: Recordable) {
     const { key, newValue, oldValue } = e;
 
     if (!key) {

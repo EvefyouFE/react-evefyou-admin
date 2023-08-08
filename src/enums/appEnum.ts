@@ -21,8 +21,8 @@ export enum SettingButtonPositionEnum {
 }
 
 export enum SessionTimeoutProcessingEnum {
-  ROUTE_JUMP='ROUTE_JUMP',
-  PAGE_COVERAGE='PAGE_COVERAGE',
+  ROUTE_JUMP = 'ROUTE_JUMP',
+  PAGE_COVERAGE = 'PAGE_COVERAGE',
 }
 
 // Route switching animation

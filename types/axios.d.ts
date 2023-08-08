@@ -35,11 +35,11 @@ declare interface RetryRequest {
   count: number;
   waitTime: number;
 }
-declare interface Result<T = any> {
+declare interface Res<T = any> {
   code: number;
   type: 'success' | 'error' | 'warning';
   message: string;
-  result: T;
+  data: T;
 }
 
 // multipart/form-data: upload file

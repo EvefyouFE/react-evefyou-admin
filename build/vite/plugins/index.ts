@@ -15,7 +15,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
 import WindiCSS from 'vite-plugin-windicss';
 
-export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
+export function createVitePlugins(viteEnv: ImportMetaEnv, isBuild: boolean) {
   const {
     VITE_USE_IMAGEMIN,
     VITE_USE_MOCK,
@@ -29,19 +29,19 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
     tsconfigPaths({
       ignoreConfigErrors: true
     }),
-    // VitePluginCertificate({
-    //   source: 'coding',
-    // }),
+    VitePluginCertificate({
+      source: 'coding',
+    }),
   ];
 
   // vite-plugin-windicss
   vitePlugins.push(WindiCSS());
 
   // @vitejs/plugin-legacy
-  // VITE_LEGACY && isBuild && vitePlugins.push(legacy());
+  VITE_LEGACY && isBuild && vitePlugins.push(legacy());
 
   // vite-plugin-html
-  // vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));
+  vitePlugins.push(configHtmlPlugin(viteEnv, isBuild));
 
   // vite-plugin-svgr 将svg转为react组件
   vitePlugins.push(svgr());
@@ -50,29 +50,29 @@ export function createVitePlugins(viteEnv: ViteEnv, isBuild: boolean) {
   VITE_USE_MOCK && vitePlugins.push(configMockPlugin(isBuild));
 
   // vite-plugin-purge-icons
-  // vitePlugins.push(purgeIcons());
+  vitePlugins.push(purgeIcons());
 
   // vite-plugin-style-import antd5不需要手动引入样式了
-//   vitePlugins.push(configStyleImportPlugin(isBuild));
+  // vitePlugins.push(configStyleImportPlugin(isBuild));
 
   // rollup-plugin-visualizer
-  // vitePlugins.push(configVisualizerConfig());
+  vitePlugins.push(configVisualizerConfig());
 
   // vite-plugin-theme antd5 的主题使用token的cssinjs方式，这个插件可能不适用了
-//   vitePlugins.push(configThemePlugin(isBuild));
+  // vitePlugins.push(configThemePlugin(isBuild));
 
   // The following plugins only work in the production environment
   if (isBuild) {
     // vite-plugin-imagemin
-    // VITE_USE_IMAGEMIN && vitePlugins.push(configImageminPlugin());
+    VITE_USE_IMAGEMIN && vitePlugins.push(configImageminPlugin());
 
     // rollup-plugin-gzip
-    // vitePlugins.push(
-    //   configCompressPlugin(VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE),
-    // );
+    vitePlugins.push(
+      configCompressPlugin(VITE_BUILD_COMPRESS, VITE_BUILD_COMPRESS_DELETE_ORIGIN_FILE),
+    );
 
     // vite-plugin-pwa
-    // vitePlugins.push(configPwaConfig(viteEnv));
+    vitePlugins.push(configPwaConfig(viteEnv));
   }
 
   return vitePlugins;

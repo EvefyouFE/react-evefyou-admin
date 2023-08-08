@@ -1,7 +1,7 @@
 import { Persistent, BasicKeys } from '@/utils/cache/persistent';
-import { CacheTypeEnum } from '@/enums';
-import { DEFAULT_PROJECT_CONFIG } from '@/config';
-import { TOKEN_KEY } from '@/enums';
+import { CacheTypeEnum, TOKEN_KEY } from '@/enums';
+import { DEFAULT_PROJECT_CONFIG } from '@/config/app/project';
+import { StorageValue } from "../cache/storageCache";
 
 const { permissionCacheType } = DEFAULT_PROJECT_CONFIG;
 const isLocal = permissionCacheType === CacheTypeEnum.LOCAL;
@@ -11,16 +11,13 @@ export function getToken() {
 }
 
 export function getAuthCache<T>(key: BasicKeys) {
-    const fn = isLocal ? Persistent.getLocal : Persistent.getSession;
-    return fn(key) as T;
+    return isLocal ? Persistent.getLocal(key) : Persistent.getSession(key) as T;
 }
 
-export function setAuthCache(key: BasicKeys, value: any) {
-    const fn = isLocal ? Persistent.setLocal : Persistent.setSession;
-    return fn(key, value, true);
+export function setAuthCache(key: BasicKeys, value: StorageValue) {
+    return isLocal ? Persistent.setLocal(key, value, true) : Persistent.setSession(key, value, true);
 }
 
 export function clearAuthCache(immediate = true) {
-    const fn = isLocal ? Persistent.clearLocal : Persistent.clearSession;
-    return fn(immediate);
+    return isLocal ? Persistent.clearLocal(immediate) : Persistent.clearSession(immediate);
 }

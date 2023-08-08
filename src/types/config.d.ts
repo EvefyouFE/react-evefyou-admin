@@ -1,6 +1,6 @@
-import { CacheTypeEnum, SessionTimeoutProcessingEnum } from "@/enums";
-import { Locale } from "@/models";
 import { AliasToken } from "antd/es/theme/internal";
+import { CacheTypeEnum, SessionTimeoutProcessingEnum } from "@/enums";
+import { Locale } from "@/models/auth";
 
 export interface BaseSetting {
   theme: Partial<AliasToken>;
@@ -13,7 +13,7 @@ export interface ProjectConfig {
   permissionCacheType: CacheTypeEnum;
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum;
   useErrorHandle: boolean;
-  
+
   layoutSetting: LayoutSetting;
   baseSetting: BaseSetting;
   menuSetting: MenuSetting;

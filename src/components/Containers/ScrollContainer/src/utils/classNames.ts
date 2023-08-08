@@ -1,20 +1,22 @@
-export default function classNames(...args: any[]): string|undefined {
+export default function classNames(...args: string[]): string | undefined {
     if (args) {
         let classes: string[] = [];
 
-        for (let i = 0; i < args.length; i++) {
-            let className = args[i];
+        for (let i = 0; i < args.length; i += 1) {
+            const className = args[i];
 
-            if (!className) continue;
+            if (className) {
+                const type = typeof className;
 
-            const type = typeof className;
+                if (type === 'string' || type === 'number') {
+                    classes.push(className);
+                } else if (type === 'object') {
+                    const clses = Array.isArray(className)
+                        ? className :
+                        Object.entries(className).map(([key, value]) => (value ? key : null));
 
-            if (type === 'string' || type === 'number') {
-                classes.push(className);
-            } else if (type === 'object') {
-                const _classes = Array.isArray(className) ? className : Object.entries(className).map(([key, value]) => (!!value ? key : null));
-
-                classes = _classes.length ? classes.concat(_classes.filter((c) => !!c)) : classes;
+                    classes = clses.length ? classes.concat(clses.filter((c) => !!c)) : classes;
+                }
             }
         }
 

@@ -5,7 +5,7 @@ declare interface SetterFn<Args extends Array<any> = any, R = any> {
     (...args: Args): R;
 }
 declare interface ActionFn<Args extends Array<any> = any, R = any> {
-    (...args: Args): R | Promise<R>;
+    (...args: Args): R;
 }
 declare type Getters<S = any> = Recordable<GetterFn<S>>;
 declare type Setters = Recordable<SetterFn>;
@@ -19,46 +19,47 @@ declare type SetterMethods<S extends Setters> = {
 declare type ActionMethods<A extends Actions> = {
     [P in keyof A]: A extends Record<P, ActionFn<infer Args, infer R>> ? ActionFn<Args, R> : unknown;
 };
-declare type DefaultMethods<S = any, N extends string = 'state'> = {
-    get: () => S;
-    set: (state: S | ((prevState: S) => S)) => void;
+declare type DefaultSetMethods<S = any> = SetMethods<S> & {
     setProps: (prop: Partial<S>) => void;
     reset: () => void;
     deepSet: <KS extends readonly ExtractNestedKeys<S>[]>(
         keys: KS,
-        value: NestedPropType<KS, S>
+        any: NestedPropType<KS, S>
     ) => void;
     deepMerge: <KS extends readonly ExtractNestedKeys<S>[]>(
         keys: KS,
-        value: Partial<NestedPropType<KS, S>>
+        any: Partial<NestedPropType<KS, S>>
     ) => void;
-} & PropName<S, N>;
+}
 
-declare type ItemsDefaultMethods<
-    S extends any[] = any[],
-    N extends string = 'state',
-> = DefaultMethods<S, N> & {
-    add: (newItem: S extends Array<infer P> ? P : unknown) => void;
-    remove: (item: S extends Array<infer P> ? P : unknown) => void;
-    removes: (items: S extends Array<infer P> ? P : unknown[]) => void;
+declare type ItemsDefaultSetMethods<
+    T = any,
+> = {
+    add: (newItem: T) => void;
+    remove: (item: T) => void;
+    removes: (items: T[]) => void;
     clear: () => void;
 };
 
+declare type DefaultMethods<S = any, N extends string = 'state'> = DefaultSetMethods<S> & {
+    get: () => S;
+} & PropName<S, N>;
 
-declare interface BaseCallbackMethods<S> {
+declare type ItemsDefaultMethods<
+    T = any,
+    N extends string = 'state'
+> = DefaultMethods<T[], N> & ItemsDefaultSetMethods<T>;
+
+declare interface SetMethods<S> {
     set: React.Dispatch<React.SetStateAction<S>>;
-}
-declare interface CallbackMethods<S> extends BaseCallbackMethods<S> {
-    [key: string]: number|string|Recordable;
 }
 
 declare interface CallbackState<
     S,
-    CBM extends CallbackMethods<S>
+    CBM extends SetMethods<S>
 > {
     (initialState?: S): [S, CBM]
-};
-
+}
 
 declare interface StateConfig<
     S extends CallbackState<any, any> | any,
@@ -66,20 +67,22 @@ declare interface StateConfig<
     G extends Getters<any> = Getters<S extends CallbackState<infer St, any> ? St : S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = S extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = S extends CallbackState<any, infer M> ? M : SetMethods<any>
 > {
     name: N;
-    state: S;
+    useState: S;
     getters?: G & ThisType<PropName<S extends CallbackState<infer St, any> ? St : S, N>
         & GetterMethods<S extends CallbackState<infer St, any> ? St : S, G>>;
     setters?: SE & ThisType<
-        (S extends any[] ? ItemsDefaultMethods<S, N>
-            : DefaultMethods<S extends CallbackState<infer St, any> ? St : S, N>)
-        & GetterMethods<S extends CallbackState<infer St, any> ? St : S, G> & SetterMethods<SE> & CBM
+        (S extends Array<infer T> ? ItemsDefaultSetMethods<T> & DefaultSetMethods<T[]>
+            : DefaultSetMethods<S extends CallbackState<infer St, any> ? St : S>)
+        & SetterMethods<SE> & CBM
     >;
     actions?: A & ThisType<
-        (S extends any[] ? ItemsDefaultMethods<S, N> : DefaultMethods<S, N>)
-        & GetterMethods<S, G> & SetterMethods<SE> & ActionMethods<A> & CBM
+        (S extends Array<infer T> ? ItemsDefaultMethods<T, N>
+            : DefaultMethods<S extends CallbackState<infer St, any> ? St : S, N>)
+        & GetterMethods<S extends CallbackState<infer St, any> ? St : S, G>
+        & SetterMethods<SE> & ActionMethods<A> & CBM
     >;
 }
 
@@ -90,42 +93,25 @@ declare interface RecoilStateConfig<
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = RS extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = RS extends CallbackState<any, infer M> ? M : SetMethods<any>
 > {
     name: N;
-    state: RS;
     defaultValue: S;
+    useState: RS;
     getters?: G & ThisType<PropName<S extends CallbackState<infer St, any> ? St : S, N>
         & GetterMethods<S extends CallbackState<infer St, any> ? St : S, G>>;
     setters?: SE & ThisType<
-        (S extends any[] ? ItemsDefaultMethods<S, N>
-            : DefaultMethods<S extends CallbackState<infer St, any> ? St : S, N>)
-        & GetterMethods<S extends CallbackState<infer St, any> ? St : S, G> & SetterMethods<SE> & CBM
+        (S extends Array<infer T> ? ItemsDefaultSetMethods<T> & DefaultSetMethods<T[]>
+            : DefaultSetMethods<S extends CallbackState<infer St, any> ? St : S>)
+        & SetterMethods<SE> & CBM
     >;
     actions?: A & ThisType<
-        (S extends any[] ? ItemsDefaultMethods<S, N> : DefaultMethods<S, N>)
-        & GetterMethods<S, G> & SetterMethods<SE> & ActionMethods<A> & CBM
+        (S extends Array<infer T> ? ItemsDefaultMethods<T, N>
+            : DefaultMethods<S extends CallbackState<infer St, any> ? St : S, N>)
+        & GetterMethods<S extends CallbackState<infer St, any> ? St : S, G>
+        & SetterMethods<SE> & ActionMethods<A> & CBM
     >;
 }
-
-declare type DefineUseRecoilStateConfig<
-    S,
-    RS extends CallbackState<MRecoilState<S>, any> | MRecoilState<S>,
-    N extends string = 'state',
-    G extends Getters<any> = Getters<S>,
-    SE extends Setters = Setters,
-    A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = RS extends CallbackState<any, infer M> ? M : CallbackMethods<any>
-> = RecoilStateConfig<S, RS, N, G, SE, A, CBM> | (() => RecoilStateConfig<S, RS, N, G, SE, A, CBM>);
-
-declare type DefineUseStateConfig<
-    State extends CallbackState<any, any> | any,
-    N extends string = 'state',
-    G extends Getters<any> = Getters<State extends CallbackState<infer St, any> ? St : State>,
-    SE extends Setters = Setters,
-    A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = State extends CallbackState<any, infer M> ? M : CallbackMethods<any>
-> = StateConfig<State, N, G, SE, A, CBM> | (() => StateConfig<State, N, G, SE, A, CBM>);
 
 declare type StateMethods<
     S extends CallbackState<any, any> | any = any,
@@ -133,11 +119,12 @@ declare type StateMethods<
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = S extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = S extends CallbackState<any, infer M> ? M : SetMethods<any>
 > = GetterMethods<S, G>
     & SetterMethods<SE>
     & ActionMethods<A>
-    & (S extends any[] ? ItemsDefaultMethods<S, N> : DefaultMethods<S, N>)
+    & (S extends Array<infer T> ? ItemsDefaultMethods<T, N>
+        : DefaultMethods<S extends CallbackState<infer St, any> ? St : S, N>)
     & CBM
     ;
 
@@ -147,7 +134,7 @@ declare type UseStateReturnType<
     G extends Getters<any> = any,
     SE extends Setters = any,
     A extends Actions = any,
-    CBM extends CallbackMethods<any> = S extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = S extends CallbackState<any, infer M> ? M : SetMethods<any>
 > = [S, StateMethods<S, N, G, SE, A, CBM>]
 
 declare interface UseState<
@@ -156,28 +143,28 @@ declare interface UseState<
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends CallbackMethods<any> = S extends CallbackState<any, infer M> ? M : CallbackMethods<any>
+    CBM extends SetMethods<any> = S extends CallbackState<any, infer M> ? M : SetMethods<any>
 > {
     (initialState?: S): UseStateReturnType<S, N, G, SE, A, CBM>
 }
 
 
-declare type SelectorDefaultMethods<State = any, N extends string = 'state'> = {
+declare type SelectorDefaultMethods<S = any, N extends string = 'state'> = {
     refresh: () => void;
-    get: () => State;
-    set: (state: State| ((state: State) => State)) => void;
-    setProps: (prop: Partial<State>) => void;
-    deepSet: <KS extends readonly ExtractNestedKeys<State>[]>(
+    get: () => S;
+    set: (state: S | ((state: S) => S)) => void;
+    setProps: (prop: Partial<S>) => void;
+    deepSet: <KS extends readonly ExtractNestedKeys<S>[]>(
         keys: KS,
-        value: NestedPropType<KS, State>
+        any: NestedPropType<KS, S>
     ) => void;
-    deepMerge: <KS extends readonly ExtractNestedKeys<State>[]>(
+    deepMerge: <KS extends readonly ExtractNestedKeys<S>[]>(
         keys: KS,
-        value: Partial<NestedPropType<KS, State>>
+        any: Partial<NestedPropType<KS, S>>
     ) => void;
     reset: () => void;
     getState: MGetRecoilValue;
-} & PropName<State, N>;
+} & PropName<S, N>;
 
 declare type SelectorItemsDefaultMethods<
     S extends any[] = any[],
@@ -210,11 +197,11 @@ declare interface BaseSelectorStateConfig<
     >;
 }
 
-declare interface RecoilCallback<CBM = {}> {
+declare interface RecoilCallback<CBM = object> {
     (): CBM
-};
+}
 
-declare interface SelectorStateConfig<
+declare interface RecoilValueConfig<
     S,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
@@ -222,54 +209,54 @@ declare interface SelectorStateConfig<
     A extends Actions = Actions,
     CB extends RecoilCallback = RecoilCallback,
 > extends BaseSelectorStateConfig<S, N, G, SE> {
-    callback?: CB,
+    useFn?: CB,
     actions?: A & ThisType<
         (S extends any[] ? SelectorItemsDefaultMethods<S, N> : SelectorDefaultMethods<S, N>)
         & GetterMethods<S, G>
         & SetterMethods<SE>
         & ActionMethods<A>
-        & (CB extends RecoilCallback<infer CBM> ? CBM : {})
+        & (CB extends RecoilCallback<infer CBM> ? CBM : object)
     >;
 }
 
-declare type SelectorStateMethods<
+declare type RecoilValueMethods<
     S = any,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
-    CBM extends Recordable<any> = {}
+    CBM extends Recordable<any> = object
 > = GetterMethods<S, G>
     & SetterMethods<SE>
     & (S extends any[] ? SelectorItemsDefaultMethods<S, N> : SelectorDefaultMethods<S, N>)
     & CBM;
 
-declare type SelectorStateAsyncMethods<
+declare type RecoilValueAsyncMethods<
     S = any,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends Recordable<any> = {}
-> = SelectorStateMethods<S, N, G, SE, CBM>
+    CBM extends Recordable<any> = object
+> = RecoilValueMethods<S, N, G, SE, CBM>
     & ActionMethods<A>
     ;
 
-declare type UseSelectorStateReturnType<
+declare type UseRecoilValueReturnType<
     S = any,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends Recordable<any> = {}
-> = [S, SelectorStateAsyncMethods<S, N, G, SE, A, CBM>]
+    CBM extends Recordable<any> = object
+> = [S, RecoilValueAsyncMethods<S, N, G, SE, A, CBM>]
 
-declare interface UseSelectorState<
+declare interface UseRecoilValue<
     S,
     N extends string = 'state',
     G extends Getters<any> = Getters<S>,
     SE extends Setters = Setters,
     A extends Actions = Actions,
-    CBM extends Recordable<any> = {}
+    CBM extends Recordable<any> = object
 > {
-    (initialState?: S): UseSelectorStateReturnType<S, N, G, SE, A, CBM>
+    (initialState?: S): UseRecoilValueReturnType<S, N, G, SE, A, CBM>
 }

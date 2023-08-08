@@ -1,9 +1,10 @@
-import { BaseInstance, UsePropsMethods } from "@/hooks";
 import { PropsWithChildren } from "react";
+import { Actions } from "ahooks/lib/useBoolean";
 import { BasicModalProps } from "./props";
+import { BaseInstance, UsePropsMethods } from "@/hooks/core";
 
-export interface UseModalPropsMethods extends Pick<UsePropsMethods<BasicModalProps>, 'init'> {
-}
+
+export type UseModalPropsMethods = Pick<UsePropsMethods<BasicModalProps>, 'init'>;
 
 export type UseModalPropsReturnType = [BasicModalProps, UseModalPropsMethods]
 
@@ -17,11 +18,11 @@ export interface ModalHookMethods extends UseModalPropsMethods {
 }
 
 export interface ModalInstance extends BaseInstance<BasicModalProps>, Pick<ModalHookMethods,
-'init'
-| 'openModal'
-| 'closeModal'
-| 'openOkLoading'
-| 'closeOkLoading'
+    'init'
+    | 'openModal'
+    | 'closeModal'
+    | 'openOkLoading'
+    | 'closeOkLoading'
 > {
 }
 
@@ -31,7 +32,7 @@ export interface ModalWrapperInstance {
 
 export interface ModalContextData {
     isUpdate?: boolean;
-    record?: Object;
+    record?: object;
 }
 export type ModalContextDataMap = {
     [key: string]: ModalContextData | undefined | null;
@@ -48,3 +49,10 @@ export interface ModalContextValue {
 
 export type ModalContextProps = PropsWithChildren;
 
+
+export interface ModalInnerProps {
+    fullScreen: [boolean, Actions];
+    instance: ModalInstance;
+    okLoadingState: boolean;
+    disabled: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
+}

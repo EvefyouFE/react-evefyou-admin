@@ -1,5 +1,6 @@
-import { MenuItem, MenuTreeList } from "@/models";
 import { clone, pick } from "ramda";
+import { MenuItem, MenuTreeList } from "@/models/auth";
+
 
 export function transforRoutesToMenuTreeList(
     routes: CrRouteObject[],
@@ -20,5 +21,5 @@ export function transforRoutesToMenuTreeList(
 export function transforRoutePathToPermissionCode(
     path: string
 ): string {
-    return path.replaceAll('/',':').slice(1)
+    return path.replaceAll('/', ':').slice(1)
 }

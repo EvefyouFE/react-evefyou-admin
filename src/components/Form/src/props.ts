@@ -1,9 +1,15 @@
-import { BasicHelpProps } from "@/components/Basic/src/props";
 import { ButtonProps, ColProps, FormItemProps, FormProps, RowProps } from "antd";
 import { SizeType } from "antd/es/config-provider/SizeContext";
 import { SpaceSize } from "antd/es/space";
 import { CSSProperties, MouseEventHandler } from "react";
-import { ItemComponentType, RenderCallbackParams } from "./types/form";
+import { ItemComponentType } from "./types/form";
+import { BasicHelpProps } from "@/components/Basic/src/props";
+
+export interface RenderCallbackParams {
+    props: ItemProps;
+    values: Recordable;
+    field: string;
+}
 
 export interface ItemInnerProps extends ItemProps {
     renderCallbackParams: RenderCallbackParams;
@@ -11,11 +17,11 @@ export interface ItemInnerProps extends ItemProps {
 
 export interface ItemProps extends Omit<FormItemProps, 'required'> {
     itemComponent?: ItemComponentType;
-    itemComponentProps?: Recordable|((params: RenderCallbackParams) => Recordable);
+    itemComponentProps?: Recordable | ((params: RenderCallbackParams) => Recordable);
     helpMessage?:
-      | string
-      | string[]
-      | ((renderCallbackParams: RenderCallbackParams) => string | string[]);
+    | string
+    | string[]
+    | ((renderCallbackParams: RenderCallbackParams) => string | string[]);
     helpProps?: Partial<BasicHelpProps>;
     subLabel?: React.ReactNode;
     changeEvent?: string;
@@ -30,9 +36,9 @@ export interface ItemProps extends Omit<FormItemProps, 'required'> {
 }
 
 export interface BasicFormItemProps {
-    //渲染与否
+    // 渲染与否
     canRender?: boolean;
-    //隐藏与否
+    // 隐藏与否
     hidden?: boolean;
     formProps?: Partial<BasicFormProps>;
     itemProps?: ItemProps;
@@ -47,7 +53,7 @@ export interface BasicFormActionProps {
     showExpand?: boolean;
     showSubmit?: boolean;
     showReset?: boolean;
-    onExpand?: MouseEventHandler<(HTMLButtonElement&HTMLAnchorElement)>;
+    onExpand?: MouseEventHandler<(HTMLButtonElement & HTMLAnchorElement)>;
     submitBtnOptions?: ButtonOptions;
     resetBtnOptions?: ButtonOptions;
     size?: SpaceSize;

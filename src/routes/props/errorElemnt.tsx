@@ -1,15 +1,14 @@
-import { BasicResult } from "@/components/Result";
-import { FC } from "react";
-import { useRouteError } from "react-router";
+import { FC } from 'react';
+import { useRouteError } from 'react-router';
+import { BasicResult } from '@/components/Result';
 
 export const RouteErrorBoundary: FC = () => {
-    let error = useRouteError();
-    console.error('error',error);
-    return (
-        <BasicResult code={500} />
-    );
-}
+  const error = useRouteError();
+  console.error('error', error);
+  return <BasicResult code={500} />;
+};
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function errorBoundary() {
-    return <RouteErrorBoundary />;
+  return <RouteErrorBoundary />;
 }

@@ -9,7 +9,7 @@ declare interface SorterParam {
     field: string;
 }
 
-declare type SortFn = <T>(sortInfo: MSorterResult<T>) => SorterParam|{};
+declare type SortFn = <T>(sortInfo: MSorterResult<T>) => SorterParam | {};
 declare type FilterFn = (data: Recordable) => Recordable;
 
 

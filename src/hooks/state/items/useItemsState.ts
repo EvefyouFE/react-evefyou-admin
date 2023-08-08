@@ -1,12 +1,11 @@
-
-
-import { useCallback } from "react";
 import { defineUseState } from "..";
 
-export const useItemsState = <T, N extends string>(
-    initialState: T[] = [],
+export const defineItemsState = <T = any, N extends string = 'itemsState'>(
+    initialState: T[] = [] as T[],
     name: N = 'itemsState' as N
-) => useCallback(defineUseState({
+) => defineUseState({
     name,
-    state: initialState,
-}), [])(initialState)
+    useState: initialState,
+})
+
+export const useItemsState = defineItemsState()

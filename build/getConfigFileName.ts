@@ -7,3 +7,5 @@ export const getConfigFileName = (env: Record<string, any>) => {
     .toUpperCase()
     .replace(/\s/g, '');
 };
+
+// __PRODUCTION__REACT_EVEFYOU_ADMIN__CONF__

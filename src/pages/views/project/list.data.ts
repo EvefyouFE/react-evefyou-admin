@@ -1,7 +1,7 @@
+import { ColumnsType } from "antd/es/table"
+import { Project } from "@models/project"
 import { BasicFormItemProps } from "@/components/Form"
 import { formatById } from "@/locales"
-import { Project } from "@models/index"
-import { ColumnsType } from "antd/es/table"
 
 export const columns: ColumnsType<Project> = [
     {
@@ -51,37 +51,37 @@ export const columns: ColumnsType<Project> = [
 export const searchItems: BasicFormItemProps[] = [
     {
         itemProps: {
-            name:'title',
+            name: 'title',
             label: formatById('view.common.title'),
             itemComponent: 'Input',
         }
     },
     {
         itemProps: {
-            name:'state',
+            name: 'state',
             label: formatById('view.project.stateDesc'),
             itemComponent: 'Select',
             itemComponentProps: {
                 options: [
-                  {
-                      value: '0',
-                      label: '未开始',
-                  },
-                  {
-                      value: '1',
-                      label: '进行中',
-                  },
-                  {
-                      value: '2',
-                      label: '已结束',
-                  },
+                    {
+                        value: '0',
+                        label: '未开始',
+                    },
+                    {
+                        value: '1',
+                        label: '进行中',
+                    },
+                    {
+                        value: '2',
+                        label: '已结束',
+                    },
                 ],
             },
         }
     },
     {
         itemProps: {
-            name:'createTime',
+            name: 'createTime',
             label: formatById('view.common.createTime'),
             itemComponent: 'RangePicker'
         }
@@ -91,37 +91,37 @@ export const searchItems: BasicFormItemProps[] = [
 export const modalItems: BasicFormItemProps[] = [
     {
         itemProps: {
-            name:'title',
+            name: 'title',
             label: formatById('view.common.title'),
             itemComponent: 'Input',
         }
     },
     {
         itemProps: {
-            name:'state',
+            name: 'state',
             label: formatById('view.project.stateDesc'),
             itemComponent: 'Select',
             itemComponentProps: {
                 options: [
-                  {
-                      value: '0',
-                      label: '未开始',
-                  },
-                  {
-                      value: '1',
-                      label: '进行中',
-                  },
-                  {
-                      value: '2',
-                      label: '已结束',
-                  },
+                    {
+                        value: '0',
+                        label: '未开始',
+                    },
+                    {
+                        value: '1',
+                        label: '进行中',
+                    },
+                    {
+                        value: '2',
+                        label: '已结束',
+                    },
                 ],
             },
         }
     },
     {
         itemProps: {
-            name:'createTime',
+            name: 'createTime',
             label: formatById('view.common.createTime'),
             itemComponent: 'RangePicker'
         }

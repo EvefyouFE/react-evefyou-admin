@@ -9,7 +9,7 @@ export const DEFAULT_PROJECT_CONFIG: ProjectConfig = {
   permissionCacheType: CacheTypeEnum.LOCAL,
   sessionTimeoutProcessing: SessionTimeoutProcessingEnum.PAGE_COVERAGE,
   useErrorHandle: true,
-  
+
   layoutSetting: DEFAULT_LAYOUT_SETTING,
   baseSetting: DEFAULT_BASE_SETTING,
   menuSetting: DEFAULT_MENU_SETTING,

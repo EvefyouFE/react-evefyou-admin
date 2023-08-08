@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { includes } from "ramda";
 import { defineUseState } from "..";
 
@@ -6,16 +6,16 @@ export interface KeyItem<K = React.Key> extends Recordable {
     key: K
 }
 
-export const useKeyItemsState = <
+export const defineKeyItemsState = <
     T extends KeyItem<K>,
     K = T extends KeyItem<infer P> ? P : React.Key,
-    N extends string = string
+    N extends string = 'state',
 >(
-    initialState: T[] = [],
-    name: N = 'keyItemsState' as N
-) => useCallback(defineUseState({
+    initialState: T[] = [] as T[],
+    name: N = 'keyItemsState' as N,
+) => defineUseState({
     name,
-    state: initialState,
+    useState: initialState,
     getters: {
         getByKey(state: T[], k: K) {
             return state.filter(item => item.key === k)[0]
@@ -26,23 +26,31 @@ export const useKeyItemsState = <
     },
     setters: {
         addByKey(item: T) {
-            const newItems = this[name].filter(({key}: T) => key !== item.key)
-            //不存在数组里
-            if(!newItems.length || newItems.length === this[name].length) {
-                this.set(newItems.concat(item))
-            }
+            this.set(s => {
+                const newItems = s.filter(({ key }: T) => key !== item.key)
+                // 不存在数组里
+                if (!newItems.length || newItems.length === s.length) {
+                    return newItems.concat(item)
+                }
+                return s
+            })
         },
         updateByKey(newItem: T) {
-            const newPanes = this[name].map((item: T) => item.key === newItem.key ? newItem : item)
-            this.set(newPanes)
+            this.set(s => s.map((item: T) => item.key === newItem.key ? newItem : item))
+        },
+        addOrUpdateByKey(item: T) {
+            this.set(s => {
+                const idx = s.findIndex(({ key }) => key === item.key)
+                return idx !== -1 ? s.map((im, index) => index === idx ? item : im) : s.concat(item)
+            })
         },
         removeByKey(k: K) {
-            const newPanes = this[name].filter((item: T) => item.key !== k);
-            this.set(newPanes);
+            this.set(s => s.filter((item: T) => item.key !== k));
         },
         removeByKeys(keys: K[]) {
-            const leftItems = this[name].filter((item: T) => !includes(item.key, keys))
-            this.set(leftItems)
+            this.set(s => s.filter((item: T) => !includes(item.key, keys)))
         },
-    }
-}), [])(initialState)
+    },
+})
+
+export const useKeyItemsState = defineKeyItemsState([] as KeyItem[])

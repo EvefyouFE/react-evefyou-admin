@@ -1,49 +1,7 @@
-import { BasicTableProps, TableRowSelectionProps } from "../props";
-import { UseDataSourceMethods } from "./tableDataSource";
-import { UseColumnsMethods } from "./tableColumns";
-import { UseRowSelectionMethods } from "./tableRowSelection";
-import { UsePaginationMethods } from "./tablePagination";
 import React from "react";
-import { BaseInstance, PermissionOptions, UsePropsMethods } from "@/hooks";
-import { SizeType } from "antd/es/config-provider/SizeContext";
 import { PopconfirmProps, TooltipProps } from "antd";
+import { PermissionOptions } from "@/hooks/auth";
 import { PopConfirmButtonProps } from "@/components/Button/src";
-
-export interface UseTablePropsSetMethods<T extends Recordable = any> extends UsePropsMethods<BasicTableProps<T>> {
-  setShowIndexColumn: (value?: boolean) => void;
-  setRowSelection: (value?: TableRowSelectionProps<T>) => void;
-  setSize: (value?: SizeType) => void;
-  setHeight: (value?: number) => void;
-}
-export interface UseTablePropsMethods<T extends Recordable = any> extends UseTablePropsSetMethods<T> {
-}
-export type UseTablePropsReturnType<T extends Recordable = any> = [BasicTableProps<T>, UseTablePropsMethods<T>]
-
-export interface TableHookMethods<T extends Recordable = any> extends UseTablePropsMethods<T>,
-  UseDataSourceMethods, UseColumnsMethods, UseRowSelectionMethods, UsePaginationMethods {
-}
-
-export interface TableContextValue<T extends Recordable = any> extends Pick<TableHookMethods<T>,
-  'setShowIndexColumn'
-  | 'setSize'
-  | 'setRowSelection'
-  | 'getRowSelection'
-  | 'getColumns'
-  | 'getShowIndexColumn'
-  | 'setColumnsWithCache'
-  | 'getCacheColumns'
-  | 'hideRowSelection'
-  | 'rowSelectionIsHidden'
-  | 'getDefaultRowSelection'
-> {
-  getElement?: () => HTMLDivElement|null;
-}
-
-export interface BasicTableInstance<T extends Recordable = any> extends BaseInstance<BasicTableProps<T>>, Pick<TableHookMethods<T>,
-  'init' | 'setHeight' | 'getPagination' | 'getDataSource'
-> {
-  getElement?: () => HTMLDivElement|null;
-}
 
 export interface TableSetting {
   redo?: boolean;
@@ -52,15 +10,15 @@ export interface TableSetting {
   fullScreen?: boolean;
 }
 export interface SearchState {
-  sortInfo: Recordable|Recordable[];
+  sortInfo: Recordable | Recordable[];
   filterInfo: Record<string, string[]>;
 }
 
 export type TableChangeParams = Partial<Recordable & SearchState>
 
-export type CellFormat =
+export type CellFormat<T> =
   | string
-  | ((text: string, record: Recordable, index: number) => string | number)
+  | ((text: string, record: T, index: number) => string | number)
   | Map<string | number, any>;
 
 export type ColumnChangeParam = {
@@ -81,14 +39,10 @@ export interface TableActionItem extends PopConfirmButtonProps {
   // 业务控制是否显示
   show?: boolean;
   tooltip?: string | TooltipProps;
-  onClick?: React.MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement | HTMLButtonElement>;
 }
-
 
 export interface TableRenderComp {
   tableHeader?: React.ReactNode;
-}
-export type UseRednersProps<T extends Recordable = any> = Partial<BasicTableProps<T>> & {
-  tableRef: React.RefObject<HTMLDivElement>;
 }
 

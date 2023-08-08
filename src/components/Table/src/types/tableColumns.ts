@@ -5,7 +5,7 @@ export interface GetColumnsParams {
     ignoreAction?: boolean;
     sort?: boolean;
 }
-export interface UseColumnsMethods<T extends Recordable = any> {
+export interface UseColumnsMethods<T = any> {
     getViewColumns: () => TableColumnProps<T>[];
     getColumnsWithIndexAndAction: () => TableColumnProps<T>[];
     setColumns: (columnList: Partial<TableColumnProps<T>>[]) => void;
@@ -15,7 +15,7 @@ export interface UseColumnsMethods<T extends Recordable = any> {
     getCacheColumns: () => TableColumnPropsWithKey<T>[];
     getShowIndexColumn: () => boolean;
 }
-export type UseColumnsReturnType<T extends Recordable = any> = [
+export type UseColumnsReturnType<T = any> = [
     TableColumnProps<T>[],
     UseColumnsMethods<T>
 ]

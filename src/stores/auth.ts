@@ -1,10 +1,9 @@
 
-import { defineRecoilState } from "@/hooks";
-import { queryGetCurrentMenuList } from "@/api";
-import { MenuItem, MenuTreeList, Role } from "@/models";
 import { atom } from "recoil";
-import { localStorageEffect } from "./effects";
-import { converListToTree } from "@/utils";
+import { localStorageEffect } from "./effects"; import { defineRecoilState } from "@/hooks/state";
+import { queryGetCurrentMenuList } from "@/api";
+import { MenuItem, MenuTreeList, Role } from "@/models/auth";
+import { converListToTree } from "@/utils/list";
 
 interface PermissionState {
     // Permission code list
@@ -43,7 +42,7 @@ export const authAtom = atom({
 export const useAuthRecoilState = defineRecoilState({
     name: 'authState',
     defaultValue: DEFAULT_AUTH_STATE,
-    state: authAtom,
+    useState: authAtom,
     getters: {
         getPermissionList(state) {
             return state.permissionList;
@@ -62,7 +61,7 @@ export const useAuthRecoilState = defineRecoilState({
         },
     },
     setters: {
-        setPermissionList(permissionList: string[]|number[]) {
+        setPermissionList(permissionList: string[] | number[]) {
             this.setProps({ permissionList });
         },
         setRoleList(roleList: Role[]) {
@@ -81,13 +80,13 @@ export const useAuthRecoilState = defineRecoilState({
     },
     actions: {
         async refreshAuthAction(): Promise<string[]> {
-            const menuList = await queryGetCurrentMenuList.fetchQueryRes()
+            const menuList = await queryGetCurrentMenuList.fetchQuery()
             if (!menuList) {
                 this.setMenuTreeList([])
                 this.setRoutes([])
                 return []
             }
-            const routes = menuList.map(m =>m.path)
+            const routes = menuList.map(m => m.path)
             this.setRoutes(routes)
             const menuTreeList = converListToTree<MenuItem>(menuList, 0)
             this.setMenuTreeList(menuTreeList)

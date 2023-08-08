@@ -3,7 +3,7 @@ import { MenuItemType } from "antd/es/menu/hooks/useItems";
 import React from "react";
 
 export interface DropMenuItem extends MenuItemType {
-    popconfirm?: PopconfirmProps; 
+    popconfirm?: PopconfirmProps;
     // onClick?: MenuItemType['onClick'];
     // to?: string;
     icon?: string;
