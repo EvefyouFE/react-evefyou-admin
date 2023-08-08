@@ -12,7 +12,7 @@ import {
     MULTIPLE_TABS_KEY,
 } from '@/enums';
 import { DEFAULT_CACHE_TIME } from '@/config/app/auth';
-import { UserInfo } from "@/models";
+import { UserInfo } from "@/models/auth";
 import { ProjectConfig } from "@/types/config";
 import { LockInfo } from "@/types/store";
 
