@@ -1,6 +1,7 @@
 
 import { atom } from "recoil";
-import { localStorageEffect } from "./effects"; import { defineRecoilState } from "@/hooks/state";
+import { defineRecoilState } from "react-evefyou-hooks";
+import { localStorageEffect } from "./effects";
 import { queryGetCurrentMenuList } from "@/api";
 import { MenuItem, MenuTreeList, Role } from "@/models/auth";
 import { converListToTree } from "@/utils/list";

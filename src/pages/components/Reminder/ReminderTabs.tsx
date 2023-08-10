@@ -1,5 +1,6 @@
 import { Tabs } from 'antd';
 import { FC, useEffect, useMemo } from 'react';
+import { defineActiveItemsState } from "react-evefyou-hooks";
 import { ReminderListMemo, ReminderListTypeEnum } from './ReminderList';
 import {
   queryGetMessageList,
@@ -8,7 +9,6 @@ import {
 } from '@/api';
 import { BasicResult } from '@/components/Result';
 import { TabItem, useTabs } from '@/hooks/components/tabs';
-import { defineActiveItemsState } from '@/hooks/state/items';
 
 const useTabItemsState = defineActiveItemsState<TabItem>();
 

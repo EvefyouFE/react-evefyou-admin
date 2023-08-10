@@ -5,7 +5,7 @@ import {
   useImperativeHandle,
   useRef,
 } from 'react';
-import { useMountEffect, useUnmountEffect } from '@/hooks/core';
+import { useMountEffect, useUnmountEffect } from 'react-evefyou-hooks';
 import { useDesign } from '@/hooks/design';
 import {
   ScrollContainerBase,

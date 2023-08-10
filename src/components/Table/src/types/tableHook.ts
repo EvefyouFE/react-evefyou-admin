@@ -1,5 +1,5 @@
 import { SizeType } from "antd/es/config-provider/SizeContext";
-import { BaseInstance, UsePropsMethods } from "@/hooks/core";
+import { BaseInstance, UsePropsMethods } from "react-evefyou-hooks";
 import { UseDataSourceMethods } from "./tableDataSource";
 import { UseColumnsMethods } from "./tableColumns";
 import { UseRowSelectionMethods } from "./tableRowSelection";

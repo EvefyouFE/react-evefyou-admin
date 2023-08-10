@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
+import { deepCompareObj } from "react-evefyou-hooks";
 import classNames from 'classnames';
 import { TableContainerInstance } from './typing';
 import {
@@ -17,7 +18,6 @@ import { useDesign } from '@/hooks/design';
 import { BasicForm } from '@/components/Form';
 import { BasicTable } from '@/components/Table';
 import { TableContainerProps } from './props';
-import { deepCompareObj } from '@/utils/object';
 
 export const TableContainer = React.memo(
   React.forwardRef(

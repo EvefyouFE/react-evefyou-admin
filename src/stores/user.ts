@@ -1,12 +1,12 @@
 import { Locale, LoginByUsernameReq, UserInfo } from "@models/auth";
 import { MenuTreeList } from "@models/auth/memu";
 import { atom } from "recoil";
+import { defineRecoilValue } from "react-evefyou-hooks";
 import React from "react";
 import { mutationLogin, queryGetCurrentUser, queryLogout } from "@/api";
 import { DEFAULT_USER_INFO } from "@/config/user";
 import { PageEnum } from "@/enums";
 import { getMessageHelper } from "@/hooks/web";
-import { defineRecoilValue } from "@/hooks/state";
 // import { setAuthCache } from "@/utils/auth";
 import { useAuthRecoilState } from "./auth";
 import { AppState, appAtom } from "./app";

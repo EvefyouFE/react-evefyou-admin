@@ -1,3 +1,11 @@
+/*
+ * @Author: EvefyouFE
+ * @Date: 2023-07-15 00:49:31
+ * @FilePath: \react-evefyou-admin\src\components\Form\src\BasicForm.tsx
+ * @Description: 
+ * Everyone is coming to the world i live in, as i am going to the world lives for you. 人人皆往我世界，我为世界中人人。
+ * Copyright (c) 2023 by EvefyouFE/evef, All Rights Reserved. 
+ */
 import { Col, Form, Row, RowProps } from 'antd';
 import { is, omit } from 'ramda';
 import React, {
@@ -7,19 +15,18 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from 'react';
+import { usePropsState, deepCompareObj } from "react-evefyou-hooks";
 import { BasicFormAction } from './components/BasicFormAction';
 import { BasicFormItem } from './components/BasicFormItem';
 import { useFormItems } from './hooks';
 import { BasicFormActionProps, BasicFormProps } from './props';
 import { BasicFormInstance } from './types/formHooks';
-import { usePropsState } from '@/hooks/core';
 import { genUUID } from '@/utils/generate';
 import { useFormProps } from './hooks/useFormProps';
-import { deepCompareObj } from '@/utils/object';
 
 export const BasicForm = React.memo(
   React.forwardRef(
-    <T = any,>(
+    <T = any>(
       props: PropsWithChildrenCls<BasicFormProps>,
       ref: React.ForwardedRef<BasicFormInstance<T>>,
     ) => {

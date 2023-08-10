@@ -1,6 +1,6 @@
 import { FormInstance } from "antd";
+import { BaseInstance, UsePropsMethods } from "react-evefyou-hooks";
 import { BasicFormProps, ItemProps } from "../props";
-import { BaseInstance, UsePropsMethods } from "@/hooks/core";
 
 export interface ItemComponentParams {
   props: Partial<ItemProps>;

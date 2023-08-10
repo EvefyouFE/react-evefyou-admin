@@ -1,7 +1,15 @@
+/*
+ * @Author: EvefyouFE
+ * @Date: 2023-07-15 00:49:31
+ * @FilePath: \react-evefyou-admin\src\components\Containers\TableContainer\src\hooks\useSearchForm.ts
+ * @Description: 
+ * Everyone is coming to the world i live in, as i am going to the world lives for you. 人人皆往我世界，我为世界中人人。
+ * Copyright (c) 2023 by EvefyouFE/evef, All Rights Reserved. 
+ */
 import classNames from "classnames";
+import { useCompInstance } from "react-evefyou-hooks";
 import { useMemo } from "react";
 import { BasicFormProps } from "@/components/Form";
-import { useCompInstance } from "@/hooks/core";
 import { useDesign } from "@/hooks/design";
 import { BasicFormInstance } from "@/components/Form/src/types/formHooks";
 import { TableContainerProps } from "../props";

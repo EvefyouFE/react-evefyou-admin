@@ -5,6 +5,7 @@ import {
   SorterResult,
   TableCurrentDataSource,
 } from 'antd/es/table/interface';
+import { deepCompareObj } from "react-evefyou-hooks";
 import classNames from 'classnames';
 import { is, omit } from 'ramda';
 import React, {
@@ -30,7 +31,6 @@ import './index.less';
 import { useTableProps } from './hooks/useTableProps';
 import { useDesign } from '@/hooks/design';
 import { TableContext } from './context';
-import { deepCompareObj } from '@/utils/object';
 
 export const BasicTable = React.memo(
   React.forwardRef(

@@ -1,7 +1,7 @@
+import { defineRecoilValue } from "react-evefyou-hooks";
 import { atom } from "recoil";
 import { Persistent } from "@/utils/cache/persistent";
 import { LOCK_INFO_KEY } from "@/enums";
-import { defineRecoilValue } from "@/hooks/state";
 import { useUserRecoilState } from "./user";
 import { LockInfo } from "@/types/store";
 
