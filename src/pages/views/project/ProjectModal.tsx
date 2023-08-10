@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { useCompInstance } from "react-evefyou-hooks";
 import {
   BasicForm,
   BasicFormInstance,
@@ -17,7 +18,6 @@ import {
   useModalContext,
 } from '@/components/Modal';
 import { ModalContextData, ModalInstance } from '@/components/Modal/src/typing';
-import { useCompInstance } from '@/hooks/core';
 import { formatById } from '@/locales';
 import { modalItems } from './list.data';
 

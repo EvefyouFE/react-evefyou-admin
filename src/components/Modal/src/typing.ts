@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
+import { BaseInstance, UsePropsMethods } from "react-evefyou-hooks";
 import { Actions } from "ahooks/lib/useBoolean";
 import { BasicModalProps } from "./props";
-import { BaseInstance, UsePropsMethods } from "@/hooks/core";
 
 
 export type UseModalPropsMethods = Pick<UsePropsMethods<BasicModalProps>, 'init'>;

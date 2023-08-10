@@ -11,6 +11,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { useUnmountEffect, deepCompareObj } from "react-evefyou-hooks";
 import { useModalContext } from './hooks';
 import { BasicModalProps, ModalWrapperProps } from './props';
 import { ModalInstance } from './typing';
@@ -19,8 +20,6 @@ import { useRenders } from './renders';
 import './index.less';
 import { ModalWrapper } from './components/ModalWrapper';
 import { useDesign } from '@/hooks/design';
-import { useUnmountEffect } from '@/hooks/core';
-import { deepCompareObj } from '@/utils/object';
 
 export const BasicModal = React.memo(
   forwardRef<ModalInstance, BasicModalProps>((props, ref) => {
@@ -71,10 +70,10 @@ export const BasicModal = React.memo(
     const { title, wrapClassName, ...restPropsState } = propsState;
     const wrapClassNameValue = useMemo(
       () =>
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         classNames(prefixCls, wrapClassName, {
           'fullscreen-modal': isFullScreenState,
         }),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [isFullScreenState],
     );
     const propsValue: BasicModalProps = {

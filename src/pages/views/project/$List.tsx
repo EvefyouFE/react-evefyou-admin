@@ -1,9 +1,9 @@
 import { Project, ProjectReq } from '@models/project';
+import { useCompInstance } from "react-evefyou-hooks";
 import { FC, useCallback, useMemo, useState } from 'react';
 import { ProjectModal } from './ProjectModal';
 import { ModalInstance } from '@/components/Modal';
 import { BasicTableProps } from '@/components/Table';
-import { useCompInstance } from '@/hooks/core';
 import { usePage } from '@/hooks/components/page';
 import { columns, searchItems } from './list.data';
 import { formatById } from '@/locales';

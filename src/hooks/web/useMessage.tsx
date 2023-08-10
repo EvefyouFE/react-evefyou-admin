@@ -43,8 +43,8 @@ function getIcon(iconType: string) {
 
 function renderContent({ content }: Pick<ModalOptionsEx, 'content'>) {
   if (is(String, content)) {
-    // eslint-disable-next-line react/no-danger
     return (
+      // eslint-disable-next-line react/no-danger
       <div dangerouslySetInnerHTML={{ __html: `<div>${content}</div>` }} />
     );
   }

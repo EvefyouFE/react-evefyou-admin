@@ -37,7 +37,7 @@ export function translate2MenuItems(tabsMenuList: TabsMenuItem[]) {
   }));
 }
 
-const ChildrenWraper = React.forwardRef(
+const ChildrenWrapper = React.forwardRef(
   (
     {
       children,
@@ -47,7 +47,7 @@ const ChildrenWraper = React.forwardRef(
     ref: React.ForwardedRef<CommonContainerInstance>,
   ) => <CommonContainer ref={ref}>{children}</CommonContainer>,
 );
-ChildrenWraper.displayName = 'ChildrenWraper';
+ChildrenWrapper.displayName = 'ChildrenWrapper';
 
 export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
   const [
@@ -108,11 +108,11 @@ export const TabContainer: FC<PropsWithChildren> = ({ children }) => {
 
   const wrapChildren = useMemo(
     () => (
-      <ChildrenWraper ref={containerRef} key={childrenKeyState}>
+      <ChildrenWrapper ref={containerRef} key={childrenKeyState}>
         {children}
-      </ChildrenWraper>
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      </ChildrenWrapper>
     ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [childrenKeyState],
   );
   useEffect(() => {

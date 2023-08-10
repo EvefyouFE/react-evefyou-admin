@@ -19,11 +19,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useUnmountEffect } from "react-evefyou-hooks";
 import { FormattedMessage } from 'react-intl';
 import { ColumnChangeParam } from '../../types/table';
 import { ScrollContainer } from '@/components/Containers';
 import { useTableContext } from '../../context';
-import { useUnmountEffect } from '@/hooks/core';
 import { useDesign } from '@/hooks/design';
 import './ColumnSetting.less';
 import { PlainOptionNode } from './PlainOptionNode';
