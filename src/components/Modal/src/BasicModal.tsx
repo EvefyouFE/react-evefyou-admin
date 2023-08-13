@@ -11,7 +11,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useUnmountEffect, deepCompareObj } from "react-evefyou-hooks";
+import { useUnmountEffect, deepCompareObj } from 'react-evefyou-hooks';
 import { useModalContext } from './hooks';
 import { BasicModalProps, ModalWrapperProps } from './props';
 import { ModalInstance } from './typing';

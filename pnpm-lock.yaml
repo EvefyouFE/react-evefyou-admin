@@ -115,6 +115,9 @@ devDependencies:
   '@types/fs-extra':
     specifier: ^11.0.1
     version: 11.0.1
+  '@types/mockjs':
+    specifier: ^1.0.7
+    version: 1.0.7
   '@types/node':
     specifier: ^18.15.11
     version: 18.17.4
@@ -3821,7 +3824,7 @@ packages:
   /@types/keyv@3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 18.17.4
+      '@types/node': 18.17.5
     dev: true
 
   /@types/minimatch@5.1.2:
@@ -3838,6 +3841,10 @@ packages:
 
   /@types/node@18.17.4:
     resolution: {integrity: sha512-ATL4WLgr7/W40+Sp1WnNTSKbgVn6Pvhc/2RHAdt8fl6NsQyp4oPCi2eKcGOvA494bwf1K/W6nGgZ9TwDqvpjdw==}
+    dev: true
+
+  /@types/node@18.17.5:
+    resolution: {integrity: sha512-xNbS75FxH6P4UXTPUJp/zNPq6/xsfdJKussCWNOnz4aULWIRwMgP1LgaB5RiBnMX1DPCYenuqGZfnIAx5mbFLA==}
     dev: true
 
   /@types/node@20.4.7:
@@ -3896,13 +3903,13 @@ packages:
   /@types/resolve@1.17.1:
     resolution: {integrity: sha512-yy7HuzQhj0dhGpD8RLXSZWEkLsV9ibvxvi6EiJ3bkqLAO1RGo0WbkWQiwpRlSFymTJRz0d3k5LM3kkx8ArDbLw==}
     dependencies:
-      '@types/node': 18.17.4
+      '@types/node': 18.17.5
     dev: true
 
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 18.17.4
+      '@types/node': 18.17.5
     dev: true
 
   /@types/scheduler@0.16.3:
@@ -8660,7 +8667,7 @@ packages:
     resolution: {integrity: sha512-KWYVV1c4i+jbMpaBC+U++4Va0cp8OisU185o73T1vo99hqi7w8tSJfUXYswwqqrjzwxa6KpRK54WhPvwf5w6PQ==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.17.4
+      '@types/node': 18.17.5
       merge-stream: 2.0.0
       supports-color: 7.2.0
     dev: true

@@ -1,3 +1,8 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ */
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-underscore-dangle */

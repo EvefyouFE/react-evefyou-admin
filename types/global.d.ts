@@ -1,4 +1,11 @@
-
+/*
+ * @Author: EvefyouFE
+ * @Date: 2023-07-16 16:27:02
+ * @FilePath: \react-evefyou-admin\types\global.d.ts
+ * @Description: 
+ * Everyone is coming to the world i live in, as i am going to the world lives for you. 人人皆往我世界，我为世界中人人。
+ * Copyright (c) 2023 by EvefyouFE/evef, All Rights Reserved. 
+ */
 declare type Recordable<T = any> = Record<string, T>;
 declare type Nullable<T> = T | null;
 declare type TreeList<
@@ -27,7 +34,7 @@ declare type Union<U = any, T = any> = {
 
 declare type Value = string | number | object | Recordable
 
-interface ImportMetaEnv {
+declare interface ImportMetaEnv {
     readonly MODE: string;
     readonly DEV: boolean;
     readonly PROD: boolean;
@@ -45,8 +52,4 @@ interface ImportMetaEnv {
     readonly VITE_LEGACY: boolean;
     readonly VITE_USE_IMAGEMIN: boolean;
     readonly VITE_GENERATE_UI: string;
-}
-
-declare interface ImportMeta {
-    readonly env: ImportMetaEnv
 }

@@ -1,3 +1,13 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ *
+ * Modified Code Copyright:
+ * Copyright (c) 2023-present EvefyouFE/evef
+ * The following are modifications to the original code:
+ * - change getConfigFileName import
+ */
 import pkg from 'package.json';
 import { warn } from '@/utils/log';
 // import { getConfigFileName } from "build/getConfigFileName";

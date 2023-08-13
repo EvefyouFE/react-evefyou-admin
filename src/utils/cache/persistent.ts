@@ -1,3 +1,8 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ */
 import { omit, pick } from "ramda";
 import { createLocalStorage, createSessionStorage } from '@/utils/cache';
 import { Cache, Memory } from './memory';

@@ -1,3 +1,13 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ *
+ * Modified Code Copyright:
+ * Copyright (c) 2023-present EvefyouFE/evef
+ * The following are modifications to the original code:
+ * - add typescript StorageValue
+ */
 import { isNil } from "ramda";
 import { cacheCipher } from '@/config/app/auth';
 import type { EncryptionParams } from '@/utils/cipher';

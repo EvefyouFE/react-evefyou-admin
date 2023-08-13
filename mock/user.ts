@@ -207,9 +207,9 @@ const mockNoticeList = [
 export default [
   {
     url: '/basic-api/login',
-    method: 'POST',
+    method: 'post',
     timeout: 1000,
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: {
@@ -225,7 +225,7 @@ export default [
     url: '/basic-api/logout',
     method: 'get',
     timeout: 1000,
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: null,
@@ -237,7 +237,7 @@ export default [
     url: '/basic-api/current/user',
     method: 'get',
     // statusCode: 401,
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: {
@@ -257,7 +257,7 @@ export default [
   {
     url: '/basic-api/current/menuTreeList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: mockMenuTree,
@@ -268,7 +268,7 @@ export default [
   {
     url: '/basic-api/current/menuList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: mockMenuList,
@@ -279,7 +279,7 @@ export default [
   {
     url: '/basic-api/getPermissionList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: mockPermissionList,
@@ -290,7 +290,7 @@ export default [
   {
     url: '/basic-api/current/notice',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: mockNoticeList,

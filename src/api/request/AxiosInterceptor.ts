@@ -23,6 +23,7 @@ export const AxiosInterceptor = () => {
 
   const handleResInterceptor = useCallback((res: AxiosResponse<Res>) => {
     const { data } = res
+    if (!data) return;
     const { code } = data
     // 在此处根据自己项目的实际情况对不同的code执行不同的操作
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
@@ -106,7 +107,7 @@ export const AxiosInterceptor = () => {
       addAjaxErrorInfo(error);
       return error;
     }
-    const interceptor = defHttp.getAxios().interceptors.response.use(undefined, errorInterceptor)
+    const interceptor = defHttp.getAxios().interceptors.response.use(response => response, errorInterceptor)
     return () => defHttp.getAxios().interceptors.response.eject(interceptor)
   }, [addAjaxErrorInfo, errorlog])
 

@@ -249,7 +249,7 @@ export default [
   {
     url: '/basic-api/getProjectList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: {
