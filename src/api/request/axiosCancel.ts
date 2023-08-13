@@ -1,3 +1,8 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ */
 /* eslint-disable class-methods-use-this */
 import type { AxiosRequestConfig, Canceler } from 'axios';
 import axios from 'axios';

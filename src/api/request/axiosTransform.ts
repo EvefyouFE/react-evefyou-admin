@@ -1,3 +1,8 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ */
 /**
  * Data processing class, can be configured according to the project
  */

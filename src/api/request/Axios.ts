@@ -1,3 +1,13 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ *
+ * Modified Code Copyright:
+ * Copyright (c) 2023-present EvefyouFE/evef
+ * The following are modifications to the original code:
+ * - change config type to InternalAxiosRequestConfig
+ */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { AxiosRequestConfig, AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';

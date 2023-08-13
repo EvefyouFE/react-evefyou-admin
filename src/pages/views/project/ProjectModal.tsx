@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from 'react';
-import { useCompInstance } from "react-evefyou-hooks";
+import { useCompInstance } from 'react-evefyou-hooks';
 import {
   BasicForm,
   BasicFormInstance,

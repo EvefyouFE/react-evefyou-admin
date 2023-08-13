@@ -115,7 +115,7 @@ export default [
   {
     url: '/basic-api/getNoticeList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: {
@@ -131,7 +131,7 @@ export default [
   {
     url: '/basic-api/getMessageList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: {
@@ -147,7 +147,7 @@ export default [
   {
     url: '/basic-api/getTodoList',
     method: 'get',
-    response: ({ body }) => {
+    response: () => {
       return {
         code: 200,
         data: {

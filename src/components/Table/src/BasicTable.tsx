@@ -5,7 +5,7 @@ import {
   SorterResult,
   TableCurrentDataSource,
 } from 'antd/es/table/interface';
-import { deepCompareObj } from "react-evefyou-hooks";
+import { deepCompareObj } from 'react-evefyou-hooks';
 import classNames from 'classnames';
 import { is, omit } from 'ramda';
 import React, {

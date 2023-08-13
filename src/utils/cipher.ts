@@ -1,3 +1,8 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ */
 import { encrypt, decrypt } from 'crypto-js/aes';
 import UTF8, { parse } from 'crypto-js/enc-utf8';
 import pkcs7 from 'crypto-js/pad-pkcs7';

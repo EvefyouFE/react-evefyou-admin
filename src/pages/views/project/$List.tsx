@@ -1,5 +1,5 @@
 import { Project, ProjectReq } from '@models/project';
-import { useCompInstance } from "react-evefyou-hooks";
+import { useCompInstance } from 'react-evefyou-hooks';
 import { FC, useCallback, useMemo, useState } from 'react';
 import { ProjectModal } from './ProjectModal';
 import { ModalInstance } from '@/components/Modal';

@@ -1,3 +1,8 @@
+/*
+ * Copyright Notice:
+ * Original code Copyright (c) 2020-present, Vben
+ * This code section is based on vue-vben-admin.
+ */
 import { getStorageShortName } from '@/utils/env';
 import { createStorage as create, CreateStorageParams } from './storageCache';
 import { enableStorageEncryption, DEFAULT_CACHE_TIME } from '@/config/app/auth';

@@ -3,8 +3,7 @@ import { LazyRouteFunction, RouteObject } from "react-router";
 import { DEFAULT_MENU_SETTING } from '@/config/app/project';
 import { crumbLoaderFn, handleFn, homeLoaderFn } from './props';
 import { wrapComponent } from './props/element';
-import { errorBoundary } from './props/errorElemnt';
-
+import { errorBoundary } from './props/errorElement';
 /**
  * 
  * @param filePath 
@@ -102,7 +101,7 @@ function mapPathConfigToRoute(cfg: RoutePathConfig, isPageView = false): CrRoute
  * @param routes 
  * @returns 
  */
-function handleRoutesUndifinedPath(routes?: CrRouteObject[]): CrRouteObject[] | undefined {
+function handleRoutesUndefinedPath(routes?: CrRouteObject[]): CrRouteObject[] | undefined {
     return routes && routes.reduce((acc, cur) => {
         if (cur && cur.children && cur.children.length === 1 && cur.children[0].path === undefined) {
             return [...acc, {
@@ -117,7 +116,7 @@ function handleRoutesUndifinedPath(routes?: CrRouteObject[]): CrRouteObject[] | 
                 ...acc,
                 {
                     ...cur,
-                    children: handleRoutesUndifinedPath(cur.children)
+                    children: handleRoutesUndefinedPath(cur.children)
                 }
             ]
         }
@@ -127,17 +126,15 @@ function handleRoutesUndifinedPath(routes?: CrRouteObject[]): CrRouteObject[] | 
 
 function generateCrRoutes(): CrRouteObject[] {
     // 扫描 src/pages 下的所有具有路由文件
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const viewModules = import.meta.glob<PageModule>('/src/pages/views/**/$*.{ts,tsx}');
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const loginModules = import.meta.glob<PageModule>('/src/pages/login/**/$*.{ts,tsx}');
     const { $: $viewFn, ...viewsPathConfig } = generatePathConfig(viewModules as ModulesObject, '/src/pages/views/');
     const { $: $loginFn, ...loginPathConfig } = generatePathConfig(loginModules as ModulesObject, '/src/pages/login/');
     const viewRoutes = mapPathConfigToRoute(viewsPathConfig, true);
-    const viewRoutesWithoutUndefined = handleRoutesUndifinedPath(viewRoutes);
+    const viewRoutesWithoutUndefined = handleRoutesUndefinedPath(viewRoutes);
 
     const loginRoutes = mapPathConfigToRoute(loginPathConfig);
-    const loginRoutesWithoutUndefined = handleRoutesUndifinedPath(loginRoutes);
+    const loginRoutesWithoutUndefined = handleRoutesUndefinedPath(loginRoutes);
     // 提取跟路由的 layout
     const lazyView = ($viewFn as LazyModuleFn)()
     const lazyLogin = ($loginFn as LazyModuleFn)()
@@ -166,7 +163,6 @@ export const crRoutes = generateCrRoutes();
 
 
 function generateCrViewsPaths() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const viewModules = import.meta.glob('/src/pages/views/**/$*.{ts,tsx}');
     return Object.keys(viewModules as object).reduce((acc, filePath) => {
         const pathss = handleFilePath(filePath, '/src/pages/views/');

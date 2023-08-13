@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { deepCompareObj } from "react-evefyou-hooks";
+import { deepCompareObj } from 'react-evefyou-hooks';
 import classNames from 'classnames';
 import { TableContainerInstance } from './typing';
 import {

@@ -1,6 +1,6 @@
 import { homeLoaderFn } from '@routes/props';
 import { FC } from 'react';
-import { useMountEffect } from "react-evefyou-hooks";
+import { useMountEffect } from 'react-evefyou-hooks';
 import { Navigate, RouteProps, useLoaderData } from 'react-router';
 import { BasicResult } from '../Result';
 import { DEFAULT_USER_INFO } from '@/config/user';
