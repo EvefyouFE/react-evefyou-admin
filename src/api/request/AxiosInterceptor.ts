@@ -29,7 +29,7 @@ export const AxiosInterceptor = () => {
     // 如果不希望中断当前请求，请return数据，否则直接抛出异常即可
     switch (code) {
       case ResultEnum.TIMEOUT:
-        setToken(undefined);
+        setToken('');
         logout(true);
         break;
       default:
@@ -51,7 +51,7 @@ export const AxiosInterceptor = () => {
       // Jump to the login page if not logged in, and carry the path of the current page
       // Return to the current page after successful login. This step needs to be operated on the login page.
       case 401:
-        setToken(undefined)
+        setToken('')
         errMessage = msg || formatById('sys.api.error.msg.401');
         if (stp === SessionTimeoutProcessingEnum.PAGE_COVERAGE) {
           setIsSessionTimeout(true)
