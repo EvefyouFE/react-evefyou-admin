@@ -21,7 +21,7 @@ export interface UserState {
 }
 
 export const DEFAULT_USER_STATE: UserState = {
-    token: 'guest',
+    token: '',
     userInfo: DEFAULT_USER_INFO,
     isSessionTimeout: false,
     lastUpdateTime: new Date().getTime()
@@ -58,7 +58,7 @@ export const useUserRecoilState = defineRecoilValue({
         setLocale(locale: Locale) {
             this.deepSet(['userInfo', 'locale'] as const, locale)
         },
-        setToken(token?: string) {
+        setToken(token: string) {
             this.setProps({ token })
         },
         setIsSessionTimeout(isSessionTimeout: boolean) {
@@ -66,16 +66,16 @@ export const useUserRecoilState = defineRecoilValue({
         },
         setUserInfo(userInfo: Nullable<UserInfo>) {
             this.setProps({ userInfo, lastUpdateTime: new Date().getTime() })
-            this.setProps({ userInfo })
             // setAuthCache(USER_INFO_KEY, userInfo);
         },
     },
     useFn: () => {
         const loginMutation = mutationLogin.useMutation()
-        const [, permissionMethods] = useAuthRecoilState()
+        const [, { setProps: setAuthProps, refreshAuthAction }] = useAuthRecoilState()
         return {
             loginMutation,
-            ...permissionMethods,
+            setAuthProps,
+            refreshAuthAction,
         }
     },
     actions: {
@@ -90,7 +90,7 @@ export const useUserRecoilState = defineRecoilValue({
                 const { goHome = true } = options ?? {};
                 const { token } = await this.loginMutation.mutateAsync(params);
                 this.setToken(token);
-                return await this.afterLoginAction(goHome);
+                return await this.afterLoginAction(goHome, { token });
             } catch (error) {
                 return Promise.reject(error);
             }
@@ -111,11 +111,13 @@ export const useUserRecoilState = defineRecoilValue({
         async getUserInfoAction(state?: Partial<UserState>): Promise<Nullable<UserInfo>> {
             const { token } = state ?? this.userState
             if (!token) return null;
-            const userInfo = await queryGetCurrentUser.fetchQuery()
-            this.setRoleList(userInfo?.roleList ?? []);
-            this.setPermissionList(userInfo?.permissionList ?? [])
-            this.setUserInfo(userInfo ?? null);
-            return userInfo;
+            const { permissionList = [], roleList = [], ...rest } = await queryGetCurrentUser.fetchQuery()
+            this.setAuthProps({ permissionList, roleList })
+            this.setProps({
+                token,
+                userInfo: rest,
+            })
+            return rest;
         },
         async logout(goLogin = false) {
             if (this.userState.token) {
@@ -125,7 +127,7 @@ export const useUserRecoilState = defineRecoilValue({
                     console.log('注销Token失败');
                 }
             }
-            this.setToken(undefined);
+            this.setToken('');
             this.setIsSessionTimeout(false);
             this.setUserInfo(null);
             goLogin && router.navigate(PageEnum.BASE_LOGIN);
