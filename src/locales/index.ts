@@ -1,71 +1,38 @@
 import React from 'react';
-import enUS from './en-us';
-import { FormattedMessage, MessageDescriptor, PrimitiveType, createIntl, createIntlCache, useIntl } from 'react-intl';
-import { localeConfig } from "@/config/locale";
-import { getRecoil } from "recoil-nexus";
-import { userAtom } from "@/stores/user";
-
-export type Id = keyof typeof enUS;
-type FormatXMLElementFn<T, R = string | T | (string | T)[]> = (parts: Array<string | T>) => R;
-export type Values = Record<string, React.ReactNode | PrimitiveType | FormatXMLElementFn<React.ReactNode, React.ReactNode>>;
-interface Props extends MessageDescriptor {
-  id: Id;
-  values?: Values;
-}
-type FormatMessageProps = (descriptor: Props, values?: Values) => string;
+import { MessageValues, useBaseLocale, LocaleFormatMessageProps, formatBaseById, LocaleInfo } from 'react-evefyou-app';
+import antdEnUS from 'antd/locale/en_US';
+import antdZhCN from 'antd/locale/zh_CN';
+import enUS from './en_US';
+import zhCN from './zh_CN';
+import { ReactComponent as EnUsSvg } from '@/assets/header/en_US.svg';
+import { ReactComponent as ZhCnSvg } from '@/assets/header/zh_CN.svg';
+import { IntlShape } from 'react-intl';
 
 export const useLocale = () => {
-  const { formatMessage: _formatMessage, ...rest } = useIntl();
-  const formatMessage: FormatMessageProps = _formatMessage;
-  const formatById = (id: Id, values?: Values) => formatMessage({ id }, values);
-  return {
-    ...rest,
-    formatMessage,
-    formatById
-  };
-};
-export function formatMessage({ id, values }: Props) {
-  return React.createElement(FormattedMessage, {
-    id,
-    values,
-    key: id
-  })
+  const locale: Omit<IntlShape, "formatMessage"> & {
+    formatMessage: LocaleFormatMessageProps<keyof typeof enUS>;
+    formatById: (id: keyof typeof enUS, values?: MessageValues) => string;
+  } = useBaseLocale<keyof typeof enUS>()
+  return locale
+}
+export function formatById(id: keyof typeof enUS, values?: MessageValues): React.ReactNode {
+  return formatBaseById(id, values)
 }
 
-export function formatById(id: Id, values?: Values) {
-  return formatMessage({ id, values })
-}
 
-const getLocaleMessage = (locale: string) => {
-  const lang = localeConfig.find((item) => {
-    return item.key === locale.toLowerCase();
-  });
-  return lang?.messages;
-};
-const cacheZh = createIntlCache();
-export const IntlZh = createIntl(
+export const locales: LocaleInfo[] = [
   {
-    locale: 'zh-CN',
-    messages: getLocaleMessage('zh-cn')
+    name: 'English',
+    key: 'en-us',
+    messages: enUS,
+    icon: React.createElement(EnUsSvg),
+    antdMessages: antdEnUS,
   },
-  cacheZh
-)
-const cacheEn = createIntlCache();
-export const IntlEn = createIntl(
   {
-    locale: 'en-US',
-    messages: getLocaleMessage('en-us')
+    name: '简体中文',
+    key: 'zh-cn',
+    messages: zhCN,
+    icon: React.createElement(ZhCnSvg),
+    antdMessages: antdZhCN,
   },
-  cacheEn
-)
-
-export function formatOutside(id: Id, values?: Values) {
-  const locale = getRecoil(userAtom).userInfo?.locale ?? 'zh-cn'
-  switch (locale) {
-    case 'en-us':
-      return IntlEn.formatMessage({ id }, values)?.toLocaleString() ?? id
-    case 'zh-cn':
-    default:
-      return IntlZh.formatMessage({ id }, values)?.toLocaleString() ?? id
-  }
-}
+];

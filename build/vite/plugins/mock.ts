@@ -15,16 +15,16 @@ import { viteMockServe } from 'vite-plugin-mock';
 export function configMockPlugin(isBuild: boolean) {
   return viteMockServe({
     ignore: /^\_/,
-    mockPath: 'mock',
+    mockPath: 'build/mock',
     localEnabled: !isBuild,
     prodEnabled: isBuild,
     watchFiles: true,
     logger: true,
-    injectFile: "src/main.tsx",
-    injectCode: `
-      import { setupProdMockServer } from '../mock/_createProductionServer';
-      console.log('work ............');
-      setupProdMockServer();
-      `,
+    // injectFile: "src/main.tsx",
+    // injectCode: `
+    //   import { setupProdMockServer } from '../mock/_createProductionServer';
+    //   console.log('work ............');
+    //   setupProdMockServer();
+    //   `,
   });
 }

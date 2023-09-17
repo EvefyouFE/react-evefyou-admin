@@ -9,6 +9,7 @@
     "extends": "./tsconfig.json",
     "include": [
         "src",
+        "build",
         "types/*.d.ts",
         "tools/**/*.ts",
         ".eslintrc.cjs",

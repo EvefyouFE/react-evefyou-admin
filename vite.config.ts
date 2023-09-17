@@ -40,6 +40,8 @@ export default defineConfig(({ command, mode }: ConfigEnv): UserConfig => {
         '@ant-design/icons',
         'antd/locale/en_US',
         'antd/locale/zh_CN',
+        'react-evefyou-app/locales/en_US',
+        'react-evefyou-app/locales/zh_CN',
       ],
     },
     server: {

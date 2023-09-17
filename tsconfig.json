@@ -60,47 +60,25 @@
       "@models/*": [
         "src/models/*"
       ],
-      "@pages/*": [
-        "src/pages/*"
-      ],
-      "@routes/*": [
-        "src/routes/*"
-      ],
       "@styles/*": [
         "src/styles/*"
       ],
       "@utils/*": [
-        "src/utils/*"
-      ],
-      "@config/*": [
-        "src/config/*"
+        "src/common/utils/*"
       ],
       "@locales/*": [
         "src/locales/*"
       ],
-      "@enums/*": [
-        "src/enums/*"
-      ],
-      "@stores/*": [
-        "src/stores/*"
-      ],
       "@hooks/*": [
-        "src/hooks/*"
+        "src/core/hooks/*"
       ],
       "@components/*": [
         "src/components/*"
-      ],
-      "@types/*": [
-        "src/types/*"
-      ],
-      "@Containers/*": [
-        "src/components/Containers/*"
       ]
-    },
+    }
   },
   "include": [
-    "src",
-    "types/*.d.ts",
+    "src"
   ],
   "references": [
     {
