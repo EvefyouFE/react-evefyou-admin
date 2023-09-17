@@ -17,11 +17,11 @@ import 'react-evefyou-app/windicss';
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <AdminApp
     version={pkg.version}
+    name={pkg.name}
+    author={pkg.author.name}
     env={import.meta.env as unknown as AppImportMetaEnv}
     locales={locales}
     pageModules={import.meta.glob<PageModule>('/src/views/**/$*.{ts,tsx}')}
-    name="Evefyou Admin"
-    author="EvefyouFE"
     recoilDebug
     strictMode
   />

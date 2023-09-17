@@ -7,17 +7,18 @@
  * Copyright (c) 2023 by EvefyouFE/evef, All Rights Reserved. 
  */
 import { DeleteTwoTone, EditOutlined } from '@ant-design/icons';
-import { TableActionItem, TableAction, ModalContextData, ModalInstance, Value } from 'react-evefyou-app';
-import { Project } from '@common/models/project';
+import { TableActionItem, TableAction, ModalContextData, BasicModalInstance, Value } from 'react-evefyou-app';
+import { Project } from '@models/project';
 import { Button } from 'antd';
 import { formatById } from '@/locales';
 
-export function renderActionFn(modalInstance: Partial<ModalInstance>) {
+export function renderActionFn(modalInstance: Partial<BasicModalInstance>) {
   const { openModal } = modalInstance;
   function renderAction(value: Value, record: Project, index: number) {
     function handleEditOnClick(v: Value, rd: Project, idx: number) {
       console.debug(v, rd, idx);
       const data: ModalContextData = {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         record: rd,
         isUpdate: true,
       };

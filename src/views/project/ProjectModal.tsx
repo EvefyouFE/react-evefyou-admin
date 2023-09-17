@@ -14,8 +14,9 @@ import {
   BasicModal,
   BasicModalProps,
   ModalContextData,
-  ModalInstance,
+  BasicModalInstance,
   useModalContext,
+  useModalInstance,
 } from 'react-evefyou-app';
 import { formatById } from '@/locales';
 import { modalItems } from './list.data';
@@ -39,14 +40,13 @@ export const ModalForm = () => {
 };
 
 export const ProjectModal = forwardRef<
-  Partial<ModalInstance>,
+  Partial<BasicModalInstance>,
   ProjectModalProps
 >((props, ref) => {
   const { onSuccess, ...rest } = props;
   const [isUpdate, setUpdate] = useState(false);
   const { dataMap } = useModalContext();
-  const [modalRef, modalInstance = {} as ModalInstance] =
-    useCompInstance<ModalInstance>();
+  const [modalRef, modalInstance] = useModalInstance();
   const { openOkLoading, closeOkLoading, closeModal } = modalInstance;
 
   useImperativeHandle(ref, () => modalInstance, [modalInstance]);
