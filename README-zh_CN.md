@@ -8,20 +8,24 @@
 
 <div align="center">
 
-一个基于react-evefyou-app的后台管理预设模板项目
+简洁容易上手的 react 后台管理应用模板设计 UI 库
 
 中文 | [English](./README.md)
 
 ## ✨ 特性
 
-- 常规路由页面
+- 只有一个 App 入口，无需设置 router、fetch、store
+- React18+ React-router6+
+- 约定式路由
 - 基于 react-query 的简单易用的 fetch
-- 基于recoil，可以像 pinia 一样在 react 中定义全局管理状态
+- 基于 recoil，可以像 pinia 一样在 react 中定义全局管理状态
 - 您可以在 react 中注册属性，而不是直接分配它们
-- 缓存路由器
-- 在每个组件中使用 Windicss 和 css 注入
+- 缓存路由页面
+- 使用 Ant Design UI
+- 在每个组件中使用 Windicss（TailWind） 和 css 注入
 - 使用 react-intl 实现国际化处理
 - 使用 react-evefyou-hooks 定义可继承的状态钩子并支持 typecript
+- 基于 Vite 生态构建
 
 ### 约定式路由页面结构
 

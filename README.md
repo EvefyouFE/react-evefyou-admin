@@ -8,20 +8,24 @@
 
 <div align="center">
 
-A React18+ Admin Template library. Based on React-evefyou-app.
+Simple and easy to use react Admin application template design UI library.
 
 English | [中文](./README-zh_CN.md)
 
 ## ✨ Features
 
-- Conventional Routing Page
+- Only one App entry without setup router, fetch, store.
+- React18+ React-router6+
+- Conventional Routing
 - Simple and easy-to-use fetch based on react-query
 - Based on recoil, store status can be defined in react like pinia
 - You can register properties in react instead of assigning them directly
 - KeepAlive Router
-- Using Windicss and css inject in every component
+- Using Ant Design UI
+- Using Tailwind Windicss and css inject in every component
 - Using react-intl to implement internationalization processing
 - Using react-evefyou-hooks define inheritable state hooks and support typecript
+- Base Vite build
 
 ### Conventional Routing Page structure
 
