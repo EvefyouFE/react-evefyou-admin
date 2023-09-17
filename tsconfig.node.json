@@ -12,7 +12,6 @@
     "types/**/*.ts",
     "build/**/*.ts",
     "build/**/*.d.ts",
-    "mock/**/*.ts",
     "vite.config.ts",
     "*.json",
     "*.ts",

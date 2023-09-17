@@ -2,9 +2,9 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "i18n-ally.localesPaths": [
     "src/locales",
-    "src/config/locale",
-    "src/locales/en-us/locale",
-    "src/locales/zh-cn/locale"
+    "src/core/locale",
+    "src/locales/en_US",
+    "src/locales/zh_CN"
   ],
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
@@ -14,4 +14,7 @@
     "*.env": "$(capture).env.*",
     "package.json": "pnpm-lock.yaml,yarn.lock,LICENSE,README*,CHANGELOG*,CNAME,.gitattributes,.gitignore,.prettierrc.cjs,.commitlintrc.cjs,stylelint.config.js,commitlint.config.js,.stylelintignore,.prettierignore,.gitpod.yml,.eslintrc.cjs,.eslintignore,react-evefyou-admin.code-workspace"
   },
+  "backgroundCover.randomImageFolder": "d:\\picture\\bkg",
+  "backgroundCover.imagePath": "d:\\picture\\bkg\\aisi.jpg",
+  "backgroundCover.opacity": 0.5,
 }

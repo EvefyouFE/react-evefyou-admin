@@ -8,24 +8,24 @@
 
 <div align="center">
 
-A React18+ Admin Template library. Based on React-evefyou-app.
+一个基于react-evefyou-app的后台管理预设模板项目
 
-English | [中文](./README-zh_CN.md)
+中文 | [English](./README.md)
 
-## ✨ Features
+## ✨ 特性
 
-- Conventional Routing Page
-- Simple and easy-to-use fetch based on react-query
-- Based on recoil, store status can be defined in react like pinia
-- You can register properties in react instead of assigning them directly
-- KeepAlive Router
-- Using Windicss and css inject in every component
-- Using react-intl to implement internationalization processing
-- Using react-evefyou-hooks define inheritable state hooks and support typecript
+- 常规路由页面
+- 基于 react-query 的简单易用的 fetch
+- 基于recoil，可以像 pinia 一样在 react 中定义全局管理状态
+- 您可以在 react 中注册属性，而不是直接分配它们
+- 缓存路由器
+- 在每个组件中使用 Windicss 和 css 注入
+- 使用 react-intl 实现国际化处理
+- 使用 react-evefyou-hooks 定义可继承的状态钩子并支持 typecript
 
-### Conventional Routing Page structure
+### 约定式路由页面结构
 
-#### common example
+#### 通用例子
 
 ```
 - pages
@@ -43,7 +43,7 @@ English | [中文](./README-zh_CN.md)
         $.ts
 ```
 
-#### simple example
+#### 最简例子
 
 ```
 - views
@@ -55,7 +55,7 @@ English | [中文](./README-zh_CN.md)
         $List.tsx
 ```
 
-### Fetching data
+### 请求数据
 
 ```
 import { queryFetch, queryFetchPage, MenuTreeList, Page } from "react-evefyou-app";

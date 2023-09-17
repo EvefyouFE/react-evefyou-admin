@@ -1,4 +1,4 @@
-import { PageReq } from "../base";
+import { PageReq } from "react-evefyou-app";
 
 export interface ProjectReq extends PageReq {
     title?: string;

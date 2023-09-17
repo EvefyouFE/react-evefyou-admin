@@ -6,29 +6,23 @@
  * Everyone is coming to the world i live in, as i am going to the world lives for you. 人人皆往我世界，我为世界中人人。
  * Copyright (c) 2023 by EvefyouFE/evef, All Rights Reserved.
  */
-import RecoilNexus from 'recoil-nexus';
-import { QueryClientProvider } from '@tanstack/react-query';
-import 'nprogress/nprogress.css';
-import React from 'react';
+import { AdminApp, AppImportMetaEnv, PageModule } from "react-evefyou-app";
 import ReactDOM from 'react-dom/client';
-import { RecoilRoot } from 'recoil';
 import 'virtual:windi.css';
-import App from './App';
-import { queryClient } from '@/api/query';
+import pkg from 'package.json';
 import './index.less';
-import { AxiosProvider } from './api/request/AxiosProvider';
-import { DebugObserver, initializeState } from './stores';
+import { locales } from "./locales";
+import 'react-evefyou-app/windicss';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <AxiosProvider>
-      <RecoilRoot initializeState={initializeState}>
-        <RecoilNexus />
-        <DebugObserver />
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </RecoilRoot>
-    </AxiosProvider>
-  </React.StrictMode>,
+  <AdminApp
+    version={pkg.version}
+    env={import.meta.env as unknown as AppImportMetaEnv}
+    locales={locales}
+    pageModules={import.meta.glob<PageModule>('/src/views/**/$*.{ts,tsx}')}
+    name="Evefyou Admin"
+    author="EvefyouFE"
+    recoilDebug
+    strictMode
+  />
 );
