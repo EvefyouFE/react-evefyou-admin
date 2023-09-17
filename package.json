@@ -1,7 +1,7 @@
 {
   "name": "Evefyou Admin",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "author": {
     "name": "EvefyouFE",
@@ -57,7 +57,7 @@
     "react-dom": "^18.2.0",
     "react-draggable": "^4.4.5",
     "react-error-boundary": "^4.0.4",
-    "react-evefyou-app": "^0.0.1",
+    "react-evefyou-app": "^0.0.3",
     "react-intl": "^6.4.4",
     "react-router": "^6.10.0",
     "react-router-dom": "^6.10.0",

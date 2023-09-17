@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { ColumnsType } from "antd/es/table"
-import { BasicFormItemProps } from "react-evefyou-components"
-import { Project } from "@common/models/project"
+import { BasicFormItemProps } from "react-evefyou-app"
+import { Project } from "@models/project"
 import { formatById } from "@/locales"
 
 export const columns: ColumnsType<Project> = [
